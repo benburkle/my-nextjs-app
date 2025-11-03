@@ -19,3 +19,143 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Schedule: Defines recurring events
+model Schedule {
+  id               Int       @id @default(autoincrement())
+  day              String // Day of the week (e.g., Wednesday)
+  timeStart        String    @map("time_start") // Start time (e.g., @8:00pm)
+  repeats          String // Frequency of repetition (e.g., Weekly, Daily)
+  starts           DateTime? // Start date (e.g., 10/7)
+  ends             DateTime? // End date (e.g., 12/7)
+  excludeDayOfWeek String?   @map("exclude_day_of_week") // Days to exclude from the schedule
+  excludeDate      DateTime? @map("exclude_date") // Specific dates to exclude from the schedule
+  studies          Study[]
+
+  @@map("schedules")
+}
+
+// Resource: Represents the content being studied
+model Resource {
+  id         Int         @id @default(autoincrement())
+  series     String? // Series the resource belongs to
+  name       String // Name of the resource
+  type       String // Type of resource (e.g., Book, Video, etc)
+  studies    Study[]
+  chapters   Chapter[]
+  selections Selection[]
+
+  @@map("resources")
+}
+
+// Study: Represents a specific study instance
+model Study {
+  id         Int       @id @default(autoincrement())
+  scheduleId Int       @map("schedule_id")
+  resourceId Int       @map("resource_id")
+  name       String // Name of the study
+  schedule   Schedule  @relation(fields: [scheduleId], references: [id])
+  resource   Resource  @relation(fields: [resourceId], references: [id])
+  sessions   Session[]
+
+  @@map("studies")
+}
+
+// Chapter: Represents a chapter within a resource
+model Chapter {
+  id              Int         @id @default(autoincrement())
+  resourceId      Int         @map("resource_id")
+  number          Int // Chapter number
+  name            String? // Optional chapter name/title
+  resource        Resource    @relation(fields: [resourceId], references: [id])
+  verses          Verse[]
+  startSelections Selection[] @relation("StartChapter")
+  endSelections   Selection[] @relation("EndChapter")
+
+  @@map("chapters")
+}
+
+// Verse: Represents a verse or paragraph within a chapter
+model Verse {
+  id              Int         @id @default(autoincrement())
+  chapterId       Int         @map("chapter_id")
+  number          Int // Verse or paragraph number
+  chapter         Chapter     @relation(fields: [chapterId], references: [id])
+  startSelections Selection[] @relation("StartVerse")
+  endSelections   Selection[] @relation("EndVerse")
+
+  @@map("verses")
+}
+
+// Selection: Defines a specific range of content from a resource
+model Selection {
+  id             Int       @id @default(autoincrement())
+  resourceId     Int       @map("resource_id")
+  startChapterId Int?      @map("start_chapter_id")
+  endChapterId   Int?      @map("end_chapter_id")
+  startVerseId   Int?      @map("start_verse_id")
+  endVerseId     Int?      @map("end_verse_id")
+  resource       Resource  @relation(fields: [resourceId], references: [id])
+  startChapter   Chapter?  @relation("StartChapter", fields: [startChapterId], references: [id])
+  endChapter     Chapter?  @relation("EndChapter", fields: [endChapterId], references: [id])
+  startVerse     Verse?    @relation("StartVerse", fields: [startVerseId], references: [id])
+  endVerse       Verse?    @relation("EndVerse", fields: [endVerseId], references: [id])
+  sessions       Session[]
+
+  @@map("selections")
+}
+
+// Guide: Represents a study guide
+model Guide {
+  id              Int         @id @default(autoincrement())
+  name            String // Name of the guide
+  levelOfResource String?     @map("level_of_resource") // Level or difficulty of the resource
+  amtOfResource   String?     @map("amt_of_resource") // Amount of resource associated with the guide
+  guideSteps      GuideStep[]
+
+  @@map("guides")
+}
+
+// GuideStep: Represents an individual step within a study guide
+model GuideStep {
+  id                   Int           @id @default(autoincrement())
+  guideId              Int           @map("guide_id")
+  index                Int // Order of the step within the guide
+  name                 String // Name of the guide step
+  instructions         String? // Instructions for the step
+  example              String? // Example for the step
+  amtOfResourcePerStep String?       @map("amt_of_resource_per_step") // Amount of resource required (e.g., Chapter, Verses)
+  guide                Guide         @relation(fields: [guideId], references: [id])
+  sessions             Session[]     @relation("SessionGuideStep")
+  sessionSteps         SessionStep[]
+
+  @@map("guide_steps")
+}
+
+// Session: Represents a single study session
+model Session {
+  id           Int           @id @default(autoincrement())
+  studyId      Int           @map("study_id")
+  stepId       Int?          @map("step_id") // Optional reference to GuideStep
+  selectionId  Int?          @map("selection_id")
+  date         DateTime? // Date of the session
+  time         DateTime? // Time of the session
+  insights     String? // Notes or insights from the session
+  study        Study         @relation(fields: [studyId], references: [id])
+  guideStep    GuideStep?    @relation("SessionGuideStep", fields: [stepId], references: [id])
+  selection    Selection?    @relation(fields: [selectionId], references: [id])
+  sessionSteps SessionStep[]
+
+  @@map("sessions")
+}
+
+// SessionStep: Links a session to a specific guide step
+model SessionStep {
+  id          Int       @id @default(autoincrement())
+  sessionId   Int       @map("session_id")
+  guideStepId Int       @map("guide_step_id")
+  session     Session   @relation(fields: [sessionId], references: [id])
+  guideStep   GuideStep @relation(fields: [guideStepId], references: [id])
+
+  @@map("session_steps")
+}

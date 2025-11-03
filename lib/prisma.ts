@@ -15,7 +15,25 @@ if (databaseUrl?.startsWith('file:')) {
   }
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+function getPrismaClient(): PrismaClient {
+  // In development, clear the cached client if models are missing
+  if (process.env.NODE_ENV !== 'production' && globalForPrisma.prisma) {
+    // Check if key models exist
+    if (!('guide' in globalForPrisma.prisma) || 
+        !('resource' in globalForPrisma.prisma) ||
+        !('study' in globalForPrisma.prisma)) {
+      console.warn('Prisma client missing models, recreating...');
+      delete (globalThis as any).prisma;
+      globalForPrisma.prisma = undefined;
+    }
+  }
+  
+  return globalForPrisma.prisma ?? new PrismaClient();
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+export const prisma = getPrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
 
