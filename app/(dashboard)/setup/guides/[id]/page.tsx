@@ -16,8 +16,6 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconPlus, IconArrowLeft } from '@tabler/icons-react';
-import { EditGuideModal } from '@/app/components/EditGuideModal';
-import { EditGuideStepModal } from '@/app/components/EditGuideStepModal';
 
 interface GuideStep {
   id: number;
@@ -43,9 +41,6 @@ export default function GuideDetailPage() {
 
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editGuideModalOpen, setEditGuideModalOpen] = useState(false);
-  const [editStepModalOpen, setEditStepModalOpen] = useState(false);
-  const [selectedStep, setSelectedStep] = useState<GuideStep | null>(null);
 
   useEffect(() => {
     if (guideId) {
@@ -75,28 +70,15 @@ export default function GuideDetailPage() {
   };
 
   const handleEditGuide = () => {
-    setEditGuideModalOpen(true);
+    router.push(`/setup/guides/${guideId}/edit`);
   };
 
   const handleEditStep = (step: GuideStep) => {
-    setSelectedStep(step);
-    setEditStepModalOpen(true);
+    router.push(`/setup/guides/${guideId}/steps/${step.id}`);
   };
 
   const handleAddStep = () => {
-    setSelectedStep(null);
-    setEditStepModalOpen(true);
-  };
-
-  const handleStepSaved = () => {
-    setEditStepModalOpen(false);
-    setSelectedStep(null);
-    fetchGuide();
-  };
-
-  const handleGuideSaved = () => {
-    setEditGuideModalOpen(false);
-    fetchGuide();
+    router.push(`/setup/guides/${guideId}/steps/new/edit`);
   };
 
   if (loading) {
@@ -132,21 +114,6 @@ export default function GuideDetailPage() {
         </Title>
       </Group>
 
-      <Stack gap="md" mb="xl">
-        <Box>
-          <Text size="sm" c="dimmed">
-            Level of Resource
-          </Text>
-          <Text>{guide.levelOfResource || '-'}</Text>
-        </Box>
-        <Box>
-          <Text size="sm" c="dimmed">
-            Amount of Resource
-          </Text>
-          <Text>{guide.amtOfResource || '-'}</Text>
-        </Box>
-      </Stack>
-
       <Group justify="space-between" mb="md">
         <Title order={3} style={{ fontFamily: 'Arial, sans-serif' }}>
           Guide Steps ({guide.guideSteps.length})
@@ -178,7 +145,6 @@ export default function GuideDetailPage() {
               <Table.Th>Name</Table.Th>
               <Table.Th>Instructions</Table.Th>
               <Table.Th>Example</Table.Th>
-              <Table.Th>Resource Amount</Table.Th>
               <Table.Th>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -189,9 +155,30 @@ export default function GuideDetailPage() {
                   <Badge>{step.index}</Badge>
                 </Table.Td>
                 <Table.Td>{step.name}</Table.Td>
-                <Table.Td>{step.instructions || '-'}</Table.Td>
-                <Table.Td>{step.example || '-'}</Table.Td>
-                <Table.Td>{step.amtOfResourcePerStep || '-'}</Table.Td>
+                <Table.Td>
+                  {step.instructions 
+                    ? (() => {
+                        // Strip HTML tags and get first sentence
+                        const text = step.instructions.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+                        // Split by sentence-ending punctuation followed by space or end of string
+                        const firstSentence = text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() || text.split(/[.!?]+[\s]?/)[0]?.trim() || text.trim();
+                        return firstSentence || '-';
+                      })()
+                    : '-'
+                  }
+                </Table.Td>
+                <Table.Td>
+                  {step.example 
+                    ? (() => {
+                        // Strip HTML tags and get first sentence
+                        const text = step.example.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+                        // Split by sentence-ending punctuation followed by space or end of string
+                        const firstSentence = text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() || text.split(/[.!?]+[\s]?/)[0]?.trim() || text.trim();
+                        return firstSentence || '-';
+                      })()
+                    : '-'
+                  }
+                </Table.Td>
                 <Table.Td>
                   <ActionIcon
                     variant="subtle"
@@ -207,23 +194,6 @@ export default function GuideDetailPage() {
         </Table>
       )}
 
-      <EditGuideModal
-        opened={editGuideModalOpen}
-        onClose={() => setEditGuideModalOpen(false)}
-        guide={guide}
-        onSaved={handleGuideSaved}
-      />
-
-      <EditGuideStepModal
-        opened={editStepModalOpen}
-        onClose={() => {
-          setEditStepModalOpen(false);
-          setSelectedStep(null);
-        }}
-        guideId={parseInt(guideId)}
-        guideStep={selectedStep}
-        onSaved={handleStepSaved}
-      />
     </Box>
   );
 }

@@ -7,7 +7,20 @@ import '@mantine/notifications/styles.css';
 import '@mantine/tiptap/styles.css';
 
 const theme = createTheme({
-  /** Your theme configuration here */
+  colors: {
+    yellow: [
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+      '#F9D45B',
+    ],
+  },
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {

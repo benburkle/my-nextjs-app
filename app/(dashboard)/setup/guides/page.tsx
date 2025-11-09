@@ -127,8 +127,6 @@ export default function GuidesPage() {
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>
-              <Table.Th>Level of Resource</Table.Th>
-              <Table.Th>Amount of Resource</Table.Th>
               <Table.Th>Steps</Table.Th>
               <Table.Th>Actions</Table.Th>
             </Table.Tr>
@@ -141,8 +139,6 @@ export default function GuidesPage() {
                 onClick={() => router.push(`/setup/guides/${guide.id}`)}
               >
                 <Table.Td>{guide.name}</Table.Td>
-                <Table.Td>{guide.levelOfResource || '-'}</Table.Td>
-                <Table.Td>{guide.amtOfResource || '-'}</Table.Td>
                 <Table.Td>{guide.guideSteps.length}</Table.Td>
                 <Table.Td>
                   <Group gap="xs" onClick={(e) => e.stopPropagation()}>

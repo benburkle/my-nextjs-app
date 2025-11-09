@@ -10,6 +10,11 @@ interface Study {
   name: string;
 }
 
+interface SidebarProps {
+  sidebarOpen: boolean;
+  toggleSidebar: () => void;
+}
+
 const staticNavItems = [
   {
     label: 'Build',
@@ -20,7 +25,7 @@ const staticNavItems = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [studies, setStudies] = useState<Study[]>([]);

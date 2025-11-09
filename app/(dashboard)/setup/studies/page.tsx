@@ -28,13 +28,20 @@ interface Resource {
   type: string;
 }
 
+interface Guide {
+  id: number;
+  name: string;
+}
+
 interface Study {
   id: number;
   name: string;
   scheduleId: number | null;
   resourceId: number;
+  guideId: number | null;
   schedule: Schedule | null;
   resource: Resource;
+  guide: Guide | null;
   sessions: any[];
 }
 
@@ -133,6 +140,7 @@ export default function StudiesPage() {
             <Table.Tr>
               <Table.Th>Name</Table.Th>
               <Table.Th>Resource</Table.Th>
+              <Table.Th>Guide</Table.Th>
               <Table.Th>Schedule</Table.Th>
               <Table.Th>Sessions</Table.Th>
               <Table.Th>Actions</Table.Th>
@@ -147,6 +155,7 @@ export default function StudiesPage() {
               >
                 <Table.Td>{study.name}</Table.Td>
                 <Table.Td>{study.resource?.name || '-'}</Table.Td>
+                <Table.Td>{study.guide?.name || '-'}</Table.Td>
                 <Table.Td>
                   {study.schedule ? `${study.schedule.day} ${study.schedule.timeStart}` : '-'}
                 </Table.Td>

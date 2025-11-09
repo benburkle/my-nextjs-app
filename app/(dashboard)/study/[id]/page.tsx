@@ -55,13 +55,20 @@ interface Resource {
   type: string;
 }
 
+interface Guide {
+  id: number;
+  name: string;
+}
+
 interface Study {
   id: number;
   name: string;
   scheduleId: number | null;
   resourceId: number;
+  guideId: number | null;
   schedule: Schedule | null;
   resource: Resource;
+  guide: Guide | null;
   sessions: Session[];
 }
 
@@ -146,30 +153,48 @@ export default function StudyPage() {
 
   return (
     <Box>
-      <Title order={2} mb="xl" style={{ fontFamily: 'Arial, sans-serif' }}>
-        {study.name}
-      </Title>
-
-      <Stack gap="md" mb="xl">
-        <Box>
-          <Text size="sm" c="dimmed">
-            Resource
-          </Text>
-          <Text>{study.resource?.name || '-'}</Text>
-        </Box>
-        <Box>
-          <Text size="sm" c="dimmed">
-            Schedule
-          </Text>
-          {study.schedule ? (
-            <Text>
-              {study.schedule.day} {study.schedule.timeStart} ({study.schedule.repeats})
+      <Grid mb="xl">
+        <Grid.Col span={{ base: 12, sm: 3 }}>
+          <Box>
+            <Text size="sm" c="dimmed">
+              Study
             </Text>
-          ) : (
-            <Text>-</Text>
-          )}
-        </Box>
-      </Stack>
+            <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
+              {study.name}
+            </Title>
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, sm: 3 }}>
+          <Box>
+            <Text size="sm" c="dimmed">
+              Resource
+            </Text>
+            <Text>{study.resource?.name || '-'}</Text>
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, sm: 3 }}>
+          <Box>
+            <Text size="sm" c="dimmed">
+              Guide
+            </Text>
+            <Text>{study.guide?.name || '-'}</Text>
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, sm: 3 }}>
+          <Box>
+            <Text size="sm" c="dimmed">
+              Schedule
+            </Text>
+            {study.schedule ? (
+              <Text>
+                {study.schedule.day} {study.schedule.timeStart} ({study.schedule.repeats})
+              </Text>
+            ) : (
+              <Text>-</Text>
+            )}
+          </Box>
+        </Grid.Col>
+      </Grid>
 
       <Divider mb="xl" />
 
@@ -270,43 +295,36 @@ export default function StudyPage() {
             </Grid.Col>
           </Grid>
           {currentSession.insights && (
-            <Box mb="xl">
-              <Text size="sm" c="dimmed" mb="xs">
+            <Group align="flex-start" gap="md" mb="xl">
+              <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
                 Insights
               </Text>
               <Box
+                style={{ flex: 1, lineHeight: 1.6 }}
                 dangerouslySetInnerHTML={{ __html: currentSession.insights }}
-                style={{
-                  lineHeight: 1.6,
-                }}
               />
-            </Box>
+            </Group>
           )}
 
           {currentSession.sessionSteps && currentSession.sessionSteps.length > 0 ? (
             <Box>
               <Stack gap="md">
                 {currentSession.sessionSteps.map((sessionStep, index) => (
-                  <Box key={sessionStep.id}>
-                    <Group gap="xs" mb="xs">
-                      <Text size="sm" c="dimmed">{index + 1}.</Text>
-                      <Text fw={500}>{sessionStep.guideStep.name}</Text>
-                    </Group>
+                  <Group key={sessionStep.id} align="flex-start" gap="md">
+                    <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
+                      {index + 1}. {sessionStep.guideStep.name}
+                    </Text>
                     {sessionStep.insights ? (
                       <Box
-                        ml="md"
+                        style={{ flex: 1, fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
                         dangerouslySetInnerHTML={{ __html: sessionStep.insights }}
-                        style={{
-                          fontSize: 'var(--mantine-font-size-sm)',
-                          lineHeight: 1.6,
-                        }}
                       />
                     ) : (
-                      <Text size="sm" c="dimmed" ml="md" style={{ fontStyle: 'italic' }}>
+                      <Text size="sm" c="dimmed" style={{ flex: 1, fontStyle: 'italic' }}>
                         No insights yet
                       </Text>
                     )}
-                  </Box>
+                  </Group>
                 ))}
               </Stack>
             </Box>

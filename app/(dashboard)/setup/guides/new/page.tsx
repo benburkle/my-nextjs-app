@@ -1,30 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { EditGuideModal } from '@/app/components/EditGuideModal';
-import { Box } from '@mantine/core';
+import { useEffect } from 'react';
 
 export default function NewGuidePage() {
   const router = useRouter();
-  const [modalOpen, setModalOpen] = useState(true);
 
-  const handleSaved = () => {
-    router.push('/setup/guides');
-  };
+  useEffect(() => {
+    router.push('/setup/guides/new/edit');
+  }, [router]);
 
-  const handleClose = () => {
-    router.push('/setup/guides');
-  };
-
-  return (
-    <Box>
-      <EditGuideModal
-        opened={modalOpen}
-        onClose={handleClose}
-        guide={null}
-        onSaved={handleSaved}
-      />
-    </Box>
-  );
+  return null;
 }

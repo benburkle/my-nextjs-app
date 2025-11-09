@@ -7,6 +7,7 @@ export async function GET() {
       include: {
         schedule: true,
         resource: true,
+        guide: true,
         sessions: {
           orderBy: {
             date: 'desc',
@@ -112,6 +113,7 @@ export async function POST(request: Request) {
       include: {
         schedule: true,
         resource: true,
+        guide: true,
         sessions: true,
       },
     });

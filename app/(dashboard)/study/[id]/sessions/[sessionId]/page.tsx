@@ -428,9 +428,10 @@ export default function EditSessionPage() {
                           Instructions
                         </Button>
                         {instructionsVisible && (
-                          <Box style={{ textAlign: 'left' }}>
-                            <Text size="sm" style={{ textAlign: 'left' }}>{currentStep.guideStep.instructions}</Text>
-                          </Box>
+                          <Box 
+                            style={{ textAlign: 'left', lineHeight: 1.6 }}
+                            dangerouslySetInnerHTML={{ __html: currentStep.guideStep.instructions }}
+                          />
                         )}
                       </Box>
                     </Grid.Col>
@@ -450,9 +451,10 @@ export default function EditSessionPage() {
                           Example
                         </Button>
                         {exampleVisible && (
-                          <Box style={{ textAlign: 'left' }}>
-                            <Text size="sm" style={{ textAlign: 'left' }}>{currentStep.guideStep.example}</Text>
-                          </Box>
+                          <Box 
+                            style={{ textAlign: 'left', lineHeight: 1.6 }}
+                            dangerouslySetInnerHTML={{ __html: currentStep.guideStep.example }}
+                          />
                         )}
                       </Box>
                     </Grid.Col>
