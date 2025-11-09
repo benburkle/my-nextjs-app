@@ -4,11 +4,14 @@ import { useState, useEffect } from 'react';
 import { Box, useMantineColorScheme } from '@mantine/core';
 import { TopNavBar } from './TopNavBar';
 import { Sidebar } from './Sidebar';
+import { WalkthroughPanel } from './WalkthroughPanel';
+import { useWalkthrough } from '../contexts/WalkthroughContext';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { colorScheme } = useMantineColorScheme();
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { walkthroughType, closeWalkthrough } = useWalkthrough();
 
   useEffect(() => {
     setMounted(true);
@@ -68,11 +71,16 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             overflowY: 'auto',
             backgroundColor: 'var(--mantine-color-body)',
             marginLeft: sidebarOpen ? '200px' : '0px', // Approximate sidebar width when open
+            marginRight: walkthroughType ? '400px' : '0px', // Adjust for walkthrough panel
+            transition: 'margin-right 0.2s ease',
           }}
         >
           {children}
         </Box>
       </Box>
+      {walkthroughType && (
+        <WalkthroughPanel walkthroughType={walkthroughType} onClose={closeWalkthrough} />
+      )}
     </Box>
   );
 }

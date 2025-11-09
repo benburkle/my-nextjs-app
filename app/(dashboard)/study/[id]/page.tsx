@@ -58,6 +58,7 @@ interface Resource {
 interface Guide {
   id: number;
   name: string;
+  guideSteps?: GuideStep[];
 }
 
 interface Study {
@@ -198,100 +199,93 @@ export default function StudyPage() {
 
       <Divider mb="xl" />
 
+      {/* Navigation buttons at the top */}
+      <Group justify="flex-start" mb="xl">
+        {currentSession ? (
+          <>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={() => router.push(`/study/${studyId}/sessions/${currentSession.id}`)}
+              aria-label="Edit session"
+            >
+              <IconPencil size={20} />
+            </ActionIcon>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={goToPreviousSession}
+              disabled={!hasPreviousSession}
+              aria-label="Previous session"
+            >
+              <IconChevronLeft size={20} />
+            </ActionIcon>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={goToNextSession}
+              disabled={!hasNextSession}
+              aria-label="Next session"
+            >
+              <IconChevronRight size={20} />
+            </ActionIcon>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              onClick={() => router.push(`/study/${studyId}/sessions/new`)}
+              aria-label="Add session"
+              data-walkthrough="add-session-button"
+            >
+              <IconPlus size={20} />
+            </ActionIcon>
+          </>
+        ) : (
+          <ActionIcon
+            variant="subtle"
+            size="lg"
+            onClick={() => router.push(`/study/${studyId}/sessions/new`)}
+            aria-label="Add session"
+            data-walkthrough="add-session-button"
+          >
+            <IconPlus size={20} />
+          </ActionIcon>
+        )}
+      </Group>
+
       {currentSession ? (
         <Box>
-          <Group justify="space-between" mb="md">
-            <Group gap="md">
-              <Text size="sm" c="dimmed">
-                Session {study.sessions.length - currentSessionIndex} of {study.sessions.length}
+          <Group gap="md" mb="md">
+            <Text size="sm" c="dimmed">
+              Session {study.sessions.length - currentSessionIndex} of {study.sessions.length}
+            </Text>
+            {currentSession.date && (
+              <Text size="sm">
+                {new Date(currentSession.date).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
               </Text>
-              {currentSession.date && (
-                <Text size="sm">
-                  {new Date(currentSession.date).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </Text>
-              )}
-              {currentSession.time && (
-                <Text size="sm">
-                  {new Date(currentSession.time).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
-                </Text>
-              )}
-            </Group>
-            <Group gap="xs">
-              <ActionIcon
-                variant="subtle"
-                size="lg"
-                onClick={() => router.push(`/study/${studyId}/sessions/${currentSession.id}`)}
-                aria-label="Edit session"
-              >
-                <IconPencil size={20} />
-              </ActionIcon>
-              <ActionIcon
-                variant="subtle"
-                size="lg"
-                onClick={goToPreviousSession}
-                disabled={!hasPreviousSession}
-                aria-label="Previous session"
-              >
-                <IconChevronLeft size={20} />
-              </ActionIcon>
-              <ActionIcon
-                variant="subtle"
-                size="lg"
-                onClick={goToNextSession}
-                disabled={!hasNextSession}
-                aria-label="Next session"
-              >
-                <IconChevronRight size={20} />
-              </ActionIcon>
-              <ActionIcon
-                variant="subtle"
-                size="lg"
-                onClick={() => router.push(`/study/${studyId}/sessions/new`)}
-                aria-label="Add session"
-              >
-                <IconPlus size={20} />
-              </ActionIcon>
-            </Group>
+            )}
+            {currentSession.time && (
+              <Text size="sm">
+                {new Date(currentSession.time).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                })}
+              </Text>
+            )}
           </Group>
 
           <Grid mb="xl">
             <Grid.Col span={{ base: 12, sm: 4 }}>
-              {currentSession.date && (
-                <Box>
-                  <Text size="sm" c="dimmed" mb="xs">
-                    Date
-                  </Text>
-                  <Text>{new Date(currentSession.date).toLocaleDateString()}</Text>
-                </Box>
-              )}
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 4 }}>
-              {currentSession.time && (
-                <Box>
-                  <Text size="sm" c="dimmed" mb="xs">
-                    Time
-                  </Text>
-                  <Text>{new Date(currentSession.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-                </Box>
-              )}
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 4 }}>
-              {currentSession.reference && (
-                <Box>
-                  <Text size="sm" c="dimmed" mb="xs">
-                    Reference
-                  </Text>
-                  <Text>{currentSession.reference}</Text>
-                </Box>
-              )}
+              <Box>
+                <Text size="sm" c="dimmed" mb="xs">
+                  Reference
+                </Text>
+                <Text>{currentSession.reference || '-'}</Text>
+              </Box>
             </Grid.Col>
           </Grid>
           {currentSession.insights && (
@@ -306,51 +300,63 @@ export default function StudyPage() {
             </Group>
           )}
 
-          {currentSession.sessionSteps && currentSession.sessionSteps.length > 0 ? (
-            <Box>
-              <Stack gap="md">
-                {currentSession.sessionSteps.map((sessionStep, index) => (
-                  <Group key={sessionStep.id} align="flex-start" gap="md">
-                    <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
-                      {index + 1}. {sessionStep.guideStep.name}
-                    </Text>
-                    {sessionStep.insights ? (
-                      <Box
-                        style={{ flex: 1, fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
-                        dangerouslySetInnerHTML={{ __html: sessionStep.insights }}
-                      />
-                    ) : (
-                      <Text size="sm" c="dimmed" style={{ flex: 1, fontStyle: 'italic' }}>
-                        No insights yet
-                      </Text>
-                    )}
-                  </Group>
-                ))}
-              </Stack>
-            </Box>
-          ) : (
-            <Text c="dimmed" ta="center" py="xl">
-              No session steps for this session.
-            </Text>
-          )}
+          {(() => {
+            // Get steps to display - use sessionSteps if available, otherwise use guide steps
+            let stepsToDisplay: Array<{ id: number; guideStep: GuideStep; insights: string | null }> = [];
+            
+            if (currentSession.sessionSteps && currentSession.sessionSteps.length > 0) {
+              stepsToDisplay = currentSession.sessionSteps.map(ss => ({
+                id: ss.id,
+                guideStep: ss.guideStep,
+                insights: ss.insights,
+              }));
+            } else if (study.guide && study.guide.guideSteps && study.guide.guideSteps.length > 0) {
+              // Fallback to guide steps if no session steps exist
+              stepsToDisplay = study.guide.guideSteps.map((gs: GuideStep) => ({
+                id: gs.id,
+                guideStep: gs,
+                insights: null,
+              }));
+            }
+
+            if (stepsToDisplay.length > 0) {
+              return (
+                <Box>
+                  <Stack gap="md">
+                    {stepsToDisplay.map((step, index) => (
+                      <Group key={step.id} align="flex-start" gap="md">
+                        <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
+                          {index + 1}. {step.guideStep.name}
+                        </Text>
+                        {step.insights ? (
+                          <Box
+                            style={{ flex: 1, fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
+                            dangerouslySetInnerHTML={{ __html: step.insights }}
+                          />
+                        ) : (
+                          <Text size="sm" c="dimmed" style={{ flex: 1, fontStyle: 'italic' }}>
+                            No insights yet
+                          </Text>
+                        )}
+                      </Group>
+                    ))}
+                  </Stack>
+                </Box>
+              );
+            } else {
+              return (
+                <Text c="dimmed" ta="center" py="xl">
+                  No steps available for this session.
+                </Text>
+              );
+            }
+          })()}
         </Box>
       ) : (
         <Box>
-          <Group justify="space-between" mb="md">
-            <Text size="sm" c="dimmed">
-              No sessions yet
-            </Text>
-            <Group gap="xs">
-              <ActionIcon
-                variant="subtle"
-                size="lg"
-                onClick={() => router.push(`/study/${studyId}/sessions/new`)}
-                aria-label="Add session"
-              >
-                <IconPlus size={20} />
-              </ActionIcon>
-            </Group>
-          </Group>
+          <Text size="sm" c="dimmed" mb="md">
+            No sessions yet
+          </Text>
         </Box>
       )}
     </Box>

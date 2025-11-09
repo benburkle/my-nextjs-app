@@ -113,6 +113,7 @@ export default function GuidesPage() {
         <Button
           leftSection={<IconPlus size={16} />}
           onClick={() => router.push('/setup/guides/new')}
+          data-walkthrough="new-guide-button"
         >
           New Guide
         </Button>

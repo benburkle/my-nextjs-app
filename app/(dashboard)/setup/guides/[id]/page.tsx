@@ -121,6 +121,7 @@ export default function GuideDetailPage() {
         <Button
           leftSection={<IconPlus size={16} />}
           onClick={handleAddStep}
+          data-walkthrough="add-step-button"
         >
           Add Step
         </Button>

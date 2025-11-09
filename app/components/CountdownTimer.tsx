@@ -250,7 +250,7 @@ export function CountdownTimer() {
 
   return (
     <>
-      <Group gap="xs" style={{ alignItems: 'center' }}>
+      <Group gap="xs" style={{ alignItems: 'center' }} data-timer-container>
         <Tooltip label="Start">
           <ActionIcon
             variant="filled"
@@ -258,12 +258,14 @@ export function CountdownTimer() {
             onClick={handleStart}
             disabled={isRunning || timeLeft === 0}
             radius="xl"
+            data-timer-start-button
           >
             <IconPlayerPlay size={18} />
           </ActionIcon>
         </Tooltip>
         <Box
           onClick={handleTimerClick}
+          data-timer-display
           style={{
             padding: '4px 12px',
             border: '1px solid var(--mantine-color-gray-3)',
@@ -285,6 +287,7 @@ export function CountdownTimer() {
             onClick={handleStop}
             disabled={!isRunning}
             radius="xl"
+            data-timer-stop-button
           >
             <IconPlayerStop size={18} />
           </ActionIcon>

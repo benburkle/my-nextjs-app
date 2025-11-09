@@ -1,10 +1,13 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/tiptap/styles.css';
+import { WalkthroughProvider } from './contexts/WalkthroughContext';
+import { FormStateProvider } from './contexts/FormStateContext';
 
 const theme = createTheme({
   colors: {
@@ -23,11 +26,15 @@ const theme = createTheme({
   },
 });
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
-      <Notifications />
-      {children}
+      <WalkthroughProvider>
+        <FormStateProvider>
+          <Notifications />
+          {children}
+        </FormStateProvider>
+      </WalkthroughProvider>
     </MantineProvider>
   );
 }

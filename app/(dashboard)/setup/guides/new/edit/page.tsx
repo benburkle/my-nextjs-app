@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   TextInput,
@@ -13,15 +13,22 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
+import { useFormState } from '@/app/contexts/FormStateContext';
 
 export default function NewGuidePage() {
   const router = useRouter();
+  const { guideFormState, setGuideFormState } = useFormState();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    levelOfResource: '',
-    amtOfResource: '',
+    name: guideFormState?.name || '',
+    levelOfResource: guideFormState?.levelOfResource || '',
+    amtOfResource: guideFormState?.amtOfResource || '',
   });
+
+  // Update context when form data changes
+  useEffect(() => {
+    setGuideFormState(formData);
+  }, [formData, setGuideFormState]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +54,7 @@ export default function NewGuidePage() {
           color: 'green',
         });
         const savedGuide = await response.json();
+        setGuideFormState(null); // Clear form state after successful save
         router.push(`/setup/guides/${savedGuide.id}`);
       } else {
         let errorData;
@@ -95,12 +103,13 @@ export default function NewGuidePage() {
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
             }
+            data-walkthrough="guide-name-input"
           />
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={() => router.push('/setup/guides')}>
               Cancel
             </Button>
-            <Button type="submit" loading={loading}>
+            <Button type="submit" loading={loading} data-walkthrough="create-guide-button">
               Create
             </Button>
           </Group>

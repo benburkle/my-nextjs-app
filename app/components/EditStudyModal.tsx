@@ -284,6 +284,7 @@ export function EditStudyModal({
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
+              data-walkthrough="study-name-input"
             />
             <Select
               label="Schedule"
@@ -295,6 +296,7 @@ export function EditStudyModal({
               }
               searchable
               clearable
+              data-walkthrough="study-schedule-select"
             />
             <Select
               label="Resource"
@@ -306,6 +308,7 @@ export function EditStudyModal({
               }
               searchable
               clearable
+              data-walkthrough="study-resource-select"
             />
             <Select
               label="Guide"
@@ -317,12 +320,13 @@ export function EditStudyModal({
               }
               searchable
               clearable
+              data-walkthrough="study-guide-select"
             />
             <Group justify="flex-end" mt="md">
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" loading={loading}>
+              <Button type="submit" loading={loading} data-walkthrough="create-study-button">
                 {study ? 'Update' : 'Create'}
               </Button>
             </Group>

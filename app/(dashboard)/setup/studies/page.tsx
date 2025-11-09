@@ -125,6 +125,7 @@ export default function StudiesPage() {
         <Button
           leftSection={<IconPlus size={16} />}
           onClick={() => router.push('/setup/studies/new')}
+          data-walkthrough="new-study-button"
         >
           New Study
         </Button>

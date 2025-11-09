@@ -317,6 +317,7 @@ export default function EditSessionPage() {
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
+                      data-walkthrough="session-date-input"
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, sm: 4 }}>
@@ -341,7 +342,7 @@ export default function EditSessionPage() {
                     Insights
                   </Text>
                   {editorMounted && insightsEditor ? (
-                    <RichTextEditor editor={insightsEditor} style={{ minHeight: 100 }}>
+                    <RichTextEditor editor={insightsEditor} style={{ minHeight: 100 }} data-walkthrough="session-insights-editor">
                       <RichTextEditor.Toolbar sticky stickyOffset={0}>
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.Bold />
@@ -393,7 +394,7 @@ export default function EditSessionPage() {
           </Box>
 
           {sessionSteps.length > 0 && (
-            <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" mb="xl">
+            <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" mb="xl" data-walkthrough="session-stepper">
               {sessionSteps.map((step, index) => (
                 <Stepper.Step
                   key={step.id}
@@ -463,10 +464,12 @@ export default function EditSessionPage() {
                     </Grid.Col>
                   )}
                 </Grid>
-                <SessionStepInsightsEditor
-                  content={currentStep.insights}
-                  onChange={(html) => handleSessionStepInsightsChange(currentStep.id, html)}
-                />
+                <Box data-walkthrough="step-insights-editor">
+                  <SessionStepInsightsEditor
+                    content={currentStep.insights}
+                    onChange={(html) => handleSessionStepInsightsChange(currentStep.id, html)}
+                  />
+                </Box>
               </Box>
             );
           })()}
@@ -489,12 +492,12 @@ export default function EditSessionPage() {
                 Cancel
               </Button>
               {sessionSteps.length === 0 && (
-                <Button type="submit" loading={loading}>
+                <Button type="submit" loading={loading} data-walkthrough="create-session-button">
                   {sessionId && sessionId !== 'new' ? 'Update' : 'Create'}
                 </Button>
               )}
               {sessionSteps.length > 0 && activeStep === getTotalSteps() - 1 && (
-                <Button type="submit" loading={loading}>
+                <Button type="submit" loading={loading} data-walkthrough="create-session-button">
                   {sessionId && sessionId !== 'new' ? 'Update' : 'Create'}
                 </Button>
               )}

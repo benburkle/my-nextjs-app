@@ -20,25 +20,32 @@ import { RichTextEditor } from '@mantine/tiptap';
 import StarterKit from '@tiptap/starter-kit';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
+import { useFormState } from '@/app/contexts/FormStateContext';
 
 export default function NewGuideStepPage() {
   const router = useRouter();
   const params = useParams();
   const guideId = params?.id as string;
+  const { guideStepFormState, setGuideStepFormState } = useFormState();
 
   const [loading, setLoading] = useState(false);
   const [editorMounted, setEditorMounted] = useState(false);
   const [formData, setFormData] = useState({
-    index: 1,
-    name: '',
-    instructions: '',
-    example: '',
-    amtOfResourcePerStep: '',
+    index: guideStepFormState?.index || 1,
+    name: guideStepFormState?.name || '',
+    instructions: guideStepFormState?.instructions || '',
+    example: guideStepFormState?.example || '',
+    amtOfResourcePerStep: guideStepFormState?.amtOfResourcePerStep || '',
   });
+
+  // Update context when form data changes
+  useEffect(() => {
+    setGuideStepFormState(formData);
+  }, [formData, setGuideStepFormState]);
 
   const instructionsEditor = useEditor({
     extensions: [StarterKit, TaskList, TaskItem],
-    content: '',
+    content: formData.instructions || '',
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setFormData({ ...formData, instructions: editor.getHTML() });
@@ -47,7 +54,7 @@ export default function NewGuideStepPage() {
 
   const exampleEditor = useEditor({
     extensions: [StarterKit, TaskList, TaskItem],
-    content: '',
+    content: formData.example || '',
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setFormData({ ...formData, example: editor.getHTML() });
@@ -84,6 +91,7 @@ export default function NewGuideStepPage() {
           message: 'Guide step created successfully',
           color: 'green',
         });
+        setGuideStepFormState(null); // Clear form state after successful save
         router.push(`/setup/guides/${guideId}`);
       } else {
         const error = await response.json();
@@ -137,6 +145,7 @@ export default function NewGuideStepPage() {
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
             }
+            data-walkthrough="step-name-input"
           />
           <Box>
             <Text size="sm" fw={500} mb={5}>
@@ -246,7 +255,7 @@ export default function NewGuideStepPage() {
             <Button variant="outline" onClick={() => router.push(`/setup/guides/${guideId}`)}>
               Cancel
             </Button>
-            <Button type="submit" loading={loading}>
+            <Button type="submit" loading={loading} data-walkthrough="create-step-button">
               Create
             </Button>
           </Group>
