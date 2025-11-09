@@ -394,7 +394,7 @@ export default function EditSessionPage() {
           </Box>
 
           {sessionSteps.length > 0 && (
-            <Stepper active={activeStep} onStepClick={setActiveStep} breakpoint="sm" mb="xl" data-walkthrough="session-stepper">
+            <Stepper active={activeStep} onStepClick={setActiveStep} mb="xl" data-walkthrough="session-stepper">
               {sessionSteps.map((step, index) => (
                 <Stepper.Step
                   key={step.id}
