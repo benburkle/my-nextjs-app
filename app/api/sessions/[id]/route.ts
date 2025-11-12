@@ -55,7 +55,7 @@ export async function GET(
       });
 
       // Fetch the session again with the newly created steps
-      session = await prisma.session.findUnique({
+      const updatedSession = await prisma.session.findUnique({
         where: { id: parseInt(id) },
         include: {
           study: {
@@ -85,6 +85,15 @@ export async function GET(
           },
         },
       });
+
+      if (!updatedSession) {
+        return NextResponse.json(
+          { error: 'Session not found' },
+          { status: 404 }
+        );
+      }
+
+      session = updatedSession;
     }
 
     return NextResponse.json(session);
@@ -184,7 +193,7 @@ export async function PUT(
       });
 
       // Fetch the session again with the newly created steps
-      session = await prisma.session.findUnique({
+      const updatedSession = await prisma.session.findUnique({
         where: { id: parseInt(id) },
         include: {
           study: {
@@ -214,6 +223,15 @@ export async function PUT(
           },
         },
       });
+
+      if (!updatedSession) {
+        return NextResponse.json(
+          { error: 'Session not found' },
+          { status: 404 }
+        );
+      }
+
+      session = updatedSession;
     }
 
     return NextResponse.json(session);
