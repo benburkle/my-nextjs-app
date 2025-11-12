@@ -31,9 +31,16 @@ export function EditChapterModal({ opened, onClose, chapter, onSaved, resourceId
     try {
       const url = chapter ? `/api/chapters/${chapter.id}` : '/api/chapters';
       const method = chapter ? 'PUT' : 'POST';
+      
+      if (!chapter && !resourceId) {
+        notifications.show({ title: 'Error', message: 'Resource ID is required', color: 'red' });
+        setLoading(false);
+        return;
+      }
+      
       const body = chapter
         ? { number: index, name }
-        : { resourceId: (resourceId ?? chapter?.resourceId), number: index, name };
+        : { resourceId: resourceId!, number: index, name };
 
       const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       if (!res.ok) throw new Error('Failed to save chapter');
