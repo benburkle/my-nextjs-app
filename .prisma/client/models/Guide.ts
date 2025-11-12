@@ -1218,6 +1218,7 @@ export type GuideCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Guides.
    */
   data: Prisma.GuideCreateManyInput | Prisma.GuideCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1236,6 +1237,7 @@ export type GuideCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Guides.
    */
   data: Prisma.GuideCreateManyInput | Prisma.GuideCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

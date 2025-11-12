@@ -344,6 +344,11 @@ export type ResourceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type ResourceNullableScalarRelationFilter = {
+  is?: Prisma.ResourceWhereInput | null
+  isNot?: Prisma.ResourceWhereInput | null
+}
+
 export type ResourceScalarRelationFilter = {
   is?: Prisma.ResourceWhereInput
   isNot?: Prisma.ResourceWhereInput
@@ -355,10 +360,12 @@ export type ResourceCreateNestedOneWithoutStudiesInput = {
   connect?: Prisma.ResourceWhereUniqueInput
 }
 
-export type ResourceUpdateOneRequiredWithoutStudiesNestedInput = {
+export type ResourceUpdateOneWithoutStudiesNestedInput = {
   create?: Prisma.XOR<Prisma.ResourceCreateWithoutStudiesInput, Prisma.ResourceUncheckedCreateWithoutStudiesInput>
   connectOrCreate?: Prisma.ResourceCreateOrConnectWithoutStudiesInput
   upsert?: Prisma.ResourceUpsertWithoutStudiesInput
+  disconnect?: Prisma.ResourceWhereInput | boolean
+  delete?: Prisma.ResourceWhereInput | boolean
   connect?: Prisma.ResourceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ResourceUpdateToOneWithWhereWithoutStudiesInput, Prisma.ResourceUpdateWithoutStudiesInput>, Prisma.ResourceUncheckedUpdateWithoutStudiesInput>
 }
@@ -1303,6 +1310,7 @@ export type ResourceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Resources.
    */
   data: Prisma.ResourceCreateManyInput | Prisma.ResourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1321,6 +1329,7 @@ export type ResourceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Resources.
    */
   data: Prisma.ResourceCreateManyInput | Prisma.ResourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

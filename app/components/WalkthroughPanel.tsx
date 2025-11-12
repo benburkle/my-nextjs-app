@@ -395,18 +395,22 @@ export function WalkthroughPanel({ walkthroughType, onClose }: WalkthroughPanelP
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-      if (steps[currentStep + 1]?.page && !steps[currentStep + 1].page.includes('[')) {
-        router.push(steps[currentStep + 1].page!);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      const nextStepData = steps[nextStep];
+      if (nextStepData?.page && !nextStepData.page.includes('[')) {
+        router.push(nextStepData.page);
       }
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-      if (steps[currentStep - 1]?.page && !steps[currentStep - 1].page.includes('[')) {
-        router.push(steps[currentStep - 1].page!);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      const prevStepData = steps[prevStep];
+      if (prevStepData?.page && !prevStepData.page.includes('[')) {
+        router.push(prevStepData.page);
       }
     }
   };

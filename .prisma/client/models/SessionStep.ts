@@ -451,6 +451,7 @@ export type SessionStepCreateOrConnectWithoutGuideStepInput = {
 
 export type SessionStepCreateManyGuideStepInputEnvelope = {
   data: Prisma.SessionStepCreateManyGuideStepInput | Prisma.SessionStepCreateManyGuideStepInput[]
+  skipDuplicates?: boolean
 }
 
 export type SessionStepUpsertWithWhereUniqueWithoutGuideStepInput = {
@@ -497,6 +498,7 @@ export type SessionStepCreateOrConnectWithoutSessionInput = {
 
 export type SessionStepCreateManySessionInputEnvelope = {
   data: Prisma.SessionStepCreateManySessionInput | Prisma.SessionStepCreateManySessionInput[]
+  skipDuplicates?: boolean
 }
 
 export type SessionStepUpsertWithWhereUniqueWithoutSessionInput = {
@@ -1280,6 +1282,7 @@ export type SessionStepCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many SessionSteps.
    */
   data: Prisma.SessionStepCreateManyInput | Prisma.SessionStepCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1298,6 +1301,7 @@ export type SessionStepCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many SessionSteps.
    */
   data: Prisma.SessionStepCreateManyInput | Prisma.SessionStepCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

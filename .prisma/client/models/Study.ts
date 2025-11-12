@@ -193,7 +193,7 @@ export type StudyGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type StudyGroupByOutputType = {
   id: number
   scheduleId: number | null
-  resourceId: number
+  resourceId: number | null
   guideId: number | null
   name: string
   _count: StudyCountAggregateOutputType | null
@@ -224,11 +224,11 @@ export type StudyWhereInput = {
   NOT?: Prisma.StudyWhereInput | Prisma.StudyWhereInput[]
   id?: Prisma.IntFilter<"Study"> | number
   scheduleId?: Prisma.IntNullableFilter<"Study"> | number | null
-  resourceId?: Prisma.IntFilter<"Study"> | number
+  resourceId?: Prisma.IntNullableFilter<"Study"> | number | null
   guideId?: Prisma.IntNullableFilter<"Study"> | number | null
   name?: Prisma.StringFilter<"Study"> | string
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
+  resource?: Prisma.XOR<Prisma.ResourceNullableScalarRelationFilter, Prisma.ResourceWhereInput> | null
   guide?: Prisma.XOR<Prisma.GuideNullableScalarRelationFilter, Prisma.GuideWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
 }
@@ -236,7 +236,7 @@ export type StudyWhereInput = {
 export type StudyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   scheduleId?: Prisma.SortOrderInput | Prisma.SortOrder
-  resourceId?: Prisma.SortOrder
+  resourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   guideId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   schedule?: Prisma.ScheduleOrderByWithRelationInput
@@ -251,11 +251,11 @@ export type StudyWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StudyWhereInput[]
   NOT?: Prisma.StudyWhereInput | Prisma.StudyWhereInput[]
   scheduleId?: Prisma.IntNullableFilter<"Study"> | number | null
-  resourceId?: Prisma.IntFilter<"Study"> | number
+  resourceId?: Prisma.IntNullableFilter<"Study"> | number | null
   guideId?: Prisma.IntNullableFilter<"Study"> | number | null
   name?: Prisma.StringFilter<"Study"> | string
   schedule?: Prisma.XOR<Prisma.ScheduleNullableScalarRelationFilter, Prisma.ScheduleWhereInput> | null
-  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
+  resource?: Prisma.XOR<Prisma.ResourceNullableScalarRelationFilter, Prisma.ResourceWhereInput> | null
   guide?: Prisma.XOR<Prisma.GuideNullableScalarRelationFilter, Prisma.GuideWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
 }, "id">
@@ -263,7 +263,7 @@ export type StudyWhereUniqueInput = Prisma.AtLeast<{
 export type StudyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   scheduleId?: Prisma.SortOrderInput | Prisma.SortOrder
-  resourceId?: Prisma.SortOrder
+  resourceId?: Prisma.SortOrderInput | Prisma.SortOrder
   guideId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   _count?: Prisma.StudyCountOrderByAggregateInput
@@ -279,7 +279,7 @@ export type StudyScalarWhereWithAggregatesInput = {
   NOT?: Prisma.StudyScalarWhereWithAggregatesInput | Prisma.StudyScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Study"> | number
   scheduleId?: Prisma.IntNullableWithAggregatesFilter<"Study"> | number | null
-  resourceId?: Prisma.IntWithAggregatesFilter<"Study"> | number
+  resourceId?: Prisma.IntNullableWithAggregatesFilter<"Study"> | number | null
   guideId?: Prisma.IntNullableWithAggregatesFilter<"Study"> | number | null
   name?: Prisma.StringWithAggregatesFilter<"Study"> | string
 }
@@ -287,7 +287,7 @@ export type StudyScalarWhereWithAggregatesInput = {
 export type StudyCreateInput = {
   name: string
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudiesInput
-  resource: Prisma.ResourceCreateNestedOneWithoutStudiesInput
+  resource?: Prisma.ResourceCreateNestedOneWithoutStudiesInput
   guide?: Prisma.GuideCreateNestedOneWithoutStudiesInput
   sessions?: Prisma.SessionCreateNestedManyWithoutStudyInput
 }
@@ -295,7 +295,7 @@ export type StudyCreateInput = {
 export type StudyUncheckedCreateInput = {
   id?: number
   scheduleId?: number | null
-  resourceId: number
+  resourceId?: number | null
   guideId?: number | null
   name: string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutStudyInput
@@ -304,7 +304,7 @@ export type StudyUncheckedCreateInput = {
 export type StudyUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.ScheduleUpdateOneWithoutStudiesNestedInput
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutStudiesNestedInput
+  resource?: Prisma.ResourceUpdateOneWithoutStudiesNestedInput
   guide?: Prisma.GuideUpdateOneWithoutStudiesNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutStudyNestedInput
 }
@@ -312,7 +312,7 @@ export type StudyUpdateInput = {
 export type StudyUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   scheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   guideId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutStudyNestedInput
@@ -321,7 +321,7 @@ export type StudyUncheckedUpdateInput = {
 export type StudyCreateManyInput = {
   id?: number
   scheduleId?: number | null
-  resourceId: number
+  resourceId?: number | null
   guideId?: number | null
   name: string
 }
@@ -333,7 +333,7 @@ export type StudyUpdateManyMutationInput = {
 export type StudyUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   scheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   guideId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -541,14 +541,14 @@ export type StudyUpdateOneRequiredWithoutSessionsNestedInput = {
 
 export type StudyCreateWithoutScheduleInput = {
   name: string
-  resource: Prisma.ResourceCreateNestedOneWithoutStudiesInput
+  resource?: Prisma.ResourceCreateNestedOneWithoutStudiesInput
   guide?: Prisma.GuideCreateNestedOneWithoutStudiesInput
   sessions?: Prisma.SessionCreateNestedManyWithoutStudyInput
 }
 
 export type StudyUncheckedCreateWithoutScheduleInput = {
   id?: number
-  resourceId: number
+  resourceId?: number | null
   guideId?: number | null
   name: string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutStudyInput
@@ -561,6 +561,7 @@ export type StudyCreateOrConnectWithoutScheduleInput = {
 
 export type StudyCreateManyScheduleInputEnvelope = {
   data: Prisma.StudyCreateManyScheduleInput | Prisma.StudyCreateManyScheduleInput[]
+  skipDuplicates?: boolean
 }
 
 export type StudyUpsertWithWhereUniqueWithoutScheduleInput = {
@@ -585,7 +586,7 @@ export type StudyScalarWhereInput = {
   NOT?: Prisma.StudyScalarWhereInput | Prisma.StudyScalarWhereInput[]
   id?: Prisma.IntFilter<"Study"> | number
   scheduleId?: Prisma.IntNullableFilter<"Study"> | number | null
-  resourceId?: Prisma.IntFilter<"Study"> | number
+  resourceId?: Prisma.IntNullableFilter<"Study"> | number | null
   guideId?: Prisma.IntNullableFilter<"Study"> | number | null
   name?: Prisma.StringFilter<"Study"> | string
 }
@@ -612,6 +613,7 @@ export type StudyCreateOrConnectWithoutResourceInput = {
 
 export type StudyCreateManyResourceInputEnvelope = {
   data: Prisma.StudyCreateManyResourceInput | Prisma.StudyCreateManyResourceInput[]
+  skipDuplicates?: boolean
 }
 
 export type StudyUpsertWithWhereUniqueWithoutResourceInput = {
@@ -633,14 +635,14 @@ export type StudyUpdateManyWithWhereWithoutResourceInput = {
 export type StudyCreateWithoutGuideInput = {
   name: string
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudiesInput
-  resource: Prisma.ResourceCreateNestedOneWithoutStudiesInput
+  resource?: Prisma.ResourceCreateNestedOneWithoutStudiesInput
   sessions?: Prisma.SessionCreateNestedManyWithoutStudyInput
 }
 
 export type StudyUncheckedCreateWithoutGuideInput = {
   id?: number
   scheduleId?: number | null
-  resourceId: number
+  resourceId?: number | null
   name: string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutStudyInput
 }
@@ -652,6 +654,7 @@ export type StudyCreateOrConnectWithoutGuideInput = {
 
 export type StudyCreateManyGuideInputEnvelope = {
   data: Prisma.StudyCreateManyGuideInput | Prisma.StudyCreateManyGuideInput[]
+  skipDuplicates?: boolean
 }
 
 export type StudyUpsertWithWhereUniqueWithoutGuideInput = {
@@ -673,14 +676,14 @@ export type StudyUpdateManyWithWhereWithoutGuideInput = {
 export type StudyCreateWithoutSessionsInput = {
   name: string
   schedule?: Prisma.ScheduleCreateNestedOneWithoutStudiesInput
-  resource: Prisma.ResourceCreateNestedOneWithoutStudiesInput
+  resource?: Prisma.ResourceCreateNestedOneWithoutStudiesInput
   guide?: Prisma.GuideCreateNestedOneWithoutStudiesInput
 }
 
 export type StudyUncheckedCreateWithoutSessionsInput = {
   id?: number
   scheduleId?: number | null
-  resourceId: number
+  resourceId?: number | null
   guideId?: number | null
   name: string
 }
@@ -704,35 +707,35 @@ export type StudyUpdateToOneWithWhereWithoutSessionsInput = {
 export type StudyUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.ScheduleUpdateOneWithoutStudiesNestedInput
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutStudiesNestedInput
+  resource?: Prisma.ResourceUpdateOneWithoutStudiesNestedInput
   guide?: Prisma.GuideUpdateOneWithoutStudiesNestedInput
 }
 
 export type StudyUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   scheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   guideId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type StudyCreateManyScheduleInput = {
   id?: number
-  resourceId: number
+  resourceId?: number | null
   guideId?: number | null
   name: string
 }
 
 export type StudyUpdateWithoutScheduleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutStudiesNestedInput
+  resource?: Prisma.ResourceUpdateOneWithoutStudiesNestedInput
   guide?: Prisma.GuideUpdateOneWithoutStudiesNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutStudyNestedInput
 }
 
 export type StudyUncheckedUpdateWithoutScheduleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   guideId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutStudyNestedInput
@@ -740,7 +743,7 @@ export type StudyUncheckedUpdateWithoutScheduleInput = {
 
 export type StudyUncheckedUpdateManyWithoutScheduleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   guideId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -777,21 +780,21 @@ export type StudyUncheckedUpdateManyWithoutResourceInput = {
 export type StudyCreateManyGuideInput = {
   id?: number
   scheduleId?: number | null
-  resourceId: number
+  resourceId?: number | null
   name: string
 }
 
 export type StudyUpdateWithoutGuideInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.ScheduleUpdateOneWithoutStudiesNestedInput
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutStudiesNestedInput
+  resource?: Prisma.ResourceUpdateOneWithoutStudiesNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutStudyNestedInput
 }
 
 export type StudyUncheckedUpdateWithoutGuideInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   scheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutStudyNestedInput
 }
@@ -799,7 +802,7 @@ export type StudyUncheckedUpdateWithoutGuideInput = {
 export type StudyUncheckedUpdateManyWithoutGuideInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   scheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  resourceId?: Prisma.IntFieldUpdateOperationsInput | number
+  resourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -841,7 +844,7 @@ export type StudySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   guideId?: boolean
   name?: boolean
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
   sessions?: boolean | Prisma.Study$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.StudyCountOutputTypeDefaultArgs<ExtArgs>
@@ -854,7 +857,7 @@ export type StudySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   guideId?: boolean
   name?: boolean
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
 }, ExtArgs["result"]["study"]>
 
@@ -865,7 +868,7 @@ export type StudySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   guideId?: boolean
   name?: boolean
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
 }, ExtArgs["result"]["study"]>
 
@@ -880,19 +883,19 @@ export type StudySelectScalar = {
 export type StudyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "scheduleId" | "resourceId" | "guideId" | "name", ExtArgs["result"]["study"]>
 export type StudyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
   sessions?: boolean | Prisma.Study$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.StudyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
 }
 export type StudyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   schedule?: boolean | Prisma.Study$scheduleArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.Study$resourceArgs<ExtArgs>
   guide?: boolean | Prisma.Study$guideArgs<ExtArgs>
 }
 
@@ -900,14 +903,14 @@ export type $StudyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Study"
   objects: {
     schedule: Prisma.$SchedulePayload<ExtArgs> | null
-    resource: Prisma.$ResourcePayload<ExtArgs>
+    resource: Prisma.$ResourcePayload<ExtArgs> | null
     guide: Prisma.$GuidePayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     scheduleId: number | null
-    resourceId: number
+    resourceId: number | null
     guideId: number | null
     name: string
   }, ExtArgs["result"]["study"]>
@@ -1305,7 +1308,7 @@ readonly fields: StudyFieldRefs;
 export interface Prisma__StudyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   schedule<T extends Prisma.Study$scheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Study$scheduleArgs<ExtArgs>>): Prisma.Prisma__ScheduleClient<runtime.Types.Result.GetResult<Prisma.$SchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  resource<T extends Prisma.ResourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ResourceDefaultArgs<ExtArgs>>): Prisma.Prisma__ResourceClient<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  resource<T extends Prisma.Study$resourceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Study$resourceArgs<ExtArgs>>): Prisma.Prisma__ResourceClient<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   guide<T extends Prisma.Study$guideArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Study$guideArgs<ExtArgs>>): Prisma.Prisma__GuideClient<runtime.Types.Result.GetResult<Prisma.$GuidePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.Study$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Study$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1571,6 +1574,7 @@ export type StudyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Studies.
    */
   data: Prisma.StudyCreateManyInput | Prisma.StudyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1589,6 +1593,7 @@ export type StudyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Studies.
    */
   data: Prisma.StudyCreateManyInput | Prisma.StudyCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
@@ -1752,6 +1757,25 @@ export type Study$scheduleArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.ScheduleInclude<ExtArgs> | null
   where?: Prisma.ScheduleWhereInput
+}
+
+/**
+ * Study.resource
+ */
+export type Study$resourceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Resource
+   */
+  select?: Prisma.ResourceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Resource
+   */
+  omit?: Prisma.ResourceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ResourceInclude<ExtArgs> | null
+  where?: Prisma.ResourceWhereInput
 }
 
 /**

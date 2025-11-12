@@ -1261,6 +1261,7 @@ export type ScheduleCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Schedules.
    */
   data: Prisma.ScheduleCreateManyInput | Prisma.ScheduleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1279,6 +1280,7 @@ export type ScheduleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Schedules.
    */
   data: Prisma.ScheduleCreateManyInput | Prisma.ScheduleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

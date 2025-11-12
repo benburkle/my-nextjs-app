@@ -490,6 +490,7 @@ export type ChapterCreateOrConnectWithoutResourceInput = {
 
 export type ChapterCreateManyResourceInputEnvelope = {
   data: Prisma.ChapterCreateManyResourceInput | Prisma.ChapterCreateManyResourceInput[]
+  skipDuplicates?: boolean
 }
 
 export type ChapterUpsertWithWhereUniqueWithoutResourceInput = {
@@ -1469,6 +1470,7 @@ export type ChapterCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Chapters.
    */
   data: Prisma.ChapterCreateManyInput | Prisma.ChapterCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1487,6 +1489,7 @@ export type ChapterCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Chapters.
    */
   data: Prisma.ChapterCreateManyInput | Prisma.ChapterCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

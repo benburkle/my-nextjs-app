@@ -143,11 +143,6 @@ export function EditResourceModal({
               setFormData({ ...formData, type: value || '' })
             }
             searchable
-            creatable
-            getCreateLabel={(query) => `+ Create "${query}"`}
-            onCreate={(query) => {
-              return query;
-            }}
           />
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={onClose}>

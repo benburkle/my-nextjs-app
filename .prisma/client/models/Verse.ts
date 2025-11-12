@@ -468,6 +468,7 @@ export type VerseCreateOrConnectWithoutChapterInput = {
 
 export type VerseCreateManyChapterInputEnvelope = {
   data: Prisma.VerseCreateManyChapterInput | Prisma.VerseCreateManyChapterInput[]
+  skipDuplicates?: boolean
 }
 
 export type VerseUpsertWithWhereUniqueWithoutChapterInput = {
@@ -1374,6 +1375,7 @@ export type VerseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Verses.
    */
   data: Prisma.VerseCreateManyInput | Prisma.VerseCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1392,6 +1394,7 @@ export type VerseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Verses.
    */
   data: Prisma.VerseCreateManyInput | Prisma.VerseCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

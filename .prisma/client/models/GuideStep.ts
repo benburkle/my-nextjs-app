@@ -537,6 +537,7 @@ export type GuideStepCreateOrConnectWithoutGuideInput = {
 
 export type GuideStepCreateManyGuideInputEnvelope = {
   data: Prisma.GuideStepCreateManyGuideInput | Prisma.GuideStepCreateManyGuideInput[]
+  skipDuplicates?: boolean
 }
 
 export type GuideStepUpsertWithWhereUniqueWithoutGuideInput = {
@@ -1500,6 +1501,7 @@ export type GuideStepCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many GuideSteps.
    */
   data: Prisma.GuideStepCreateManyInput | Prisma.GuideStepCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1518,6 +1520,7 @@ export type GuideStepCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many GuideSteps.
    */
   data: Prisma.GuideStepCreateManyInput | Prisma.GuideStepCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

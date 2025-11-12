@@ -680,6 +680,7 @@ export type SelectionCreateOrConnectWithoutResourceInput = {
 
 export type SelectionCreateManyResourceInputEnvelope = {
   data: Prisma.SelectionCreateManyResourceInput | Prisma.SelectionCreateManyResourceInput[]
+  skipDuplicates?: boolean
 }
 
 export type SelectionUpsertWithWhereUniqueWithoutResourceInput = {
@@ -734,6 +735,7 @@ export type SelectionCreateOrConnectWithoutStartChapterInput = {
 
 export type SelectionCreateManyStartChapterInputEnvelope = {
   data: Prisma.SelectionCreateManyStartChapterInput | Prisma.SelectionCreateManyStartChapterInput[]
+  skipDuplicates?: boolean
 }
 
 export type SelectionCreateWithoutEndChapterInput = {
@@ -760,6 +762,7 @@ export type SelectionCreateOrConnectWithoutEndChapterInput = {
 
 export type SelectionCreateManyEndChapterInputEnvelope = {
   data: Prisma.SelectionCreateManyEndChapterInput | Prisma.SelectionCreateManyEndChapterInput[]
+  skipDuplicates?: boolean
 }
 
 export type SelectionUpsertWithWhereUniqueWithoutStartChapterInput = {
@@ -818,6 +821,7 @@ export type SelectionCreateOrConnectWithoutStartVerseInput = {
 
 export type SelectionCreateManyStartVerseInputEnvelope = {
   data: Prisma.SelectionCreateManyStartVerseInput | Prisma.SelectionCreateManyStartVerseInput[]
+  skipDuplicates?: boolean
 }
 
 export type SelectionCreateWithoutEndVerseInput = {
@@ -844,6 +848,7 @@ export type SelectionCreateOrConnectWithoutEndVerseInput = {
 
 export type SelectionCreateManyEndVerseInputEnvelope = {
   data: Prisma.SelectionCreateManyEndVerseInput | Prisma.SelectionCreateManyEndVerseInput[]
+  skipDuplicates?: boolean
 }
 
 export type SelectionUpsertWithWhereUniqueWithoutStartVerseInput = {
@@ -1883,6 +1888,7 @@ export type SelectionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many Selections.
    */
   data: Prisma.SelectionCreateManyInput | Prisma.SelectionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1901,6 +1907,7 @@ export type SelectionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many Selections.
    */
   data: Prisma.SelectionCreateManyInput | Prisma.SelectionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

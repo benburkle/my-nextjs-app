@@ -625,6 +625,7 @@ export type SessionCreateOrConnectWithoutStudyInput = {
 
 export type SessionCreateManyStudyInputEnvelope = {
   data: Prisma.SessionCreateManyStudyInput | Prisma.SessionCreateManyStudyInput[]
+  skipDuplicates?: boolean
 }
 
 export type SessionUpsertWithWhereUniqueWithoutStudyInput = {
@@ -685,6 +686,7 @@ export type SessionCreateOrConnectWithoutSelectionInput = {
 
 export type SessionCreateManySelectionInputEnvelope = {
   data: Prisma.SessionCreateManySelectionInput | Prisma.SessionCreateManySelectionInput[]
+  skipDuplicates?: boolean
 }
 
 export type SessionUpsertWithWhereUniqueWithoutSelectionInput = {
@@ -731,6 +733,7 @@ export type SessionCreateOrConnectWithoutGuideStepInput = {
 
 export type SessionCreateManyGuideStepInputEnvelope = {
   data: Prisma.SessionCreateManyGuideStepInput | Prisma.SessionCreateManyGuideStepInput[]
+  skipDuplicates?: boolean
 }
 
 export type SessionUpsertWithWhereUniqueWithoutGuideStepInput = {
@@ -1716,6 +1719,7 @@ export type SessionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Sessions.
    */
   data: Prisma.SessionCreateManyInput | Prisma.SessionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1734,6 +1738,7 @@ export type SessionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Sessions.
    */
   data: Prisma.SessionCreateManyInput | Prisma.SessionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
