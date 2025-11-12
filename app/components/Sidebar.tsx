@@ -34,7 +34,13 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const fetchStudies = useCallback(async () => {
     try {
       setLoadingStudies(true);
-      const response = await fetch('/api/studies');
+      // Add cache-busting to ensure fresh data
+      const response = await fetch('/api/studies', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setStudies(data);
@@ -55,9 +61,18 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   // This ensures the sidebar updates after creating/editing a study
   useEffect(() => {
     if (mounted && pathname) {
-      // Refresh when navigating to studies list or individual study pages
-      if (pathname === '/setup/studies' || pathname?.match(/^\/study\/\d+$/)) {
-        fetchStudies();
+      // Refresh when navigating to studies list, new study page, individual study pages, or study detail pages
+      if (
+        pathname === '/setup/studies' ||
+        pathname === '/setup/studies/new' ||
+        pathname?.match(/^\/setup\/studies\/\d+$/) ||
+        pathname?.match(/^\/study\/\d+$/)
+      ) {
+        // Small delay to ensure the database transaction is committed
+        const timeoutId = setTimeout(() => {
+          fetchStudies();
+        }, 100);
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [pathname, mounted, fetchStudies]);
