@@ -96,7 +96,10 @@ export default function StudiesPage() {
         });
         fetchStudies();
         // Dispatch custom event to notify sidebar to refresh
-        window.dispatchEvent(new CustomEvent('studyDeleted'));
+        // Use a small delay to ensure database transaction is committed
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('studyDeleted', { bubbles: true }));
+        }, 200);
       } else {
         throw new Error('Failed to delete study');
       }

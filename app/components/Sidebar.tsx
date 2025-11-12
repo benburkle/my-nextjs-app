@@ -68,14 +68,26 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         pathname?.match(/^\/setup\/studies\/\d+$/) ||
         pathname?.match(/^\/study\/\d+$/)
       ) {
-        // Small delay to ensure the database transaction is committed
+        // Delay to ensure the database transaction is committed
         const timeoutId = setTimeout(() => {
           fetchStudies();
-        }, 100);
+        }, 200);
         return () => clearTimeout(timeoutId);
       }
     }
   }, [pathname, mounted, fetchStudies]);
+
+  // Also refresh periodically when on studies page to catch any changes
+  useEffect(() => {
+    if (!mounted || pathname !== '/setup/studies') return;
+    
+    // Refresh every 2 seconds when on studies page (helps catch deletions)
+    const intervalId = setInterval(() => {
+      fetchStudies();
+    }, 2000);
+    
+    return () => clearInterval(intervalId);
+  }, [mounted, pathname, fetchStudies]);
 
   // Also refresh when window regains focus (user returns to tab)
   useEffect(() => {
@@ -93,19 +105,21 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   useEffect(() => {
     if (!mounted) return;
     
-    const handleStudyChange = () => {
-      // Small delay to ensure database transaction is committed
+    const handleStudyChange = (event: Event) => {
+      console.log('Study change event received:', event.type);
+      // Delay to ensure database transaction is committed and API is ready
       setTimeout(() => {
         fetchStudies();
-      }, 100);
+      }, 300);
     };
     
-    window.addEventListener('studyDeleted', handleStudyChange);
-    window.addEventListener('studyCreated', handleStudyChange);
+    // Use capture phase to ensure we catch the event
+    window.addEventListener('studyDeleted', handleStudyChange, true);
+    window.addEventListener('studyCreated', handleStudyChange, true);
     
     return () => {
-      window.removeEventListener('studyDeleted', handleStudyChange);
-      window.removeEventListener('studyCreated', handleStudyChange);
+      window.removeEventListener('studyDeleted', handleStudyChange, true);
+      window.removeEventListener('studyCreated', handleStudyChange, true);
     };
   }, [mounted, fetchStudies]);
 
