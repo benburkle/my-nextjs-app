@@ -89,6 +89,26 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     return () => window.removeEventListener('focus', handleFocus);
   }, [mounted, fetchStudies]);
 
+  // Listen for custom events when studies are created or deleted
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleStudyChange = () => {
+      // Small delay to ensure database transaction is committed
+      setTimeout(() => {
+        fetchStudies();
+      }, 100);
+    };
+    
+    window.addEventListener('studyDeleted', handleStudyChange);
+    window.addEventListener('studyCreated', handleStudyChange);
+    
+    return () => {
+      window.removeEventListener('studyDeleted', handleStudyChange);
+      window.removeEventListener('studyCreated', handleStudyChange);
+    };
+  }, [mounted, fetchStudies]);
+
   // Build dynamic nav items with studies
   const studyNavItems = studies.map((study) => ({
     label: study.name,

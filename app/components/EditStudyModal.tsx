@@ -164,6 +164,10 @@ export function EditStudyModal({
           message: study ? 'Study updated successfully' : 'Study created successfully',
           color: 'green',
         });
+        // Dispatch custom event to notify sidebar to refresh
+        if (!study) {
+          window.dispatchEvent(new CustomEvent('studyCreated'));
+        }
         onSaved();
         onClose();
       } else {

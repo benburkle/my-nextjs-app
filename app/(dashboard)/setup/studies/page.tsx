@@ -95,6 +95,8 @@ export default function StudiesPage() {
           color: 'green',
         });
         fetchStudies();
+        // Dispatch custom event to notify sidebar to refresh
+        window.dispatchEvent(new CustomEvent('studyDeleted'));
       } else {
         throw new Error('Failed to delete study');
       }
