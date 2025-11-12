@@ -113,9 +113,27 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/abideguide?schema=pu
 ### Production (Vercel)
 
 For production on Vercel:
-1. Set up a PostgreSQL database (Vercel Postgres, Supabase, Neon, etc.)
-2. Add the `DATABASE_URL` environment variable in your Vercel project settings
-3. Run migrations: `npx prisma migrate deploy` (or Vercel will run `prisma generate` automatically via the `postinstall` script)
+
+1. **Set up a PostgreSQL database**:
+   - **Option A (Recommended)**: Use Vercel Postgres
+     - Go to your Vercel project → Storage → Create Database → Postgres
+     - Vercel will automatically add `DATABASE_URL` to your environment variables
+   - **Option B**: Use an external provider (Supabase, Neon, Railway, etc.)
+     - Get your connection string from your provider
+     - Add it as `DATABASE_URL` in Vercel project settings
+
+2. **Add Environment Variables in Vercel**:
+   - Go to your Vercel project → Settings → Environment Variables
+   - Add `DATABASE_URL` with your PostgreSQL connection string
+   - Make sure to select all environments (Production, Preview, Development)
+
+3. **Run database migrations**:
+   ```bash
+   npx prisma migrate deploy
+   ```
+   Or Vercel will automatically run `prisma generate` via the `postinstall` script during build.
+
+**Important**: After adding `DATABASE_URL`, you must redeploy your project for the changes to take effect.
 
 ### Viewing Your Database
 
