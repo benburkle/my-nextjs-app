@@ -162,12 +162,9 @@ export default function GuideWalkthroughPage() {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
       // Navigate to the page for the next step if specified
-      if (steps[currentStep + 1]?.page) {
-        // Replace [id] with a placeholder or skip navigation for dynamic routes
-        const nextPage = steps[currentStep + 1].page;
-        if (!nextPage.includes('[')) {
-          router.push(nextPage);
-        }
+      const nextPage = steps[currentStep + 1]?.page;
+      if (nextPage && !nextPage.includes('[')) {
+        router.push(nextPage);
       }
     }
   };
@@ -175,11 +172,9 @@ export default function GuideWalkthroughPage() {
   const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
-      if (steps[currentStep - 1]?.page) {
-        const prevPage = steps[currentStep - 1].page;
-        if (!prevPage.includes('[')) {
-          router.push(prevPage);
-        }
+      const prevPage = steps[currentStep - 1]?.page;
+      if (prevPage && !prevPage.includes('[')) {
+        router.push(prevPage);
       }
     }
   };

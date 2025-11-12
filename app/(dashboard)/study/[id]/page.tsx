@@ -289,15 +289,15 @@ export default function StudyPage() {
             </Grid.Col>
           </Grid>
           {currentSession.insights && (
-            <Group align="flex-start" gap="md" mb="xl">
-              <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
+            <Box mb="xl">
+              <Text size="sm" c="dimmed" mb="xs">
                 Insights
               </Text>
               <Box
-                style={{ flex: 1, lineHeight: 1.6 }}
+                style={{ lineHeight: 1.6 }}
                 dangerouslySetInnerHTML={{ __html: currentSession.insights }}
               />
-            </Group>
+            </Box>
           )}
 
           {(() => {
@@ -324,21 +324,21 @@ export default function StudyPage() {
                 <Box>
                   <Stack gap="md">
                     {stepsToDisplay.map((step, index) => (
-                      <Group key={step.id} align="flex-start" gap="md">
-                        <Text size="sm" c="dimmed" style={{ minWidth: '80px' }}>
+                      <Box key={step.id} mb="md">
+                        <Text size="sm" c="dimmed" mb="xs">
                           {index + 1}. {step.guideStep.name}
                         </Text>
                         {step.insights ? (
                           <Box
-                            style={{ flex: 1, fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
+                            style={{ fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
                             dangerouslySetInnerHTML={{ __html: step.insights }}
                           />
                         ) : (
-                          <Text size="sm" c="dimmed" style={{ flex: 1, fontStyle: 'italic' }}>
+                          <Text size="sm" c="dimmed" style={{ fontStyle: 'italic' }}>
                             No insights yet
                           </Text>
                         )}
-                      </Group>
+                      </Box>
                     ))}
                   </Stack>
                 </Box>
