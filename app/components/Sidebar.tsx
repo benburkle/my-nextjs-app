@@ -158,6 +158,23 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     ];
   }, [studies]);
 
+  // Initialize and maintain opened state based on active pathname
+  // Preserve manually opened items while ensuring active parents stay open
+  useEffect(() => {
+    if (mounted && pathname) {
+      setOpenedItems((prev) => {
+        const newOpenedItems = new Set(prev); // Preserve existing opened items
+        navItems.forEach((item) => {
+          const isParentActive = item.children.some((child) => pathname === child.href);
+          if (isParentActive) {
+            newOpenedItems.add(item.label); // Ensure active parent is open
+          }
+        });
+        return newOpenedItems;
+      });
+    }
+  }, [mounted, pathname, navItems]);
+
   if (!mounted || loadingStudies) {
     return (
       <Box style={{ padding: '16px', height: '100%' }}>
@@ -181,23 +198,6 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
       </Box>
     );
   }
-
-  // Initialize and maintain opened state based on active pathname
-  // Preserve manually opened items while ensuring active parents stay open
-  useEffect(() => {
-    if (mounted && pathname) {
-      setOpenedItems((prev) => {
-        const newOpenedItems = new Set(prev); // Preserve existing opened items
-        navItems.forEach((item) => {
-          const isParentActive = item.children.some((child) => pathname === child.href);
-          if (isParentActive) {
-            newOpenedItems.add(item.label); // Ensure active parent is open
-          }
-        });
-        return newOpenedItems;
-      });
-    }
-  }, [mounted, pathname, navItems]);
 
   return (
     <Box style={{ padding: '16px', height: '100%' }}>
