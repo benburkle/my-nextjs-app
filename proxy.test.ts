@@ -1,4 +1,4 @@
-import { middleware } from './middleware';
+import { proxy } from './proxy';
 import { getToken } from 'next-auth/jwt';
 
 jest.mock('next-auth/jwt', () => ({
@@ -19,7 +19,7 @@ function createMockRequest(url: string): any {
   };
 }
 
-describe('middleware', () => {
+describe('proxy', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -28,7 +28,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/auth/signin');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response).toBeInstanceOf(Response);
     expect(response.status).toBe(200);
@@ -38,7 +38,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/api/auth/signin');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response).toBeInstanceOf(Response);
     expect(response.status).toBe(200);
@@ -48,7 +48,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/api/guides');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -59,7 +59,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue({ id: 'user-1', email: 'test@example.com' });
     const request = createMockRequest('http://localhost/api/guides');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response).toBeInstanceOf(Response);
     expect(response.status).toBe(200);
@@ -69,7 +69,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/setup/guides');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response.status).toBe(307);
     // Check if Location header exists (may be lowercase or uppercase)
@@ -86,7 +86,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue({ id: 'user-1', email: 'test@example.com' });
     const request = createMockRequest('http://localhost/setup/guides');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response).toBeInstanceOf(Response);
     expect(response.status).toBe(200);
@@ -96,7 +96,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/study/1');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response.status).toBe(307);
     // Check if Location header exists (may be lowercase or uppercase)
@@ -116,7 +116,7 @@ describe('middleware', () => {
       mockGetToken.mockResolvedValue(null);
       const request = createMockRequest(`http://localhost${route}`);
 
-      const response = await middleware(request as any);
+      const response = await proxy(request as any);
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -128,7 +128,7 @@ describe('middleware', () => {
     mockGetToken.mockResolvedValue(null);
     const request = createMockRequest('http://localhost/');
 
-    const response = await middleware(request as any);
+    const response = await proxy(request as any);
 
     expect(response).toBeInstanceOf(Response);
     expect(response.status).toBe(200);

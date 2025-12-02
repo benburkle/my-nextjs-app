@@ -42,7 +42,7 @@ This document describes the changes made to convert the app into a SaaS applicat
 ### 5. UI Updates
 - TopNavBar shows user email and logout option
 - SessionProvider wraps the app for session management
-- Middleware protects routes requiring authentication
+- Proxy protects routes requiring authentication
 
 ## Environment Variables Required
 
@@ -98,7 +98,7 @@ If you have existing data in your database:
 - Passwords are hashed using bcryptjs
 - All API routes verify user authentication
 - Data is isolated per user - users can only see/modify their own data
-- Middleware protects routes from unauthorized access
+- Proxy protects routes from unauthorized access
 
 ## Next Steps
 

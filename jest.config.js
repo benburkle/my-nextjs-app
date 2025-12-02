@@ -21,7 +21,7 @@ const customJestConfig = {
         collectCoverageFrom: [
           'app/**/*.{js,jsx,ts,tsx}',
           'lib/**/*.{js,jsx,ts,tsx}',
-          'middleware.ts',
+          'proxy.ts',
           '!app/**/*.d.ts',
           '!app/**/layout.tsx',
           '!app/**/page.tsx',

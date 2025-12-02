@@ -44,8 +44,8 @@ Each API route test covers:
 - Successful CRUD operations
 - Error handling
 
-#### Middleware (`middleware.test.ts`)
-- Tests authentication and authorization middleware
+#### Proxy (`proxy.test.ts`)
+- Tests authentication and authorization proxy
 - Tests route protection
 - Tests redirects for unauthenticated users
 
