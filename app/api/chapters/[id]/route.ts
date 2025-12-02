@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const chapter = await prisma.chapter.findUnique({ where: { id: parseInt(id) } });
@@ -16,15 +13,13 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await request.json();
     const { number, name } = body;
-    if (number === undefined) return NextResponse.json({ error: 'number is required' }, { status: 400 });
+    if (number === undefined)
+      return NextResponse.json({ error: 'number is required' }, { status: 400 });
 
     const chapter = await prisma.chapter.update({
       where: { id: parseInt(id) },
@@ -37,10 +32,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     await prisma.chapter.delete({ where: { id: parseInt(id) } });

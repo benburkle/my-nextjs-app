@@ -2,16 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import {
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Box,
-  Title,
-  ActionIcon,
-  Loader,
-} from '@mantine/core';
+import { TextInput, Button, Stack, Group, Box, Title, ActionIcon, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
 
@@ -92,7 +83,10 @@ export default function EditGuidePage() {
       if (response.ok) {
         notifications.show({
           title: 'Success',
-          message: guideId && guideId !== 'new' ? 'Guide updated successfully' : 'Guide created successfully',
+          message:
+            guideId && guideId !== 'new'
+              ? 'Guide updated successfully'
+              : 'Guide created successfully',
           color: 'green',
         });
         const savedGuide = await response.json();
@@ -105,7 +99,8 @@ export default function EditGuidePage() {
           errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
         }
         console.error('API Error Response:', errorData);
-        const errorMessage = errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
+        const errorMessage =
+          errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -133,7 +128,9 @@ export default function EditGuidePage() {
       <Group mb="xl">
         <ActionIcon
           variant="subtle"
-          onClick={() => router.push(guideId && guideId !== 'new' ? `/setup/guides/${guideId}` : '/setup/guides')}
+          onClick={() =>
+            router.push(guideId && guideId !== 'new' ? `/setup/guides/${guideId}` : '/setup/guides')
+          }
         >
           <IconArrowLeft size={20} />
         </ActionIcon>
@@ -149,12 +146,17 @@ export default function EditGuidePage() {
             placeholder="Enter guide name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <Group justify="flex-end" mt="md">
-            <Button variant="outline" onClick={() => router.push(guideId && guideId !== 'new' ? `/setup/guides/${guideId}` : '/setup/guides')}>
+            <Button
+              variant="outline"
+              onClick={() =>
+                router.push(
+                  guideId && guideId !== 'new' ? `/setup/guides/${guideId}` : '/setup/guides'
+                )
+              }
+            >
               Cancel
             </Button>
             <Button type="submit" loading={loading}>
@@ -166,4 +168,3 @@ export default function EditGuidePage() {
     </Box>
   );
 }
-

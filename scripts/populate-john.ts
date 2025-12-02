@@ -91,7 +91,9 @@ async function populateJohn() {
       });
 
       if (existingVerses.length > 0) {
-        console.log(`  Chapter ${chapterNum} already has ${existingVerses.length} verses, skipping...`);
+        console.log(
+          `  Chapter ${chapterNum} already has ${existingVerses.length} verses, skipping...`
+        );
         continue;
       }
 
@@ -119,7 +121,7 @@ async function populateJohn() {
     console.log('\n✓ Successfully populated Book of John!');
     console.log(`  - Resource: John (ID: ${resourceId})`);
     console.log(`  - Chapters: 21`);
-    
+
     // Count total verses
     const totalVerses = await prisma.verse.count({
       where: {
@@ -129,7 +131,6 @@ async function populateJohn() {
       },
     });
     console.log(`  - Total Verses: ${totalVerses}`);
-
   } catch (error) {
     console.error('Error populating John:', error);
     throw error;
@@ -147,4 +148,3 @@ populateJohn()
     console.error('Script failed:', error);
     process.exit(1);
   });
-

@@ -38,7 +38,7 @@ describe('EditChapterModal', () => {
         resourceId={1}
       />
     );
-    
+
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
@@ -58,7 +58,7 @@ describe('EditChapterModal', () => {
         resourceId={1}
       />
     );
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue('1')).toBeInTheDocument();
     });
@@ -66,7 +66,7 @@ describe('EditChapterModal', () => {
 
   it('should create new chapter', async () => {
     const user = userEvent.setup();
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ id: 1 }),
@@ -81,18 +81,17 @@ describe('EditChapterModal', () => {
         resourceId={1}
       />
     );
-    
+
     await waitFor(() => {
       const createButton = screen.getByRole('button', { name: /create|save/i });
       expect(createButton).toBeInTheDocument();
     });
-    
+
     const createButton = screen.getByRole('button', { name: /create|save/i });
     await user.click(createButton);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
-

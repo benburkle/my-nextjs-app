@@ -68,7 +68,7 @@ describe('EditSessionModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
@@ -93,24 +93,30 @@ describe('EditSessionModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     // Wait for modal to render and data to load
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    }, { timeout: 3000 });
-    
+    await waitFor(
+      () => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+
     // The insights field should be populated after fetch
-    await waitFor(() => {
-      const insightsField = screen.queryByDisplayValue('Test insights');
-      if (insightsField) {
-        expect(insightsField).toBeInTheDocument();
-      }
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const insightsField = screen.queryByDisplayValue('Test insights');
+        if (insightsField) {
+          expect(insightsField).toBeInTheDocument();
+        }
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('should create new session', async () => {
     const user = userEvent.setup();
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ id: 1 }),
@@ -125,18 +131,17 @@ describe('EditSessionModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     await waitFor(() => {
       const createButton = screen.getByRole('button', { name: /create|save/i });
       expect(createButton).toBeInTheDocument();
     });
-    
+
     const createButton = screen.getByRole('button', { name: /create|save/i });
     await user.click(createButton);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
-

@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Box, Title, Text, Stack, Paper, Group, ActionIcon, Button, Overlay, Badge } from '@mantine/core';
+import {
+  Box,
+  Title,
+  Text,
+  Stack,
+  Paper,
+  Group,
+  ActionIcon,
+  Button,
+  Overlay,
+  Badge,
+} from '@mantine/core';
 import { IconArrowLeft, IconArrowRight, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
@@ -18,12 +29,14 @@ const steps: WalkthroughStep[] = [
   {
     id: 'overview',
     title: 'Welcome to the Timer Walkthrough',
-    description: 'The countdown timer is located in the top navigation bar. Let\'s learn how to use it step by step.',
+    description:
+      "The countdown timer is located in the top navigation bar. Let's learn how to use it step by step.",
   },
   {
     id: 'timer-display',
     title: 'Timer Display',
-    description: 'This shows the current time remaining. Click on it to set a new time. When no time is set, it shows "00:00".',
+    description:
+      'This shows the current time remaining. Click on it to set a new time. When no time is set, it shows "00:00".',
     targetElement: 'data-timer-display',
     position: 'bottom',
     highlight: true,
@@ -31,7 +44,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'start-button',
     title: 'Start Button',
-    description: 'Click this play button (▶) to start the countdown timer. It will be disabled if no time is set or if the timer is already running.',
+    description:
+      'Click this play button (▶) to start the countdown timer. It will be disabled if no time is set or if the timer is already running.',
     targetElement: 'data-timer-start-button',
     position: 'bottom',
     highlight: true,
@@ -39,7 +53,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'stop-button',
     title: 'Stop Button',
-    description: 'Click this stop button (⏹) to pause the timer. The timer will preserve the remaining time so you can resume later.',
+    description:
+      'Click this stop button (⏹) to pause the timer. The timer will preserve the remaining time so you can resume later.',
     targetElement: 'data-timer-stop-button',
     position: 'bottom',
     highlight: true,
@@ -47,7 +62,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'setting-time',
     title: 'Setting the Time',
-    description: 'Click on the timer display to open a modal where you can enter minutes (0-59) and seconds (0-59). Click "Set" to apply the time.',
+    description:
+      'Click on the timer display to open a modal where you can enter minutes (0-59) and seconds (0-59). Click "Set" to apply the time.',
     targetElement: 'data-timer-display',
     position: 'bottom',
     highlight: true,
@@ -55,17 +71,20 @@ const steps: WalkthroughStep[] = [
   {
     id: 'completion',
     title: 'Timer Completion',
-    description: 'When the timer reaches 00:00, it will automatically play three beep sounds to notify you. The timer then resets.',
+    description:
+      'When the timer reaches 00:00, it will automatically play three beep sounds to notify you. The timer then resets.',
   },
   {
     id: 'persistence',
     title: 'Timer Persistence',
-    description: 'The timer continues running even when you navigate to different pages. Your timer state is saved and will persist across browser sessions.',
+    description:
+      'The timer continues running even when you navigate to different pages. Your timer state is saved and will persist across browser sessions.',
   },
   {
     id: 'complete',
-    title: 'You\'re All Set!',
-    description: 'You now know how to use the countdown timer. Try it out by setting a time and starting the timer. Remember, the timer persists across pages!',
+    title: "You're All Set!",
+    description:
+      'You now know how to use the countdown timer. Try it out by setting a time and starting the timer. Remember, the timer persists across pages!',
   },
 ];
 
@@ -73,7 +92,12 @@ export default function TimerWalkthroughPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [tooltipOpened, setTooltipOpened] = useState(false);
-  const [targetPosition, setTargetPosition] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const [targetPosition, setTargetPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const stepRef = useRef<HTMLDivElement>(null);
 
   const currentStepData = steps[currentStep];
@@ -93,7 +117,7 @@ export default function TimerWalkthroughPage() {
           height: rect.height,
         });
         setTooltipOpened(true);
-        
+
         // Add highlight class
         if (currentStepData.highlight) {
           element.style.outline = '3px solid var(--mantine-color-blue-5)';
@@ -116,7 +140,7 @@ export default function TimerWalkthroughPage() {
     // Small delay to ensure DOM is ready
     const timeoutId = setTimeout(() => {
       updateTargetPosition();
-      
+
       if (currentStepData?.targetElement) {
         const element = document.querySelector(`[${currentStepData.targetElement}]`) as HTMLElement;
         if (element) {
@@ -135,13 +159,17 @@ export default function TimerWalkthroughPage() {
       clearTimeout(timeoutId);
       window.removeEventListener('scroll', updateTargetPosition);
       window.removeEventListener('resize', updateTargetPosition);
-      document.querySelectorAll('[data-timer-display], [data-timer-start-button], [data-timer-stop-button]').forEach((el) => {
-        (el as HTMLElement).style.outline = '';
-        (el as HTMLElement).style.outlineOffset = '';
-        (el as HTMLElement).style.borderRadius = '';
-        (el as HTMLElement).style.zIndex = '';
-        (el as HTMLElement).style.position = '';
-      });
+      document
+        .querySelectorAll(
+          '[data-timer-display], [data-timer-start-button], [data-timer-stop-button]'
+        )
+        .forEach((el) => {
+          (el as HTMLElement).style.outline = '';
+          (el as HTMLElement).style.outlineOffset = '';
+          (el as HTMLElement).style.borderRadius = '';
+          (el as HTMLElement).style.zIndex = '';
+          (el as HTMLElement).style.position = '';
+        });
     };
   }, [currentStep, currentStepData, updateTargetPosition]);
 
@@ -181,122 +209,120 @@ export default function TimerWalkthroughPage() {
       )}
 
       {/* Tooltip pointing to timer element */}
-      {tooltipOpened && targetPosition && currentStepData.targetElement && (() => {
-        const rect = document.querySelector(`[${currentStepData.targetElement}]`)?.getBoundingClientRect();
-        if (!rect) return null;
-        
-        const position = currentStepData.position || 'bottom';
-        let top = 0;
-        let left = 0;
-        let transform = '';
-        
-        if (position === 'bottom') {
-          top = rect.bottom + 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%)';
-        } else if (position === 'top') {
-          top = rect.top - 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%) translateY(-100%)';
-        } else if (position === 'right') {
-          top = rect.top + rect.height / 2;
-          left = rect.right + 10;
-          transform = 'translateY(-50%)';
-        } else if (position === 'left') {
-          top = rect.top + rect.height / 2;
-          left = rect.left - 10;
-          transform = 'translateX(-100%) translateY(-50%)';
-        }
-        
-        return (
-          <Box
-            style={{
-              position: 'fixed',
-              top: `${top}px`,
-              left: `${left}px`,
-              transform,
-              zIndex: 1001,
-              maxWidth: 300,
-            }}
-          >
-          <Paper
-            p="md"
-            shadow="xl"
-            withBorder
-            style={{
-              backgroundColor: 'var(--mantine-color-body)',
-            }}
-          >
-            <Stack gap="xs">
-              <Group justify="space-between" align="flex-start">
-                <Box style={{ flex: 1 }}>
-                  <Text fw={600} size="sm" mb={4}>
-                    {currentStepData.title}
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    {currentStepData.description}
-                  </Text>
-                </Box>
-                <ActionIcon
-                  size="sm"
-                  variant="subtle"
-                  onClick={() => setTooltipOpened(false)}
-                >
-                  <IconX size={14} />
-                </ActionIcon>
-              </Group>
-            </Stack>
-          </Paper>
-          {/* Arrow pointing to element */}
-          {(() => {
-            const position = currentStepData.position || 'bottom';
-            const arrowStyle: React.CSSProperties = {
-              position: 'absolute',
-              width: 0,
-              height: 0,
-            };
+      {tooltipOpened &&
+        targetPosition &&
+        currentStepData.targetElement &&
+        (() => {
+          const rect = document
+            .querySelector(`[${currentStepData.targetElement}]`)
+            ?.getBoundingClientRect();
+          if (!rect) return null;
 
-            if (position === 'bottom') {
-              arrowStyle.top = -8;
-              arrowStyle.left = '50%';
-              arrowStyle.transform = 'translateX(-50%)';
-              arrowStyle.borderLeft = '8px solid transparent';
-              arrowStyle.borderRight = '8px solid transparent';
-              arrowStyle.borderBottom = '8px solid var(--mantine-color-body)';
-            } else if (position === 'top') {
-              arrowStyle.bottom = -8;
-              arrowStyle.left = '50%';
-              arrowStyle.transform = 'translateX(-50%)';
-              arrowStyle.borderLeft = '8px solid transparent';
-              arrowStyle.borderRight = '8px solid transparent';
-              arrowStyle.borderTop = '8px solid var(--mantine-color-body)';
-            } else if (position === 'right') {
-              arrowStyle.left = -8;
-              arrowStyle.top = '50%';
-              arrowStyle.transform = 'translateY(-50%)';
-              arrowStyle.borderTop = '8px solid transparent';
-              arrowStyle.borderBottom = '8px solid transparent';
-              arrowStyle.borderRight = '8px solid var(--mantine-color-body)';
-            } else if (position === 'left') {
-              arrowStyle.right = -8;
-              arrowStyle.top = '50%';
-              arrowStyle.transform = 'translateY(-50%)';
-              arrowStyle.borderTop = '8px solid transparent';
-              arrowStyle.borderBottom = '8px solid transparent';
-              arrowStyle.borderLeft = '8px solid var(--mantine-color-body)';
-            }
+          const position = currentStepData.position || 'bottom';
+          let top = 0;
+          let left = 0;
+          let transform = '';
 
-            return <Box style={arrowStyle} />;
-          })()}
-          </Box>
-        );
-      })()}
+          if (position === 'bottom') {
+            top = rect.bottom + 10;
+            left = rect.left + rect.width / 2;
+            transform = 'translateX(-50%)';
+          } else if (position === 'top') {
+            top = rect.top - 10;
+            left = rect.left + rect.width / 2;
+            transform = 'translateX(-50%) translateY(-100%)';
+          } else if (position === 'right') {
+            top = rect.top + rect.height / 2;
+            left = rect.right + 10;
+            transform = 'translateY(-50%)';
+          } else if (position === 'left') {
+            top = rect.top + rect.height / 2;
+            left = rect.left - 10;
+            transform = 'translateX(-100%) translateY(-50%)';
+          }
+
+          return (
+            <Box
+              style={{
+                position: 'fixed',
+                top: `${top}px`,
+                left: `${left}px`,
+                transform,
+                zIndex: 1001,
+                maxWidth: 300,
+              }}
+            >
+              <Paper
+                p="md"
+                shadow="xl"
+                withBorder
+                style={{
+                  backgroundColor: 'var(--mantine-color-body)',
+                }}
+              >
+                <Stack gap="xs">
+                  <Group justify="space-between" align="flex-start">
+                    <Box style={{ flex: 1 }}>
+                      <Text fw={600} size="sm" mb={4}>
+                        {currentStepData.title}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {currentStepData.description}
+                      </Text>
+                    </Box>
+                    <ActionIcon size="sm" variant="subtle" onClick={() => setTooltipOpened(false)}>
+                      <IconX size={14} />
+                    </ActionIcon>
+                  </Group>
+                </Stack>
+              </Paper>
+              {/* Arrow pointing to element */}
+              {(() => {
+                const position = currentStepData.position || 'bottom';
+                const arrowStyle: React.CSSProperties = {
+                  position: 'absolute',
+                  width: 0,
+                  height: 0,
+                };
+
+                if (position === 'bottom') {
+                  arrowStyle.top = -8;
+                  arrowStyle.left = '50%';
+                  arrowStyle.transform = 'translateX(-50%)';
+                  arrowStyle.borderLeft = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid var(--mantine-color-body)';
+                } else if (position === 'top') {
+                  arrowStyle.bottom = -8;
+                  arrowStyle.left = '50%';
+                  arrowStyle.transform = 'translateX(-50%)';
+                  arrowStyle.borderLeft = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid transparent';
+                  arrowStyle.borderTop = '8px solid var(--mantine-color-body)';
+                } else if (position === 'right') {
+                  arrowStyle.left = -8;
+                  arrowStyle.top = '50%';
+                  arrowStyle.transform = 'translateY(-50%)';
+                  arrowStyle.borderTop = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid var(--mantine-color-body)';
+                } else if (position === 'left') {
+                  arrowStyle.right = -8;
+                  arrowStyle.top = '50%';
+                  arrowStyle.transform = 'translateY(-50%)';
+                  arrowStyle.borderTop = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid transparent';
+                  arrowStyle.borderLeft = '8px solid var(--mantine-color-body)';
+                }
+
+                return <Box style={arrowStyle} />;
+              })()}
+            </Box>
+          );
+        })()}
 
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={handleClose}
-        >
+        <ActionIcon variant="subtle" onClick={handleClose}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={1}>Countdown Timer Walkthrough</Title>
@@ -308,23 +334,33 @@ export default function TimerWalkthroughPage() {
       <Paper p="lg" withBorder ref={stepRef}>
         <Stack gap="md">
           <Box>
-            <Title order={2} mb="sm">{currentStepData.title}</Title>
-            <Text size="lg" c="dimmed">{currentStepData.description}</Text>
+            <Title order={2} mb="sm">
+              {currentStepData.title}
+            </Title>
+            <Text size="lg" c="dimmed">
+              {currentStepData.description}
+            </Text>
           </Box>
 
           {/* Step-specific content */}
           {currentStepData.id === 'overview' && (
             <Box>
-              <Text mb="md">Follow along as we explore each part of the timer. Use the navigation buttons below to move through the walkthrough.</Text>
+              <Text mb="md">
+                Follow along as we explore each part of the timer. Use the navigation buttons below
+                to move through the walkthrough.
+              </Text>
               <Text size="sm" c="dimmed">
-                The timer is located in the top navigation bar, on the right side next to the theme toggle.
+                The timer is located in the top navigation bar, on the right side next to the theme
+                toggle.
               </Text>
             </Box>
           )}
 
           {currentStepData.id === 'setting-time' && (
             <Box>
-              <Text mb="sm" fw={500}>To set a time:</Text>
+              <Text mb="sm" fw={500}>
+                To set a time:
+              </Text>
               <Text size="sm" component="ol" style={{ paddingLeft: '20px' }}>
                 <li>Click on the timer display (highlighted above)</li>
                 <li>Enter minutes (0-59) in the "Minutes" field</li>
@@ -359,10 +395,13 @@ export default function TimerWalkthroughPage() {
 
           {currentStepData.id === 'complete' && (
             <Box>
-              <Text mb="md" fw={500}>You're ready to use the timer!</Text>
+              <Text mb="md" fw={500}>
+                You're ready to use the timer!
+              </Text>
               <Text size="sm" c="dimmed">
-                Try setting a short time (like 10 seconds) and starting the timer to see it in action.
-                The timer will highlight the relevant parts as you go through this walkthrough.
+                Try setting a short time (like 10 seconds) and starting the timer to see it in
+                action. The timer will highlight the relevant parts as you go through this
+                walkthrough.
               </Text>
             </Box>
           )}
@@ -387,9 +426,10 @@ export default function TimerWalkthroughPage() {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                backgroundColor: index === currentStep
-                  ? 'var(--mantine-color-blue-6)'
-                  : 'var(--mantine-color-gray-4)',
+                backgroundColor:
+                  index === currentStep
+                    ? 'var(--mantine-color-blue-6)'
+                    : 'var(--mantine-color-gray-4)',
                 cursor: 'pointer',
               }}
               onClick={() => setCurrentStep(index)}
@@ -397,16 +437,9 @@ export default function TimerWalkthroughPage() {
           ))}
         </Group>
         {isLastStep ? (
-          <Button
-            onClick={handleClose}
-          >
-            Finish
-          </Button>
+          <Button onClick={handleClose}>Finish</Button>
         ) : (
-          <Button
-            rightSection={<IconArrowRight size={16} />}
-            onClick={handleNext}
-          >
+          <Button rightSection={<IconArrowRight size={16} />} onClick={handleNext}>
             Next
           </Button>
         )}

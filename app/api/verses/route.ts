@@ -5,7 +5,10 @@ export async function GET(request: Request) {
   try {
     // Check if prisma is initialized correctly
     if (!prisma || !prisma.verse) {
-      console.error('Prisma client not initialized correctly. Available models:', Object.keys(prisma || {}));
+      console.error(
+        'Prisma client not initialized correctly. Available models:',
+        Object.keys(prisma || {})
+      );
       return NextResponse.json(
         { error: 'Database connection error', details: 'Prisma client not initialized' },
         { status: 500 }
@@ -27,17 +30,20 @@ export async function GET(request: Request) {
     return NextResponse.json(verses);
   } catch (error) {
     console.error('Error fetching verses:', error);
-    const errorDetails = error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    } : { error: 'Unknown error' };
-    
+    const errorDetails =
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : { error: 'Unknown error' };
+
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch verses', 
+      {
+        error: 'Failed to fetch verses',
         details: error instanceof Error ? error.message : 'Unknown error',
-        ...(process.env.NODE_ENV === 'development' && errorDetails ? { errorDetails } : {})
+        ...(process.env.NODE_ENV === 'development' && errorDetails ? { errorDetails } : {}),
       },
       { status: 500 }
     );
@@ -48,7 +54,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { chapterId, number, text } = body;
-    if (!chapterId || !number) return NextResponse.json({ error: 'chapterId and number are required' }, { status: 400 });
+    if (!chapterId || !number)
+      return NextResponse.json({ error: 'chapterId and number are required' }, { status: 400 });
 
     const verse = await prisma.verse.create({
       data: {
@@ -63,10 +70,19 @@ export async function POST(request: Request) {
     // Handle unique constraint violation
     if (error.code === 'P2002' || error.message?.includes('Unique constraint')) {
       return NextResponse.json(
-        { error: 'A verse with this number already exists in this chapter', details: 'Verses must be unique per chapter' },
+        {
+          error: 'A verse with this number already exists in this chapter',
+          details: 'Verses must be unique per chapter',
+        },
         { status: 409 }
       );
     }
-    return NextResponse.json({ error: 'Failed to create verse', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to create verse',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }

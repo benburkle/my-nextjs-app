@@ -2,22 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/get-session';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
     let study = await prisma.study.findFirst({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -56,10 +50,7 @@ export async function GET(
     });
 
     if (!study) {
-      return NextResponse.json(
-        { error: 'Study not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Study not found' }, { status: 404 });
     }
 
     // For each session without steps, create them from guide steps
@@ -78,7 +69,7 @@ export async function GET(
 
     // Fetch the study again to include newly created session steps
     study = await prisma.study.findFirst({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -120,23 +111,20 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching study:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch study', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch study',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
@@ -156,14 +144,17 @@ export async function PUT(
       parsedResourceId = parseInt(resourceId);
       if (isNaN(parsedResourceId)) {
         return NextResponse.json(
-          { error: 'Invalid Resource ID', details: `Resource ID must be a valid number. Received: ${resourceId}` },
+          {
+            error: 'Invalid Resource ID',
+            details: `Resource ID must be a valid number. Received: ${resourceId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if resource exists and belongs to user
       const resource = await prisma.resource.findFirst({
-        where: { 
+        where: {
           id: parsedResourceId,
           userId: user.id,
         },
@@ -171,7 +162,10 @@ export async function PUT(
 
       if (!resource) {
         return NextResponse.json(
-          { error: 'Resource not found', details: `Resource with ID ${parsedResourceId} does not exist` },
+          {
+            error: 'Resource not found',
+            details: `Resource with ID ${parsedResourceId} does not exist`,
+          },
           { status: 404 }
         );
       }
@@ -183,14 +177,17 @@ export async function PUT(
       parsedScheduleId = parseInt(scheduleId);
       if (isNaN(parsedScheduleId)) {
         return NextResponse.json(
-          { error: 'Invalid Schedule ID', details: `Schedule ID must be a valid number. Received: ${scheduleId}` },
+          {
+            error: 'Invalid Schedule ID',
+            details: `Schedule ID must be a valid number. Received: ${scheduleId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if schedule exists and belongs to user
       const schedule = await prisma.schedule.findFirst({
-        where: { 
+        where: {
           id: parsedScheduleId,
           userId: user.id,
         },
@@ -198,7 +195,10 @@ export async function PUT(
 
       if (!schedule) {
         return NextResponse.json(
-          { error: 'Schedule not found', details: `Schedule with ID ${parsedScheduleId} does not exist` },
+          {
+            error: 'Schedule not found',
+            details: `Schedule with ID ${parsedScheduleId} does not exist`,
+          },
           { status: 404 }
         );
       }
@@ -210,14 +210,17 @@ export async function PUT(
       parsedGuideId = parseInt(guideId);
       if (isNaN(parsedGuideId)) {
         return NextResponse.json(
-          { error: 'Invalid Guide ID', details: `Guide ID must be a valid number. Received: ${guideId}` },
+          {
+            error: 'Invalid Guide ID',
+            details: `Guide ID must be a valid number. Received: ${guideId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if guide exists and belongs to user
       const guide = await prisma.guide.findFirst({
-        where: { 
+        where: {
           id: parsedGuideId,
           userId: user.id,
         },
@@ -240,14 +243,11 @@ export async function PUT(
     });
 
     if (!existingStudy) {
-      return NextResponse.json(
-        { error: 'Study not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Study not found' }, { status: 404 });
     }
 
     const study = await prisma.study.update({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -272,27 +272,24 @@ export async function PUT(
   } catch (error) {
     console.error('Error updating study:', error);
     return NextResponse.json(
-      { error: 'Failed to update study', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to update study',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
-    
+
     // Verify study belongs to user before deleting
     const study = await prisma.study.findFirst({
       where: {
@@ -302,14 +299,11 @@ export async function DELETE(
     });
 
     if (!study) {
-      return NextResponse.json(
-        { error: 'Study not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Study not found' }, { status: 404 });
     }
 
     await prisma.study.delete({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -318,7 +312,10 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting study:', error);
     return NextResponse.json(
-      { error: 'Failed to delete study', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to delete study',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

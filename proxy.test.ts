@@ -110,8 +110,14 @@ describe('proxy', () => {
   });
 
   it('should protect all API resource routes', async () => {
-    const routes = ['/api/studies', '/api/guides', '/api/resources', '/api/sessions', '/api/schedules'];
-    
+    const routes = [
+      '/api/studies',
+      '/api/guides',
+      '/api/resources',
+      '/api/sessions',
+      '/api/schedules',
+    ];
+
     for (const route of routes) {
       mockGetToken.mockResolvedValue(null);
       const request = createMockRequest(`http://localhost${route}`);
@@ -134,4 +140,3 @@ describe('proxy', () => {
     expect(response.status).toBe(200);
   });
 });
-

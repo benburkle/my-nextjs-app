@@ -6,22 +6,19 @@ export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
     const studyId = searchParams.get('studyId');
-    
+
     const where: any = {
       userId: user.id,
     };
     if (studyId) {
       where.studyId = parseInt(studyId);
     }
-    
+
     const sessions = await prisma.session.findMany({
       where,
       include: {
@@ -58,7 +55,11 @@ export async function GET(request: Request) {
 
     // For each session without steps, create them from guide steps
     for (const session of sessions) {
-      if (session.sessionSteps.length === 0 && session.study.guide && session.study.guide.guideSteps.length > 0) {
+      if (
+        session.sessionSteps.length === 0 &&
+        session.study.guide &&
+        session.study.guide.guideSteps.length > 0
+      ) {
         await prisma.sessionStep.createMany({
           data: session.study.guide.guideSteps.map((guideStep) => ({
             sessionId: session.id,
@@ -105,12 +106,15 @@ export async function GET(request: Request) {
         date: 'desc',
       },
     });
-    
+
     return NextResponse.json(sessionsWithSteps);
   } catch (error) {
     console.error('Error fetching sessions:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch sessions', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch sessions',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -120,10 +124,7 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -138,7 +139,7 @@ export async function POST(request: Request) {
 
     // Verify study exists and belongs to user
     const study = await prisma.study.findFirst({
-      where: { 
+      where: {
         id: parseInt(studyId),
         userId: user.id,
       },
@@ -179,7 +180,7 @@ export async function POST(request: Request) {
     // Verify selectionId if provided and belongs to user's resource
     if (selectionId) {
       const selection = await prisma.selection.findFirst({
-        where: { 
+        where: {
           id: parseInt(selectionId),
           resource: {
             userId: user.id,
@@ -189,7 +190,10 @@ export async function POST(request: Request) {
 
       if (!selection) {
         return NextResponse.json(
-          { error: 'Selection not found', details: `Selection with ID ${selectionId} does not exist or does not belong to your resources` },
+          {
+            error: 'Selection not found',
+            details: `Selection with ID ${selectionId} does not exist or does not belong to your resources`,
+          },
           { status: 404 }
         );
       }
@@ -243,9 +247,11 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating session:', error);
     return NextResponse.json(
-      { error: 'Failed to create session', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create session',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
-

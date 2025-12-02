@@ -38,7 +38,10 @@ describe('/api/auth/register', () => {
     });
 
     it('should return 400 when user already exists', async () => {
-      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue({ id: '1', email: 'test@example.com' });
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        email: 'test@example.com',
+      });
 
       const request = new Request('http://localhost/api/auth/register', {
         method: 'POST',
@@ -60,7 +63,11 @@ describe('/api/auth/register', () => {
 
       const request = new Request('http://localhost/api/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ email: 'test@example.com', password: 'password123', name: 'Test User' }),
+        body: JSON.stringify({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User',
+        }),
       });
 
       const response = await POST(request);
@@ -72,4 +79,3 @@ describe('/api/auth/register', () => {
     });
   });
 });
-

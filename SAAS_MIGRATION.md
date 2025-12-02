@@ -5,11 +5,13 @@ This document describes the changes made to convert the app into a SaaS applicat
 ## Changes Made
 
 ### 1. Authentication System
+
 - **NextAuth.js**: Installed and configured with credentials provider
 - **User Model**: Added User model to Prisma schema with email/password authentication
 - **Session Management**: JWT-based sessions for authentication
 
 ### 2. Database Schema Updates
+
 - Added `User` model with authentication fields
 - Added `Account`, `SessionAuth`, and `VerificationToken` models for NextAuth
 - Added `userId` field to all main entities:
@@ -21,6 +23,7 @@ This document describes the changes made to convert the app into a SaaS applicat
 - All relationships updated to include user ownership
 
 ### 3. API Routes Protection
+
 - All API routes now require authentication
 - All queries filter by `userId` to ensure data isolation
 - Updated routes:
@@ -35,11 +38,13 @@ This document describes the changes made to convert the app into a SaaS applicat
   - `/api/schedules` (GET, POST)
 
 ### 4. Authentication Pages
+
 - `/auth/signin` - Login page
 - `/auth/signup` - Registration page
 - Home page redirects to signin if not authenticated
 
 ### 5. UI Updates
+
 - TopNavBar shows user email and logout option
 - SessionProvider wraps the app for session management
 - Proxy protects routes requiring authentication
@@ -54,7 +59,7 @@ AUTH_SECRET=your-secret-key-here
 # NEXTAUTH_SECRET=your-secret-key-here
 
 AUTH_URL=http://localhost:3000
-# Or use NEXTAUTH_URL for backward compatibility  
+# Or use NEXTAUTH_URL for backward compatibility
 # NEXTAUTH_URL=http://localhost:3000
 
 DATABASE_URL=your-database-url
@@ -65,6 +70,7 @@ DATABASE_URL=your-database-url
 For production, set `AUTH_URL` to your production domain.
 
 To generate a secure secret, you can use:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -87,6 +93,7 @@ If you have existing data in your database:
 ### For New Installations
 
 1. Run Prisma migrations:
+
    ```bash
    npx prisma migrate dev
    ```
@@ -107,4 +114,3 @@ If you have existing data in your database:
 3. Create your admin user account
 4. Update the migration user password or delete it after migration
 5. Consider making `userId` required (non-nullable) after migration is complete
-

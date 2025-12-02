@@ -1,7 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Modal, Button, Stack, TextInput, Textarea, Group, ActionIcon, Box, Text, Title } from '@mantine/core';
+import {
+  Modal,
+  Button,
+  Stack,
+  TextInput,
+  Textarea,
+  Group,
+  ActionIcon,
+  Box,
+  Text,
+  Title,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconHelp } from '@tabler/icons-react';
 
@@ -74,7 +85,7 @@ export function EditSessionModal({
 
   const fetchSessionWithSteps = async () => {
     if (!session?.id) return;
-    
+
     try {
       const response = await fetch(`/api/sessions/${session.id}`);
       if (response.ok) {
@@ -97,12 +108,14 @@ export function EditSessionModal({
         const studyData = await response.json();
         if (studyData.guide && studyData.guide.guideSteps) {
           // Create temporary session steps from guide steps for the form
-          const tempSteps: SessionStep[] = studyData.guide.guideSteps.map((guideStep: GuideStep, index: number) => ({
-            id: -index - 1, // Temporary negative IDs
-            guideStepId: guideStep.id,
-            insights: null,
-            guideStep,
-          }));
+          const tempSteps: SessionStep[] = studyData.guide.guideSteps.map(
+            (guideStep: GuideStep, index: number) => ({
+              id: -index - 1, // Temporary negative IDs
+              guideStepId: guideStep.id,
+              insights: null,
+              guideStep,
+            })
+          );
           setSessionSteps(tempSteps);
         }
       }
@@ -113,9 +126,7 @@ export function EditSessionModal({
 
   const handleSessionStepInsightsChange = (sessionStepId: number, value: string) => {
     setSessionSteps((prev) =>
-      prev.map((step) =>
-        step.id === sessionStepId ? { ...step, insights: value } : step
-      )
+      prev.map((step) => (step.id === sessionStepId ? { ...step, insights: value } : step))
     );
   };
 
@@ -170,7 +181,7 @@ export function EditSessionModal({
         // If creating a new session, use the auto-created session steps from the response
         // If editing, use the existing session steps
         const stepsToUpdate = savedSession.sessionSteps || sessionSteps;
-        
+
         // Create a map of guideStepId to insights for quick lookup
         const insightsMap = new Map<number, string | null>();
         sessionSteps.forEach((step) => {
@@ -331,4 +342,3 @@ export function EditSessionModal({
     </>
   );
 }
-

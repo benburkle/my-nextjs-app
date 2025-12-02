@@ -116,10 +116,7 @@ export default function StudyDetailPage() {
   return (
     <Box>
       <Group mb="md">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push('/setup/studies')}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push('/setup/studies')}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -155,11 +152,7 @@ export default function StudyDetailPage() {
       </Stack>
 
       <Group justify="flex-end" mb="md">
-        <Button
-          leftSection={<IconEdit size={16} />}
-          variant="outline"
-          onClick={handleEditStudy}
-        >
+        <Button leftSection={<IconEdit size={16} />} variant="outline" onClick={handleEditStudy}>
           Edit Study
         </Button>
       </Group>

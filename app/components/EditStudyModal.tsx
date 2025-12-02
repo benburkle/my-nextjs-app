@@ -1,15 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Select,
-  Loader,
-} from '@mantine/core';
+import { Modal, TextInput, Button, Stack, Group, Select, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 // Helper function to get HTTP status descriptions
@@ -64,12 +56,7 @@ interface EditStudyModalProps {
   onSaved: () => void;
 }
 
-export function EditStudyModal({
-  opened,
-  onClose,
-  study,
-  onSaved,
-}: EditStudyModalProps) {
+export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyModalProps) {
   const [loading, setLoading] = useState(false);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [resources, setResources] = useState<Resource[]>([]);
@@ -175,19 +162,16 @@ export function EditStudyModal({
         const responseClone = response.clone();
         let errorData: any = null;
         let errorMessage = `HTTP ${response.status}: ${response.statusText || 'Failed to save study'}`;
-        
+
         try {
           // Try to parse JSON response first
           try {
             errorData = await responseClone.json();
-            
+
             // Extract error message from parsed data
             if (errorData && typeof errorData === 'object') {
-              errorMessage = 
-                errorData.error || 
-                errorData.details || 
-                errorData.message ||
-                errorMessage;
+              errorMessage =
+                errorData.error || errorData.details || errorData.message || errorMessage;
             }
           } catch (jsonError) {
             // If JSON parsing fails, try reading as text from original response
@@ -204,14 +188,14 @@ export function EditStudyModal({
           console.error('Failed to read error response:', readError);
           errorMessage = `HTTP ${response.status}: ${response.statusText || 'Failed to read error response'}`;
         }
-        
+
         // Build error log with explicit values - never log empty objects
         const errorLogEntries: any[] = [
           `Status: ${response.status}`,
           `Status Text: ${response.statusText || 'N/A'}`,
           `Status Description: ${getStatusDescription(response.status)}`,
         ];
-        
+
         if (errorData !== null && errorData !== undefined) {
           if (typeof errorData === 'object') {
             const keys = Object.keys(errorData);
@@ -226,9 +210,9 @@ export function EditStudyModal({
         } else {
           errorLogEntries.push('Error Data: No error data (null/undefined)');
         }
-        
+
         errorLogEntries.push(`Error Message: ${errorMessage}`);
-        
+
         console.error('API Error Response:', errorLogEntries.join('\n'));
         console.error('API Error Response (structured):', {
           status: response.status,
@@ -238,7 +222,7 @@ export function EditStudyModal({
           errorDataKeys: errorData && typeof errorData === 'object' ? Object.keys(errorData) : [],
           errorMessage: errorMessage,
         });
-        
+
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -269,12 +253,7 @@ export function EditStudyModal({
   }));
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={study ? 'Edit Study' : 'New Study'}
-      size="lg"
-    >
+    <Modal opened={opened} onClose={onClose} title={study ? 'Edit Study' : 'New Study'} size="lg">
       {loadingOptions ? (
         <Loader size="md" />
       ) : (
@@ -285,9 +264,7 @@ export function EditStudyModal({
               placeholder="Enter study name"
               required
               value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               data-walkthrough="study-name-input"
             />
             <Select
@@ -295,9 +272,7 @@ export function EditStudyModal({
               placeholder="Select schedule (optional)"
               data={scheduleOptions}
               value={formData.scheduleId}
-              onChange={(value) =>
-                setFormData({ ...formData, scheduleId: value || '' })
-              }
+              onChange={(value) => setFormData({ ...formData, scheduleId: value || '' })}
               searchable
               clearable
               data-walkthrough="study-schedule-select"
@@ -307,9 +282,7 @@ export function EditStudyModal({
               placeholder="Select resource (optional)"
               data={resourceOptions}
               value={formData.resourceId}
-              onChange={(value) =>
-                setFormData({ ...formData, resourceId: value || '' })
-              }
+              onChange={(value) => setFormData({ ...formData, resourceId: value || '' })}
               searchable
               clearable
               data-walkthrough="study-resource-select"
@@ -319,9 +292,7 @@ export function EditStudyModal({
               placeholder="Select guide (optional)"
               data={guideOptions}
               value={formData.guideId}
-              onChange={(value) =>
-                setFormData({ ...formData, guideId: value || '' })
-              }
+              onChange={(value) => setFormData({ ...formData, guideId: value || '' })}
               searchable
               clearable
               data-walkthrough="study-guide-select"

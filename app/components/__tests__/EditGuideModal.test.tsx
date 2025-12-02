@@ -30,28 +30,18 @@ describe('EditGuideModal', () => {
 
   it('should render modal when opened', () => {
     renderWithProvider(
-      <EditGuideModal
-        opened={true}
-        onClose={mockOnClose}
-        guide={null}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={true} onClose={mockOnClose} guide={null} onSaved={mockOnSaved} />
     );
-    
+
     // Modal title should be present
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('should not render when closed', () => {
     renderWithProvider(
-      <EditGuideModal
-        opened={false}
-        onClose={mockOnClose}
-        guide={null}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={false} onClose={mockOnClose} guide={null} onSaved={mockOnSaved} />
     );
-    
+
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -65,14 +55,9 @@ describe('EditGuideModal', () => {
     };
 
     renderWithProvider(
-      <EditGuideModal
-        opened={true}
-        onClose={mockOnClose}
-        guide={guide}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={true} onClose={mockOnClose} guide={guide} onSaved={mockOnSaved} />
     );
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue('Test Guide')).toBeInTheDocument();
     });
@@ -83,50 +68,46 @@ describe('EditGuideModal', () => {
   it('should call onClose when cancel is clicked', async () => {
     const user = userEvent.setup();
     renderWithProvider(
-      <EditGuideModal
-        opened={true}
-        onClose={mockOnClose}
-        guide={null}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={true} onClose={mockOnClose} guide={null} onSaved={mockOnSaved} />
     );
-    
+
     const cancelButton = screen.getByText(/cancel/i);
     await user.click(cancelButton);
-    
+
     expect(mockOnClose).toHaveBeenCalled();
   });
 
   it('should create new guide', async () => {
     const user = userEvent.setup();
-    const mockGuide = { id: 1, name: 'New Guide', levelOfResource: null, amtOfResource: null, guideSteps: [] };
-    
+    const mockGuide = {
+      id: 1,
+      name: 'New Guide',
+      levelOfResource: null,
+      amtOfResource: null,
+      guideSteps: [],
+    };
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockGuide,
     });
 
     renderWithProvider(
-      <EditGuideModal
-        opened={true}
-        onClose={mockOnClose}
-        guide={null}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={true} onClose={mockOnClose} guide={null} onSaved={mockOnSaved} />
     );
-    
+
     await waitFor(() => {
       const nameInput = screen.getByLabelText(/name/i);
       expect(nameInput).toBeInTheDocument();
     });
-    
+
     const nameInput = screen.getByLabelText(/name/i);
     await user.clear(nameInput);
     await user.type(nameInput, 'New Guide');
-    
+
     const createButton = screen.getByRole('button', { name: /create|save/i });
     await user.click(createButton);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
@@ -148,24 +129,18 @@ describe('EditGuideModal', () => {
     });
 
     renderWithProvider(
-      <EditGuideModal
-        opened={true}
-        onClose={mockOnClose}
-        guide={guide}
-        onSaved={mockOnSaved}
-      />
+      <EditGuideModal opened={true} onClose={mockOnClose} guide={guide} onSaved={mockOnSaved} />
     );
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue('Test Guide')).toBeInTheDocument();
     });
-    
+
     const saveButton = screen.getByRole('button', { name: /save|update/i });
     await user.click(saveButton);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
-

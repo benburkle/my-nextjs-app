@@ -49,4 +49,3 @@ describe('/api/posts/[id]', () => {
     });
   });
 });
-

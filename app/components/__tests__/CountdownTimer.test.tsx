@@ -40,39 +40,42 @@ describe('CountdownTimer', () => {
   it('should open modal when timer display is clicked', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
-      await waitFor(() => {
-        expect(screen.getByText('Set Timer')).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('Set Timer')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     }
   });
 
   it('should set timer time from modal', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     const minutesInput = screen.getByLabelText('Minutes');
     const secondsInput = screen.getByLabelText('Seconds');
-    
+
     await user.clear(minutesInput);
     await user.type(minutesInput, '5');
     await user.clear(secondsInput);
     await user.type(secondsInput, '30');
-    
+
     await user.click(screen.getByText('Set'));
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Set Timer')).not.toBeInTheDocument();
       const timerDisplay = document.querySelector('[data-timer-display]');
@@ -83,27 +86,27 @@ describe('CountdownTimer', () => {
   it('should start timer when start button is clicked', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     // Set timer first
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     const minutesInput = screen.getByLabelText('Minutes');
     await user.clear(minutesInput);
     await user.type(minutesInput, '1');
     await user.click(screen.getByText('Set'));
-    
+
     await waitFor(() => {
       const timerDisplay = document.querySelector('[data-timer-display]');
       expect(timerDisplay).toHaveTextContent('01:00');
     });
-    
+
     // Start timer
     const startButton = document.querySelector('[data-timer-start-button]');
     if (startButton) {
@@ -118,42 +121,42 @@ describe('CountdownTimer', () => {
   it('should stop timer when stop button is clicked', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     // Set and start timer
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     const minutesInput = screen.getByLabelText('Minutes');
     await user.clear(minutesInput);
     await user.type(minutesInput, '1');
     await user.click(screen.getByText('Set'));
-    
+
     await waitFor(() => {
       const timerDisplay = document.querySelector('[data-timer-display]');
       expect(timerDisplay).toHaveTextContent('01:00');
     });
-    
+
     const startButton = document.querySelector('[data-timer-start-button]');
     if (startButton) {
       await user.click(startButton);
     }
-    
+
     await waitFor(() => {
       const stopButton = document.querySelector('[data-timer-stop-button]');
       expect(stopButton).not.toBeDisabled();
     });
-    
+
     const stopButton = document.querySelector('[data-timer-stop-button]');
     if (stopButton) {
       await user.click(stopButton);
     }
-    
+
     await waitFor(() => {
       const stopButton = document.querySelector('[data-timer-stop-button]');
       expect(stopButton).toBeDisabled();
@@ -163,26 +166,26 @@ describe('CountdownTimer', () => {
   it('should disable start button when timer is running', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     const minutesInput = screen.getByLabelText('Minutes');
     await user.clear(minutesInput);
     await user.type(minutesInput, '1');
     await user.click(screen.getByText('Set'));
-    
+
     await waitFor(() => {
       const timerDisplay = document.querySelector('[data-timer-display]');
       expect(timerDisplay).toHaveTextContent('01:00');
     });
-    
+
     const startButton = document.querySelector('[data-timer-start-button]');
     if (startButton) {
       await user.click(startButton);
@@ -205,30 +208,30 @@ describe('CountdownTimer', () => {
       isRunning: false,
     };
     localStorageMock.getItem.mockReturnValue(JSON.stringify(savedState));
-    
+
     renderWithProvider(<CountdownTimer />);
-    
+
     expect(localStorageMock.getItem).toHaveBeenCalledWith('countdownTimer');
   });
 
   it('should save timer state to localStorage', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     const minutesInput = screen.getByLabelText('Minutes');
     await user.clear(minutesInput);
     await user.type(minutesInput, '1');
     await user.click(screen.getByText('Set'));
-    
+
     await waitFor(() => {
       expect(localStorageMock.setItem).toHaveBeenCalled();
     });
@@ -243,18 +246,18 @@ describe('CountdownTimer', () => {
   it('should handle cancel in modal', async () => {
     const user = userEvent.setup({ delay: null });
     renderWithProvider(<CountdownTimer />);
-    
+
     const timerDisplay = document.querySelector('[data-timer-display]');
     if (timerDisplay) {
       await user.click(timerDisplay);
     }
-    
+
     await waitFor(() => {
       expect(screen.getByText('Set Timer')).toBeInTheDocument();
     });
-    
+
     await user.click(screen.getByText('Cancel'));
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Set Timer')).not.toBeInTheDocument();
     });

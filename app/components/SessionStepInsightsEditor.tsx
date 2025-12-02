@@ -15,7 +15,7 @@ interface SessionStepInsightsEditorProps {
 
 export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsightsEditorProps) {
   const [mounted, setMounted] = useState(false);
-  
+
   const editor = useEditor({
     extensions: [StarterKit, TaskList, TaskItem],
     content: content || '',
@@ -43,7 +43,14 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
         <Text size="sm" fw={500} mb={5}>
           Insights
         </Text>
-        <Box style={{ minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box
+          style={{
+            minHeight: 200,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Loader size="sm" />
         </Box>
       </Box>
@@ -99,4 +106,3 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
     </Box>
   );
 }
-

@@ -6,10 +6,7 @@ export async function GET() {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const studies = await prisma.study.findMany({
@@ -34,7 +31,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching studies:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch studies', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch studies',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -44,10 +44,7 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -68,14 +65,17 @@ export async function POST(request: Request) {
       parsedResourceId = parseInt(resourceId);
       if (isNaN(parsedResourceId)) {
         return NextResponse.json(
-          { error: 'Invalid Resource ID', details: `Resource ID must be a valid number. Received: ${resourceId}` },
+          {
+            error: 'Invalid Resource ID',
+            details: `Resource ID must be a valid number. Received: ${resourceId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if resource exists and belongs to user
       const resource = await prisma.resource.findFirst({
-        where: { 
+        where: {
           id: parsedResourceId,
           userId: user.id,
         },
@@ -83,7 +83,10 @@ export async function POST(request: Request) {
 
       if (!resource) {
         return NextResponse.json(
-          { error: 'Resource not found', details: `Resource with ID ${parsedResourceId} does not exist` },
+          {
+            error: 'Resource not found',
+            details: `Resource with ID ${parsedResourceId} does not exist`,
+          },
           { status: 404 }
         );
       }
@@ -95,14 +98,17 @@ export async function POST(request: Request) {
       parsedScheduleId = parseInt(scheduleId);
       if (isNaN(parsedScheduleId)) {
         return NextResponse.json(
-          { error: 'Invalid Schedule ID', details: `Schedule ID must be a valid number. Received: ${scheduleId}` },
+          {
+            error: 'Invalid Schedule ID',
+            details: `Schedule ID must be a valid number. Received: ${scheduleId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if schedule exists and belongs to user
       const schedule = await prisma.schedule.findFirst({
-        where: { 
+        where: {
           id: parsedScheduleId,
           userId: user.id,
         },
@@ -110,7 +116,10 @@ export async function POST(request: Request) {
 
       if (!schedule) {
         return NextResponse.json(
-          { error: 'Schedule not found', details: `Schedule with ID ${parsedScheduleId} does not exist` },
+          {
+            error: 'Schedule not found',
+            details: `Schedule with ID ${parsedScheduleId} does not exist`,
+          },
           { status: 404 }
         );
       }
@@ -122,14 +131,17 @@ export async function POST(request: Request) {
       parsedGuideId = parseInt(guideId);
       if (isNaN(parsedGuideId)) {
         return NextResponse.json(
-          { error: 'Invalid Guide ID', details: `Guide ID must be a valid number. Received: ${guideId}` },
+          {
+            error: 'Invalid Guide ID',
+            details: `Guide ID must be a valid number. Received: ${guideId}`,
+          },
           { status: 400 }
         );
       }
 
       // Check if guide exists and belongs to user
       const guide = await prisma.guide.findFirst({
-        where: { 
+        where: {
           id: parsedGuideId,
           userId: user.id,
         },
@@ -163,11 +175,11 @@ export async function POST(request: Request) {
     return NextResponse.json(study, { status: 201 });
   } catch (error) {
     console.error('Error creating study:', error);
-    
+
     // Handle Prisma-specific errors
     let errorMessage = 'Unknown error';
     let errorDetails: any = null;
-    
+
     if (error instanceof Error) {
       errorMessage = error.message;
       errorDetails = {
@@ -175,7 +187,7 @@ export async function POST(request: Request) {
         message: error.message,
         ...(error.stack && { stack: error.stack }),
       };
-      
+
       // Check if it's a Prisma error with additional info
       if ('code' in error) {
         errorDetails.code = (error as any).code;
@@ -184,18 +196,18 @@ export async function POST(request: Request) {
         errorDetails.meta = (error as any).meta;
       }
     }
-    
+
     // Format error message - remove extra newlines and whitespace
     const formattedMessage = errorMessage.replace(/\n+/g, ' ').trim();
-    
+
     console.error('Error details:', errorDetails || error);
     console.error('Full error message:', formattedMessage);
-    
+
     return NextResponse.json(
-      { 
-        error: 'Failed to create study', 
+      {
+        error: 'Failed to create study',
         details: formattedMessage,
-        ...(process.env.NODE_ENV === 'development' && errorDetails ? { errorDetails } : {})
+        ...(process.env.NODE_ENV === 'development' && errorDetails ? { errorDetails } : {}),
       },
       { status: 500 }
     );

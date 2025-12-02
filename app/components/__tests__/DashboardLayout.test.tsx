@@ -38,9 +38,7 @@ Object.defineProperty(window, 'localStorage', {
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <MantineProvider>
-      <WalkthroughProvider>
-        {ui}
-      </WalkthroughProvider>
+      <WalkthroughProvider>{ui}</WalkthroughProvider>
     </MantineProvider>
   );
 };
@@ -57,7 +55,7 @@ describe('DashboardLayout', () => {
         <div>Test Content</div>
       </DashboardLayout>
     );
-    
+
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
@@ -67,7 +65,7 @@ describe('DashboardLayout', () => {
         <div>Test</div>
       </DashboardLayout>
     );
-    
+
     expect(screen.getByText('Abide Guide')).toBeInTheDocument();
   });
 
@@ -77,7 +75,7 @@ describe('DashboardLayout', () => {
         <div>Test</div>
       </DashboardLayout>
     );
-    
+
     // Sidebar should be rendered (check for menu button)
     expect(screen.getByLabelText('Toggle sidebar')).toBeInTheDocument();
   });

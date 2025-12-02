@@ -55,10 +55,10 @@ describe('/api/sessions', () => {
     it('should return sessions for authenticated user', async () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
       const mockSessions = [
-        { 
-          id: 1, 
-          userId: 'user-1', 
-          studyId: 1, 
+        {
+          id: 1,
+          userId: 'user-1',
+          studyId: 1,
           sessionSteps: [],
           study: {
             guide: {
@@ -85,12 +85,10 @@ describe('/api/sessions', () => {
 
     it('should filter by studyId when provided', async () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
-      const mockSessions = [];
+      const mockSessions: any[] = [];
       mockGetCurrentUser.mockResolvedValue(mockUser as any);
       const mockFindMany = mockPrisma.session.findMany as jest.Mock;
-      mockFindMany
-        .mockResolvedValueOnce(mockSessions)
-        .mockResolvedValueOnce(mockSessions);
+      mockFindMany.mockResolvedValueOnce(mockSessions).mockResolvedValueOnce(mockSessions);
       (mockPrisma.sessionStep.createMany as jest.Mock).mockResolvedValue({ count: 0 });
 
       const request = new Request('http://localhost/api/sessions?studyId=1');
@@ -168,7 +166,7 @@ describe('/api/sessions', () => {
 
       expect(response.status).toBe(404);
       expect(data.error).toBe('Selection not found');
-      expect((mockPrisma.selection.findFirst as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.selection.findFirst as jest.Mock).toHaveBeenCalledWith({
         where: {
           id: 999,
           resource: {
@@ -218,7 +216,7 @@ describe('/api/sessions', () => {
 
       expect(response.status).toBe(201);
       expect(data).toHaveProperty('id');
-      expect((mockPrisma.session.create as jest.Mock)).toHaveBeenCalledWith(
+      expect(mockPrisma.session.create as jest.Mock).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             userId: 'user-1',
@@ -229,4 +227,3 @@ describe('/api/sessions', () => {
     });
   });
 });
-

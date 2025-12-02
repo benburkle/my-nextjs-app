@@ -227,4 +227,3 @@ describe('/api/schedules/[id]', () => {
     });
   });
 });
-

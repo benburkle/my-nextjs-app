@@ -48,7 +48,9 @@ export default function ChapterDetailPage() {
       ]);
 
       if (!chapterRes.ok) {
-        const errorData = await chapterRes.json().catch(() => ({ error: 'Failed to fetch chapter' }));
+        const errorData = await chapterRes
+          .json()
+          .catch(() => ({ error: 'Failed to fetch chapter' }));
         throw new Error(errorData.error || errorData.details || 'Failed to fetch chapter');
       }
 
@@ -72,19 +74,40 @@ export default function ChapterDetailPage() {
   };
 
   const handleEditChapter = () => setEditChapterOpen(true);
-  const handleAddVerse = () => { setSelectedVerse(null); setEditVerseOpen(true); };
-  const handleEditVerse = (v: Verse) => { setSelectedVerse(v); setEditVerseOpen(true); };
+  const handleAddVerse = () => {
+    setSelectedVerse(null);
+    setEditVerseOpen(true);
+  };
+  const handleEditVerse = (v: Verse) => {
+    setSelectedVerse(v);
+    setEditVerseOpen(true);
+  };
 
-  const handleChapterSaved = () => { setEditChapterOpen(false); fetchData(); };
-  const handleVerseSaved = () => { setEditVerseOpen(false); setSelectedVerse(null); fetchData(); };
+  const handleChapterSaved = () => {
+    setEditChapterOpen(false);
+    fetchData();
+  };
+  const handleVerseSaved = () => {
+    setEditVerseOpen(false);
+    setSelectedVerse(null);
+    fetchData();
+  };
 
-  if (loading) return (<Box style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}><Loader size="lg" /></Box>);
-  if (!chapter) return (
-    <Box>
-      <Text c="red">Chapter not found</Text>
-      <Button mt="md" onClick={() => router.push(`/setup/resources/${resourceId}`)}>Back</Button>
-    </Box>
-  );
+  if (loading)
+    return (
+      <Box style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+        <Loader size="lg" />
+      </Box>
+    );
+  if (!chapter)
+    return (
+      <Box>
+        <Text c="red">Chapter not found</Text>
+        <Button mt="md" onClick={() => router.push(`/setup/resources/${resourceId}`)}>
+          Back
+        </Button>
+      </Box>
+    );
 
   return (
     <Box>
@@ -92,17 +115,28 @@ export default function ChapterDetailPage() {
         <ActionIcon variant="subtle" onClick={() => router.push(`/setup/resources/${resourceId}`)}>
           <IconArrowLeft size={20} />
         </ActionIcon>
-        <Title order={2}>Chapter {chapter.number}{(chapter as any).name ? ` - ${(chapter as any).name}` : ''}</Title>
+        <Title order={2}>
+          Chapter {chapter.number}
+          {(chapter as any).name ? ` - ${(chapter as any).name}` : ''}
+        </Title>
       </Group>
 
       <Group justify="flex-end" mb="md">
-        <Button variant="outline" leftSection={<IconEdit size={16} />} onClick={handleEditChapter}>Edit Chapter</Button>
-        <Button leftSection={<IconPlus size={16} />} onClick={handleAddVerse}>Add Verse</Button>
+        <Button variant="outline" leftSection={<IconEdit size={16} />} onClick={handleEditChapter}>
+          Edit Chapter
+        </Button>
+        <Button leftSection={<IconPlus size={16} />} onClick={handleAddVerse}>
+          Add Verse
+        </Button>
       </Group>
 
-      <Title order={3} mb="md">Verses ({verses.length})</Title>
+      <Title order={3} mb="md">
+        Verses ({verses.length})
+      </Title>
       {verses.length === 0 ? (
-        <Text c="dimmed" ta="center" py="xl">No verses yet.</Text>
+        <Text c="dimmed" ta="center" py="xl">
+          No verses yet.
+        </Text>
       ) : (
         <Table striped highlightOnHover>
           <Table.Thead>
@@ -114,7 +148,9 @@ export default function ChapterDetailPage() {
           <Table.Tbody>
             {verses.map((v) => (
               <Table.Tr key={v.id}>
-                <Table.Td><Badge>v{v.number}</Badge></Table.Td>
+                <Table.Td>
+                  <Badge>v{v.number}</Badge>
+                </Table.Td>
                 <Table.Td>
                   <ActionIcon variant="subtle" color="blue" onClick={() => handleEditVerse(v)}>
                     <IconEdit size={16} />
@@ -135,7 +171,10 @@ export default function ChapterDetailPage() {
 
       <EditVerseModal
         opened={editVerseOpen}
-        onClose={() => { setEditVerseOpen(false); setSelectedVerse(null); }}
+        onClose={() => {
+          setEditVerseOpen(false);
+          setSelectedVerse(null);
+        }}
         chapterId={chapter.id}
         verse={selectedVerse}
         onSaved={handleVerseSaved}

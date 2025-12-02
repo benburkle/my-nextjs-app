@@ -103,10 +103,7 @@ export default function GuideDetailPage() {
   return (
     <Box>
       <Group mb="md">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push('/setup/guides')}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push('/setup/guides')}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -125,11 +122,7 @@ export default function GuideDetailPage() {
         >
           Add Step
         </Button>
-        <Button
-          leftSection={<IconEdit size={16} />}
-          variant="outline"
-          onClick={handleEditGuide}
-        >
+        <Button leftSection={<IconEdit size={16} />} variant="outline" onClick={handleEditGuide}>
           Edit Guide
         </Button>
       </Group>
@@ -157,35 +150,37 @@ export default function GuideDetailPage() {
                 </Table.Td>
                 <Table.Td>{step.name}</Table.Td>
                 <Table.Td>
-                  {step.instructions 
+                  {step.instructions
                     ? (() => {
                         // Strip HTML tags and get first sentence
-                        const text = step.instructions.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+                        const text = step.instructions
+                          .replace(/<[^>]*>/g, '')
+                          .replace(/&nbsp;/g, ' ');
                         // Split by sentence-ending punctuation followed by space or end of string
-                        const firstSentence = text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() || text.split(/[.!?]+[\s]?/)[0]?.trim() || text.trim();
+                        const firstSentence =
+                          text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
+                          text.split(/[.!?]+[\s]?/)[0]?.trim() ||
+                          text.trim();
                         return firstSentence || '-';
                       })()
-                    : '-'
-                  }
+                    : '-'}
                 </Table.Td>
                 <Table.Td>
-                  {step.example 
+                  {step.example
                     ? (() => {
                         // Strip HTML tags and get first sentence
                         const text = step.example.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
                         // Split by sentence-ending punctuation followed by space or end of string
-                        const firstSentence = text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() || text.split(/[.!?]+[\s]?/)[0]?.trim() || text.trim();
+                        const firstSentence =
+                          text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
+                          text.split(/[.!?]+[\s]?/)[0]?.trim() ||
+                          text.trim();
                         return firstSentence || '-';
                       })()
-                    : '-'
-                  }
+                    : '-'}
                 </Table.Td>
                 <Table.Td>
-                  <ActionIcon
-                    variant="subtle"
-                    color="blue"
-                    onClick={() => handleEditStep(step)}
-                  >
+                  <ActionIcon variant="subtle" color="blue" onClick={() => handleEditStep(step)}>
                     <IconEdit size={16} />
                   </ActionIcon>
                 </Table.Td>
@@ -194,7 +189,6 @@ export default function GuideDetailPage() {
           </Table.Tbody>
         </Table>
       )}
-
     </Box>
   );
 }

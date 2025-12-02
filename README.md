@@ -44,6 +44,7 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/abideguide?schema=pu
 ```
 
 **Note**: If using Docker Compose, the default credentials are:
+
 - User: `postgres`
 - Password: `postgres`
 - Database: `abideguide`
@@ -74,7 +75,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Database
 
-This project uses Prisma with PostgreSQL. 
+This project uses Prisma with PostgreSQL.
 
 ### Local Development
 
@@ -92,6 +93,7 @@ npm run db:reset
 ```
 
 **Database Scripts:**
+
 - `npm run db:start` - Start PostgreSQL with Docker Compose
 - `npm run db:stop` - Stop PostgreSQL
 - `npm run db:reset` - Reset database (removes all data and recreates)
@@ -100,12 +102,14 @@ npm run db:reset
 - `npm run db:studio` - Open Prisma Studio to view/edit data
 
 **Default Docker Compose credentials:**
+
 - User: `postgres`
 - Password: `postgres`
 - Database: `abideguide`
 - Port: `5432`
 
 Make sure your `.env` file has:
+
 ```
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/abideguide?schema=public"
 ```

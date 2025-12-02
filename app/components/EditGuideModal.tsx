@@ -1,15 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Textarea,
-  Loader,
-} from '@mantine/core';
+import { Modal, TextInput, Button, Stack, Group, Textarea, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 interface Guide {
@@ -27,12 +19,7 @@ interface EditGuideModalProps {
   onSaved: () => void;
 }
 
-export function EditGuideModal({
-  opened,
-  onClose,
-  guide,
-  onSaved,
-}: EditGuideModalProps) {
+export function EditGuideModal({ opened, onClose, guide, onSaved }: EditGuideModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -92,7 +79,8 @@ export function EditGuideModal({
           errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
         }
         console.error('API Error Response:', errorData);
-        const errorMessage = errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
+        const errorMessage =
+          errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -108,12 +96,7 @@ export function EditGuideModal({
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={guide ? 'Edit Guide' : 'New Guide'}
-      size="lg"
-    >
+    <Modal opened={opened} onClose={onClose} title={guide ? 'Edit Guide' : 'New Guide'} size="lg">
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
           <TextInput
@@ -121,25 +104,19 @@ export function EditGuideModal({
             placeholder="Enter guide name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextInput
             label="Level of Resource"
             placeholder="Enter level of resource"
             value={formData.levelOfResource}
-            onChange={(e) =>
-              setFormData({ ...formData, levelOfResource: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, levelOfResource: e.target.value })}
           />
           <TextInput
             label="Amount of Resource"
             placeholder="Enter amount of resource"
             value={formData.amtOfResource}
-            onChange={(e) =>
-              setFormData({ ...formData, amtOfResource: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, amtOfResource: e.target.value })}
           />
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={onClose}>

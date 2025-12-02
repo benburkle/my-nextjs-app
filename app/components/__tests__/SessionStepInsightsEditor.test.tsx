@@ -43,12 +43,10 @@ describe('SessionStepInsightsEditor', () => {
   it('should render loading state initially', async () => {
     const { useEditor } = require('@tiptap/react');
     useEditor.mockReturnValueOnce(null);
-    
+
     try {
-      renderWithProvider(
-        <SessionStepInsightsEditor content={null} onChange={mockOnChange} />
-      );
-      
+      renderWithProvider(<SessionStepInsightsEditor content={null} onChange={mockOnChange} />);
+
       await waitFor(() => {
         expect(screen.getByText('Insights')).toBeInTheDocument();
       });
@@ -63,7 +61,7 @@ describe('SessionStepInsightsEditor', () => {
       renderWithProvider(
         <SessionStepInsightsEditor content="<p>Test content</p>" onChange={mockOnChange} />
       );
-      
+
       await waitFor(() => {
         expect(screen.getByText('Insights')).toBeInTheDocument();
       });
@@ -77,11 +75,11 @@ describe('SessionStepInsightsEditor', () => {
       renderWithProvider(
         <SessionStepInsightsEditor content="<p>Test</p>" onChange={mockOnChange} />
       );
-      
+
       await waitFor(() => {
         expect(screen.getByText('Insights')).toBeInTheDocument();
       });
-      
+
       const { useEditor } = require('@tiptap/react');
       expect(useEditor).toHaveBeenCalled();
     } catch (error) {

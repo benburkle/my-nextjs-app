@@ -2,17 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Title,
-  Text,
-  Box,
-  Table,
-  Button,
-  Loader,
-  Group,
-  ActionIcon,
-  Badge,
-} from '@mantine/core';
+import { Title, Text, Box, Table, Button, Loader, Group, ActionIcon, Badge } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash, IconPlus } from '@tabler/icons-react';
 
@@ -167,4 +157,3 @@ export default function SchedulesPage() {
     </Box>
   );
 }
-

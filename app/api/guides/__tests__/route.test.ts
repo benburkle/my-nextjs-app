@@ -81,7 +81,7 @@ describe('/api/guides', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Database connection error');
-      
+
       // Restore guide for other tests
       mockPrisma.guide = originalGuide;
     });
@@ -207,4 +207,3 @@ describe('/api/guides', () => {
     });
   });
 });
-

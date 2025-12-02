@@ -1,14 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Select,
-} from '@mantine/core';
+import { Modal, TextInput, Button, Stack, Group, Select } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 interface Schedule {
@@ -30,12 +23,7 @@ interface EditScheduleModalProps {
   onSaved: () => void;
 }
 
-export function EditScheduleModal({
-  opened,
-  onClose,
-  schedule,
-  onSaved,
-}: EditScheduleModalProps) {
+export function EditScheduleModal({ opened, onClose, schedule, onSaved }: EditScheduleModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     day: '',
@@ -125,7 +113,10 @@ export function EditScheduleModal({
           errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
         }
         console.error('API Error Response:', errorData);
-        const errorMessage = errorData.error || errorData.details || `HTTP ${response.status}: Failed to save schedule`;
+        const errorMessage =
+          errorData.error ||
+          errorData.details ||
+          `HTTP ${response.status}: Failed to save schedule`;
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -158,9 +149,7 @@ export function EditScheduleModal({
             required
             data={dayOptions}
             value={formData.day}
-            onChange={(value) =>
-              setFormData({ ...formData, day: value || '' })
-            }
+            onChange={(value) => setFormData({ ...formData, day: value || '' })}
             searchable
           />
           <TextInput
@@ -168,9 +157,7 @@ export function EditScheduleModal({
             placeholder="e.g., 8:00pm"
             required
             value={formData.timeStart}
-            onChange={(e) =>
-              setFormData({ ...formData, timeStart: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, timeStart: e.target.value })}
           />
           <Select
             label="Repeats"
@@ -178,9 +165,7 @@ export function EditScheduleModal({
             required
             data={repeatsOptions}
             value={formData.repeats}
-            onChange={(value) =>
-              setFormData({ ...formData, repeats: value || '' })
-            }
+            onChange={(value) => setFormData({ ...formData, repeats: value || '' })}
             searchable
           />
           <TextInput
@@ -188,27 +173,21 @@ export function EditScheduleModal({
             type="datetime-local"
             placeholder="Select start date and time"
             value={formData.starts}
-            onChange={(e) =>
-              setFormData({ ...formData, starts: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, starts: e.target.value })}
           />
           <TextInput
             label="Ends"
             type="datetime-local"
             placeholder="Select end date and time"
             value={formData.ends}
-            onChange={(e) =>
-              setFormData({ ...formData, ends: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, ends: e.target.value })}
           />
           <Select
             label="Exclude Day of Week"
             placeholder="Select day to exclude"
             data={dayOptions}
             value={formData.excludeDayOfWeek}
-            onChange={(value) =>
-              setFormData({ ...formData, excludeDayOfWeek: value || '' })
-            }
+            onChange={(value) => setFormData({ ...formData, excludeDayOfWeek: value || '' })}
             searchable
             clearable
           />
@@ -217,9 +196,7 @@ export function EditScheduleModal({
             type="datetime-local"
             placeholder="Select date to exclude"
             value={formData.excludeDate}
-            onChange={(e) =>
-              setFormData({ ...formData, excludeDate: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, excludeDate: e.target.value })}
           />
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={onClose}>
@@ -234,4 +211,3 @@ export function EditScheduleModal({
     </Modal>
   );
 }
-

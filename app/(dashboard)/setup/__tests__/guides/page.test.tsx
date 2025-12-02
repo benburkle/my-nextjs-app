@@ -21,9 +21,7 @@ global.fetch = jest.fn();
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <MantineProvider>
-      <WalkthroughProvider>
-        {ui}
-      </WalkthroughProvider>
+      <WalkthroughProvider>{ui}</WalkthroughProvider>
     </MantineProvider>
   );
 };
@@ -47,17 +45,19 @@ describe('GuidesPage', () => {
     const mockGuides = [
       { id: 1, name: 'Test Guide', levelOfResource: null, amtOfResource: null, guideSteps: [] },
     ];
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockGuides,
     });
 
     renderWithProvider(<GuidesPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Test Guide')).toBeInTheDocument();
-    }, { timeout: 3000 });
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('Test Guide')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 });
-

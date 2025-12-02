@@ -1,14 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Select,
-} from '@mantine/core';
+import { Modal, TextInput, Button, Stack, Group, Select } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 interface Resource {
@@ -27,12 +20,7 @@ interface EditResourceModalProps {
   onSaved: () => void;
 }
 
-export function EditResourceModal({
-  opened,
-  onClose,
-  resource,
-  onSaved,
-}: EditResourceModalProps) {
+export function EditResourceModal({ opened, onClose, resource, onSaved }: EditResourceModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -92,7 +80,10 @@ export function EditResourceModal({
           errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
         }
         console.error('API Error Response:', errorData);
-        const errorMessage = errorData.error || errorData.details || `HTTP ${response.status}: Failed to save resource`;
+        const errorMessage =
+          errorData.error ||
+          errorData.details ||
+          `HTTP ${response.status}: Failed to save resource`;
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -121,17 +112,13 @@ export function EditResourceModal({
             placeholder="Enter resource name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextInput
             label="Series"
             placeholder="Enter series name"
             value={formData.series}
-            onChange={(e) =>
-              setFormData({ ...formData, series: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, series: e.target.value })}
           />
           <Select
             label="Type"
@@ -139,9 +126,7 @@ export function EditResourceModal({
             required
             data={['Book', 'Video', 'Article', 'Audio', 'Other']}
             value={formData.type}
-            onChange={(value) =>
-              setFormData({ ...formData, type: value || '' })
-            }
+            onChange={(value) => setFormData({ ...formData, type: value || '' })}
             searchable
           />
           <Group justify="flex-end" mt="md">

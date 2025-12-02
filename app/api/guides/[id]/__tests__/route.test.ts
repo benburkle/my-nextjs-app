@@ -61,7 +61,7 @@ describe('/api/guides/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(mockGuide);
-      expect((mockPrisma.guide.findFirst as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.guide.findFirst as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
         include: {
           guideSteps: {
@@ -168,7 +168,7 @@ describe('/api/guides/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(updatedGuide);
-      expect((mockPrisma.guide.update as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.guide.update as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
         data: {
           name: 'Updated Guide',
@@ -234,10 +234,9 @@ describe('/api/guides/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect((mockPrisma.guide.delete as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.guide.delete as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
       });
     });
   });
 });
-

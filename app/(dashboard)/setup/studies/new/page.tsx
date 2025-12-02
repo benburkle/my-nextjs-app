@@ -19,12 +19,7 @@ export default function NewStudyPage() {
 
   return (
     <Box>
-      <EditStudyModal
-        opened={modalOpen}
-        onClose={handleClose}
-        study={null}
-        onSaved={handleSaved}
-      />
+      <EditStudyModal opened={modalOpen} onClose={handleClose} study={null} onSaved={handleSaved} />
     </Box>
   );
 }

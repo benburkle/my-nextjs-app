@@ -10,7 +10,19 @@ interface Chapter {
   resourceId: number;
 }
 
-export function EditChapterModal({ opened, onClose, chapter, onSaved, resourceId }: { opened: boolean; onClose: () => void; chapter: Chapter | null; onSaved: () => void; resourceId?: number; }) {
+export function EditChapterModal({
+  opened,
+  onClose,
+  chapter,
+  onSaved,
+  resourceId,
+}: {
+  opened: boolean;
+  onClose: () => void;
+  chapter: Chapter | null;
+  onSaved: () => void;
+  resourceId?: number;
+}) {
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState<number>(1);
   const [name, setName] = useState<string>('');
@@ -31,20 +43,28 @@ export function EditChapterModal({ opened, onClose, chapter, onSaved, resourceId
     try {
       const url = chapter ? `/api/chapters/${chapter.id}` : '/api/chapters';
       const method = chapter ? 'PUT' : 'POST';
-      
+
       if (!chapter && !resourceId) {
         notifications.show({ title: 'Error', message: 'Resource ID is required', color: 'red' });
         setLoading(false);
         return;
       }
-      
+
       const body = chapter
         ? { number: index, name }
         : { resourceId: resourceId!, number: index, name };
 
-      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
       if (!res.ok) throw new Error('Failed to save chapter');
-      notifications.show({ title: 'Success', message: chapter ? 'Chapter updated' : 'Chapter created', color: 'green' });
+      notifications.show({
+        title: 'Success',
+        message: chapter ? 'Chapter updated' : 'Chapter created',
+        color: 'green',
+      });
       onSaved();
       onClose();
     } catch (err) {
@@ -55,14 +75,34 @@ export function EditChapterModal({ opened, onClose, chapter, onSaved, resourceId
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={chapter ? 'Edit Chapter' : 'New Chapter'} size="lg">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={chapter ? 'Edit Chapter' : 'New Chapter'}
+      size="lg"
+    >
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <NumberInput label="Chapter Number" min={1} value={index} onChange={(v) => setIndex(typeof v === 'number' ? v : 1)} required />
-          <TextInput label="Chapter Name" placeholder="Optional name" value={name} onChange={(e) => setName(e.target.value)} />
+          <NumberInput
+            label="Chapter Number"
+            min={1}
+            value={index}
+            onChange={(v) => setIndex(typeof v === 'number' ? v : 1)}
+            required
+          />
+          <TextInput
+            label="Chapter Name"
+            placeholder="Optional name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <Group justify="flex-end">
-            <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit" loading={loading}>{chapter ? 'Update' : 'Create'}</Button>
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={loading}>
+              {chapter ? 'Update' : 'Create'}
+            </Button>
           </Group>
         </Stack>
       </form>

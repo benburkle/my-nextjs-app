@@ -16,7 +16,10 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Error fetching chapters:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch chapters', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch chapters',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -28,10 +31,7 @@ export async function POST(request: Request) {
     const { resourceId, number, name } = body;
 
     if (!resourceId || !number) {
-      return NextResponse.json(
-        { error: 'resourceId and number are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'resourceId and number are required' }, { status: 400 });
     }
 
     const chapter = await prisma.chapter.create({
@@ -46,7 +46,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating chapter:', error);
     return NextResponse.json(
-      { error: 'Failed to create chapter', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create chapter',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

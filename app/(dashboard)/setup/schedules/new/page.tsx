@@ -30,12 +30,6 @@ export default function NewSchedulePage() {
   }
 
   return (
-    <EditScheduleModal
-      opened={true}
-      onClose={handleClose}
-      schedule={null}
-      onSaved={handleSaved}
-    />
+    <EditScheduleModal opened={true} onClose={handleClose} schedule={null} onSaved={handleSaved} />
   );
 }
-

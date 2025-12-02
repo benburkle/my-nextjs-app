@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const verse = await prisma.verse.findUnique({ where: { id: parseInt(id) } });
@@ -16,15 +13,13 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await request.json();
     const { number, text } = body;
-    if (number === undefined) return NextResponse.json({ error: 'number is required' }, { status: 400 });
+    if (number === undefined)
+      return NextResponse.json({ error: 'number is required' }, { status: 400 });
 
     const updateData: { number: number; text?: string | null } = { number: parseInt(number) };
     if (text !== undefined) {
@@ -41,18 +36,24 @@ export async function PUT(
     // Handle unique constraint violation
     if (error.code === 'P2002' || error.message?.includes('Unique constraint')) {
       return NextResponse.json(
-        { error: 'A verse with this number already exists in this chapter', details: 'Verses must be unique per chapter' },
+        {
+          error: 'A verse with this number already exists in this chapter',
+          details: 'Verses must be unique per chapter',
+        },
         { status: 409 }
       );
     }
-    return NextResponse.json({ error: 'Failed to update verse', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to update verse',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     await prisma.verse.delete({ where: { id: parseInt(id) } });

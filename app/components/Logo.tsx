@@ -11,7 +11,7 @@ interface LogoProps {
 export function Logo({ size = 40 }: LogoProps) {
   const theme = useMantineTheme();
   const router = useRouter();
-  
+
   return (
     <Box
       onClick={() => router.push('/')}
@@ -48,4 +48,3 @@ export function Logo({ size = 40 }: LogoProps) {
     </Box>
   );
 }
-

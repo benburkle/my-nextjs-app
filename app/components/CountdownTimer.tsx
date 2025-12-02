@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Box, Button, Group, TextInput, Text, Stack, ActionIcon, Modal, Tooltip } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Group,
+  TextInput,
+  Text,
+  Stack,
+  ActionIcon,
+  Modal,
+  Tooltip,
+} from '@mantine/core';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 
 const TIMER_STORAGE_KEY = 'countdownTimer';
@@ -29,12 +39,12 @@ export function CountdownTimer() {
       audioContextRef.current = new AudioContextClass();
       setAudioContextInitialized(true);
     }
-    
+
     // Resume if suspended
     if (audioContextRef.current.state === 'suspended') {
       await audioContextRef.current.resume();
     }
-    
+
     return audioContextRef.current;
   };
 
@@ -42,13 +52,13 @@ export function CountdownTimer() {
     try {
       // Use existing audio context or create new one
       let audioContext = audioContextRef.current;
-      
+
       if (!audioContext) {
         const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
         audioContext = new AudioContextClass();
         audioContextRef.current = audioContext;
       }
-      
+
       // Resume audio context if suspended (required by browser autoplay policies)
       if (audioContext.state === 'suspended') {
         await audioContext.resume();
@@ -84,7 +94,9 @@ export function CountdownTimer() {
       // Fallback: try using browser notification sound
       try {
         // Some browsers support this
-        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzGH0fPTgjMGHm7A7+OZURAJR6Hh8sBwJgUufsry3Yk5CBxsvO3mnlEQCEih4fLAcCYFLn7K8t2JOQgcbLzt5p5REAhIoeHywHAmBS5+yvLdiTkIHGy87eaeURAI');
+        const audio = new Audio(
+          'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzGH0fPTgjMGHm7A7+OZURAJR6Hh8sBwJgUufsry3Yk5CBxsvO3mnlEQCEih4fLAcCYFLn7K8t2JOQgcbLzt5p5REAhIoeHywHAmBS5+yvLdiTkIHGy87eaeURAI'
+        );
         audio.play().catch(() => {
           // If audio play fails, at least log it
           console.warn('Could not play timer completion sound');
@@ -102,7 +114,7 @@ export function CountdownTimer() {
       if (saved) {
         const state: TimerState = JSON.parse(saved);
         const now = Date.now();
-        
+
         if (state.isRunning && state.endTime && state.endTime > now) {
           // Timer was running, calculate remaining time
           const remaining = Math.ceil((state.endTime - now) / 1000);
@@ -126,7 +138,7 @@ export function CountdownTimer() {
           localStorage.removeItem(TIMER_STORAGE_KEY);
         } else {
           // Timer was stopped, restore time left
-          const remaining = state.endTime 
+          const remaining = state.endTime
             ? Math.ceil((state.endTime - now) / 1000)
             : state.initialSeconds;
           setTimeLeft(Math.max(0, remaining));
@@ -165,7 +177,7 @@ export function CountdownTimer() {
       intervalRef.current = setInterval(() => {
         const now = Date.now();
         const remaining = Math.ceil((endTimeRef.current! - now) / 1000);
-        
+
         if (remaining <= 0) {
           setIsRunning(false);
           setTimeLeft(0);
@@ -226,7 +238,7 @@ export function CountdownTimer() {
     if (timeLeft > 0) {
       // Initialize audio context on user interaction (this ensures sound will work)
       await initializeAudioContext();
-      
+
       // Calculate end time based on current time left
       endTimeRef.current = Date.now() + timeLeft * 1000;
       setIsRunning(true);
@@ -294,12 +306,7 @@ export function CountdownTimer() {
         </Tooltip>
       </Group>
 
-      <Modal
-        opened={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Set Timer"
-        size="xs"
-      >
+      <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title="Set Timer" size="xs">
         <Stack gap="md">
           <Group gap="xs" align="center">
             <TextInput
@@ -317,7 +324,9 @@ export function CountdownTimer() {
               min={0}
               max={59}
             />
-            <Text size="xl" mt="xl">:</Text>
+            <Text size="xl" mt="xl">
+              :
+            </Text>
             <TextInput
               type="number"
               placeholder="Sec"
@@ -338,13 +347,10 @@ export function CountdownTimer() {
             <Button variant="outline" onClick={() => setModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSetTime}>
-              Set
-            </Button>
+            <Button onClick={handleSetTime}>Set</Button>
           </Group>
         </Stack>
       </Modal>
     </>
   );
 }
-

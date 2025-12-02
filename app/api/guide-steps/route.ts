@@ -7,10 +7,7 @@ export async function POST(request: Request) {
     const { guideId, index, name, instructions, example, amtOfResourcePerStep } = body;
 
     if (!guideId || index === undefined || !name) {
-      return NextResponse.json(
-        { error: 'guideId, index, and name are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'guideId, index, and name are required' }, { status: 400 });
     }
 
     const guideStep = await prisma.guideStep.create({
@@ -28,7 +25,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating guide step:', error);
     return NextResponse.json(
-      { error: 'Failed to create guide step', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create guide step',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

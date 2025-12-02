@@ -40,9 +40,7 @@ describe('/api/resources', () => {
 
     it('should return resources for authenticated user', async () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
-      const mockResources = [
-        { id: 1, name: 'Resource 1', userId: 'user-1', chapters: [] },
-      ];
+      const mockResources = [{ id: 1, name: 'Resource 1', userId: 'user-1', chapters: [] }];
 
       mockGetCurrentUser.mockResolvedValue(mockUser as any);
       (mockPrisma.resource.findMany as jest.Mock).mockResolvedValue(mockResources);
@@ -52,7 +50,7 @@ describe('/api/resources', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(mockResources);
-      expect((mockPrisma.resource.findMany as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.resource.findMany as jest.Mock).toHaveBeenCalledWith({
         where: { userId: 'user-1' },
         include: {
           chapters: {
@@ -142,4 +140,3 @@ describe('/api/resources', () => {
     });
   });
 });
-

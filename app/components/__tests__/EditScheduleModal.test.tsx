@@ -43,10 +43,13 @@ describe('EditScheduleModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
-      }, { timeout: 2000 });
+
+      await waitFor(
+        () => {
+          expect(screen.getByRole('dialog')).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
     } catch (error) {
       expect(EditScheduleModal).toBeDefined();
     }
@@ -74,10 +77,13 @@ describe('EditScheduleModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        expect(screen.getByDisplayValue('Monday')).toBeInTheDocument();
-      }, { timeout: 2000 });
+
+      await waitFor(
+        () => {
+          expect(screen.getByDisplayValue('Monday')).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
       expect(screen.getByDisplayValue('09:00')).toBeInTheDocument();
     } catch (error) {
       expect(EditScheduleModal).toBeDefined();
@@ -86,7 +92,7 @@ describe('EditScheduleModal', () => {
 
   it('should handle form submission', async () => {
     const user = userEvent.setup();
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ id: 1, day: 'Monday' }),
@@ -101,19 +107,22 @@ describe('EditScheduleModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        const dayInput = screen.getByLabelText(/day/i);
-        expect(dayInput).toBeInTheDocument();
-      }, { timeout: 2000 });
-      
+
+      await waitFor(
+        () => {
+          const dayInput = screen.getByLabelText(/day/i);
+          expect(dayInput).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
+
       const dayInput = screen.getByLabelText(/day/i);
       await user.clear(dayInput);
       await user.type(dayInput, 'Monday');
-      
+
       const createButton = screen.getByRole('button', { name: /create|save/i });
       await user.click(createButton);
-      
+
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalled();
       });

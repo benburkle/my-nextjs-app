@@ -27,9 +27,7 @@ jest.mock('next-auth/react', () => ({
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <MantineProvider>
-      <WalkthroughProvider>
-        {ui}
-      </WalkthroughProvider>
+      <WalkthroughProvider>{ui}</WalkthroughProvider>
     </MantineProvider>
   );
 };
@@ -41,8 +39,7 @@ describe('DashboardRouteLayout', () => {
         <div>Test Content</div>
       </DashboardRouteLayout>
     );
-    
+
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 });
-

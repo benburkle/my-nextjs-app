@@ -2,7 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Button, Stack, TextInput, Textarea, Group, ActionIcon, Box, Text, Title, Modal, Stepper, Grid } from '@mantine/core';
+import {
+  Button,
+  Stack,
+  TextInput,
+  Textarea,
+  Group,
+  ActionIcon,
+  Box,
+  Text,
+  Title,
+  Modal,
+  Stepper,
+  Grid,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconHelp, IconArrowLeft, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useEditor } from '@tiptap/react';
@@ -72,10 +85,9 @@ export default function EditSessionPage() {
     setEditorMounted(true);
   }, []);
 
-
   useEffect(() => {
     if (!insightsEditor) return;
-    
+
     // Only update editor if content actually changed (avoid infinite loop)
     const currentContent = insightsEditor.getHTML();
     if (currentContent !== insights && insights !== undefined) {
@@ -99,7 +111,7 @@ export default function EditSessionPage() {
 
   const fetchSessionWithSteps = async () => {
     if (!sessionId || sessionId === 'new') return;
-    
+
     try {
       setFetching(true);
       const response = await fetch(`/api/sessions/${sessionId}`);
@@ -132,12 +144,14 @@ export default function EditSessionPage() {
         const studyData = await response.json();
         if (studyData.guide && studyData.guide.guideSteps) {
           // Create temporary session steps from guide steps for the form
-          const tempSteps: SessionStep[] = studyData.guide.guideSteps.map((guideStep: GuideStep, index: number) => ({
-            id: -index - 1, // Temporary negative IDs
-            guideStepId: guideStep.id,
-            insights: null,
-            guideStep,
-          }));
+          const tempSteps: SessionStep[] = studyData.guide.guideSteps.map(
+            (guideStep: GuideStep, index: number) => ({
+              id: -index - 1, // Temporary negative IDs
+              guideStepId: guideStep.id,
+              insights: null,
+              guideStep,
+            })
+          );
           setSessionSteps(tempSteps);
         }
       }
@@ -150,9 +164,7 @@ export default function EditSessionPage() {
 
   const handleSessionStepInsightsChange = (sessionStepId: number, value: string) => {
     setSessionSteps((prev) =>
-      prev.map((step) =>
-        step.id === sessionStepId ? { ...step, insights: value } : step
-      )
+      prev.map((step) => (step.id === sessionStepId ? { ...step, insights: value } : step))
     );
   };
 
@@ -182,7 +194,6 @@ export default function EditSessionPage() {
     return sessionSteps[activeStep];
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -194,20 +205,21 @@ export default function EditSessionPage() {
 
       const url = sessionId && sessionId !== 'new' ? `/api/sessions/${sessionId}` : '/api/sessions';
       const method = sessionId && sessionId !== 'new' ? 'PUT' : 'POST';
-      const body = sessionId && sessionId !== 'new'
-        ? {
-            date: dateOnly,
-            time: dateTime,
-            insights: insights || null,
-            reference: reference || null,
-          }
-        : {
-            studyId: parseInt(studyId),
-            date: dateOnly,
-            time: dateTime,
-            insights: insights || null,
-            reference: reference || null,
-          };
+      const body =
+        sessionId && sessionId !== 'new'
+          ? {
+              date: dateOnly,
+              time: dateTime,
+              insights: insights || null,
+              reference: reference || null,
+            }
+          : {
+              studyId: parseInt(studyId),
+              date: dateOnly,
+              time: dateTime,
+              insights: insights || null,
+              reference: reference || null,
+            };
 
       const response = await fetch(url, {
         method,
@@ -229,7 +241,7 @@ export default function EditSessionPage() {
         // If creating a new session, use the auto-created session steps from the response
         // If editing, use the existing session steps
         const stepsToUpdate = savedSession.sessionSteps || sessionSteps;
-        
+
         // Create a map of guideStepId to insights for quick lookup
         const insightsMap = new Map<number, string | null>();
         sessionSteps.forEach((step) => {
@@ -284,10 +296,7 @@ export default function EditSessionPage() {
   return (
     <Box>
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push(`/study/${studyId}`)}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push(`/study/${studyId}`)}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -301,7 +310,9 @@ export default function EditSessionPage() {
             <Button
               variant="subtle"
               size="xs"
-              leftSection={showSessionDetails ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+              leftSection={
+                showSessionDetails ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
+              }
               onClick={() => setShowSessionDetails(!showSessionDetails)}
               mb="xs"
               justify="flex-start"
@@ -342,7 +353,11 @@ export default function EditSessionPage() {
                     Insights
                   </Text>
                   {editorMounted && insightsEditor ? (
-                    <RichTextEditor editor={insightsEditor} style={{ minHeight: 100 }} data-walkthrough="session-insights-editor">
+                    <RichTextEditor
+                      editor={insightsEditor}
+                      style={{ minHeight: 100 }}
+                      data-walkthrough="session-insights-editor"
+                    >
                       <RichTextEditor.Toolbar sticky stickyOffset={0}>
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.Bold />
@@ -384,8 +399,17 @@ export default function EditSessionPage() {
                       <RichTextEditor.Content />
                     </RichTextEditor>
                   ) : (
-                    <Box style={{ minHeight: 100, border: '1px solid var(--mantine-color-gray-3)', borderRadius: '4px', padding: '8px' }}>
-                      <Text size="sm" c="dimmed">Loading editor...</Text>
+                    <Box
+                      style={{
+                        minHeight: 100,
+                        border: '1px solid var(--mantine-color-gray-3)',
+                        borderRadius: '4px',
+                        padding: '8px',
+                      }}
+                    >
+                      <Text size="sm" c="dimmed">
+                        Loading editor...
+                      </Text>
                     </Box>
                   )}
                 </Box>
@@ -394,85 +418,113 @@ export default function EditSessionPage() {
           </Box>
 
           {sessionSteps.length > 0 && (
-            <Stepper active={activeStep} onStepClick={setActiveStep} mb="xl" data-walkthrough="session-stepper">
+            <Stepper
+              active={activeStep}
+              onStepClick={setActiveStep}
+              mb="xl"
+              data-walkthrough="session-stepper"
+            >
               {sessionSteps.map((step, index) => (
                 <Stepper.Step
                   key={step.id}
                   label={`Step ${index + 1}`}
                   description={step.guideStep.name}
-                >
-                </Stepper.Step>
+                ></Stepper.Step>
               ))}
             </Stepper>
           )}
 
-          {sessionSteps.length > 0 && activeStep >= 0 && getCurrentSessionStep() && (() => {
-            const currentStep = getCurrentSessionStep()!;
-            const stepIndex = activeStep;
-            const instructionsVisible = showInstructions[stepIndex] || false;
-            const exampleVisible = showExample[stepIndex] || false;
-            return (
-              <Box>
-                <Title order={3} mb="md" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  {currentStep.guideStep.name}
-                </Title>
-                <Grid mb="md">
-                  {currentStep.guideStep.instructions && (
-                    <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Box>
-                        <Button
-                          variant="subtle"
-                          size="xs"
-                          leftSection={instructionsVisible ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-                          onClick={() => setShowInstructions({ ...showInstructions, [stepIndex]: !instructionsVisible })}
-                          mb="xs"
-                          fullWidth
-                          justify="flex-start"
-                        >
-                          Instructions
-                        </Button>
-                        {instructionsVisible && (
-                          <Box 
-                            style={{ textAlign: 'left', lineHeight: 1.6 }}
-                            dangerouslySetInnerHTML={{ __html: currentStep.guideStep.instructions }}
-                          />
-                        )}
-                      </Box>
-                    </Grid.Col>
-                  )}
-                  {currentStep.guideStep.example && (
-                    <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Box>
-                        <Button
-                          variant="subtle"
-                          size="xs"
-                          leftSection={exampleVisible ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-                          onClick={() => setShowExample({ ...showExample, [stepIndex]: !exampleVisible })}
-                          mb="xs"
-                          fullWidth
-                          justify="flex-start"
-                        >
-                          Example
-                        </Button>
-                        {exampleVisible && (
-                          <Box 
-                            style={{ textAlign: 'left', lineHeight: 1.6 }}
-                            dangerouslySetInnerHTML={{ __html: currentStep.guideStep.example }}
-                          />
-                        )}
-                      </Box>
-                    </Grid.Col>
-                  )}
-                </Grid>
-                <Box data-walkthrough="step-insights-editor">
-                  <SessionStepInsightsEditor
-                    content={currentStep.insights}
-                    onChange={(html) => handleSessionStepInsightsChange(currentStep.id, html)}
-                  />
+          {sessionSteps.length > 0 &&
+            activeStep >= 0 &&
+            getCurrentSessionStep() &&
+            (() => {
+              const currentStep = getCurrentSessionStep()!;
+              const stepIndex = activeStep;
+              const instructionsVisible = showInstructions[stepIndex] || false;
+              const exampleVisible = showExample[stepIndex] || false;
+              return (
+                <Box>
+                  <Title order={3} mb="md" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {currentStep.guideStep.name}
+                  </Title>
+                  <Grid mb="md">
+                    {currentStep.guideStep.instructions && (
+                      <Grid.Col span={{ base: 12, sm: 6 }}>
+                        <Box>
+                          <Button
+                            variant="subtle"
+                            size="xs"
+                            leftSection={
+                              instructionsVisible ? (
+                                <IconChevronUp size={14} />
+                              ) : (
+                                <IconChevronDown size={14} />
+                              )
+                            }
+                            onClick={() =>
+                              setShowInstructions({
+                                ...showInstructions,
+                                [stepIndex]: !instructionsVisible,
+                              })
+                            }
+                            mb="xs"
+                            fullWidth
+                            justify="flex-start"
+                          >
+                            Instructions
+                          </Button>
+                          {instructionsVisible && (
+                            <Box
+                              style={{ textAlign: 'left', lineHeight: 1.6 }}
+                              dangerouslySetInnerHTML={{
+                                __html: currentStep.guideStep.instructions,
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </Grid.Col>
+                    )}
+                    {currentStep.guideStep.example && (
+                      <Grid.Col span={{ base: 12, sm: 6 }}>
+                        <Box>
+                          <Button
+                            variant="subtle"
+                            size="xs"
+                            leftSection={
+                              exampleVisible ? (
+                                <IconChevronUp size={14} />
+                              ) : (
+                                <IconChevronDown size={14} />
+                              )
+                            }
+                            onClick={() =>
+                              setShowExample({ ...showExample, [stepIndex]: !exampleVisible })
+                            }
+                            mb="xs"
+                            fullWidth
+                            justify="flex-start"
+                          >
+                            Example
+                          </Button>
+                          {exampleVisible && (
+                            <Box
+                              style={{ textAlign: 'left', lineHeight: 1.6 }}
+                              dangerouslySetInnerHTML={{ __html: currentStep.guideStep.example }}
+                            />
+                          )}
+                        </Box>
+                      </Grid.Col>
+                    )}
+                  </Grid>
+                  <Box data-walkthrough="step-insights-editor">
+                    <SessionStepInsightsEditor
+                      content={currentStep.insights}
+                      onChange={(html) => handleSessionStepInsightsChange(currentStep.id, html)}
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            );
-          })()}
+              );
+            })()}
 
           <Group gap="md" mt="xl" justify="space-between">
             <Group gap="md">
@@ -482,9 +534,7 @@ export default function EditSessionPage() {
                 </Button>
               )}
               {sessionSteps.length > 0 && activeStep < getTotalSteps() - 1 && (
-                <Button onClick={nextStep}>
-                  Next Step
-                </Button>
+                <Button onClick={nextStep}>Next Step</Button>
               )}
             </Group>
             <Group gap="md">
@@ -539,4 +589,3 @@ export default function EditSessionPage() {
     </Box>
   );
 }
-

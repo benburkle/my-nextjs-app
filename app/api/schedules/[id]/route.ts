@@ -2,22 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/get-session';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
     const schedule = await prisma.schedule.findFirst({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -31,33 +25,27 @@ export async function GET(
     });
 
     if (!schedule) {
-      return NextResponse.json(
-        { error: 'Schedule not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
     }
 
     return NextResponse.json(schedule);
   } catch (error) {
     console.error('Error fetching schedule:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch schedule', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch schedule',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
@@ -94,14 +82,11 @@ export async function PUT(
     });
 
     if (!existingSchedule) {
-      return NextResponse.json(
-        { error: 'Schedule not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
     }
 
     const schedule = await prisma.schedule.update({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -127,27 +112,24 @@ export async function PUT(
   } catch (error) {
     console.error('Error updating schedule:', error);
     return NextResponse.json(
-      { error: 'Failed to update schedule', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to update schedule',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
-    
+
     // Verify schedule belongs to user
     const schedule = await prisma.schedule.findFirst({
       where: {
@@ -157,14 +139,11 @@ export async function DELETE(
     });
 
     if (!schedule) {
-      return NextResponse.json(
-        { error: 'Schedule not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
     }
 
     await prisma.schedule.delete({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -173,9 +152,11 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting schedule:', error);
     return NextResponse.json(
-      { error: 'Failed to delete schedule', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to delete schedule',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
-

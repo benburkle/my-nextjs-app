@@ -40,9 +40,7 @@ describe('/api/schedules', () => {
 
     it('should return schedules for authenticated user', async () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
-      const mockSchedules = [
-        { id: 1, day: 'Monday', userId: 'user-1', studies: [] },
-      ];
+      const mockSchedules = [{ id: 1, day: 'Monday', userId: 'user-1', studies: [] }];
 
       mockGetCurrentUser.mockResolvedValue(mockUser as any);
       (mockPrisma.schedule.findMany as jest.Mock).mockResolvedValue(mockSchedules);
@@ -52,7 +50,7 @@ describe('/api/schedules', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(mockSchedules);
-      expect((mockPrisma.schedule.findMany as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.schedule.findMany as jest.Mock).toHaveBeenCalledWith({
         where: { userId: 'user-1' },
         include: { studies: true },
         orderBy: { day: 'asc' },
@@ -121,7 +119,7 @@ describe('/api/schedules', () => {
 
       expect(response.status).toBe(201);
       expect(data).toEqual(mockSchedule);
-      expect((mockPrisma.schedule.create as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.schedule.create as jest.Mock).toHaveBeenCalledWith({
         data: {
           day: 'Monday',
           userId: 'user-1',
@@ -137,4 +135,3 @@ describe('/api/schedules', () => {
     });
   });
 });
-

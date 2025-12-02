@@ -42,7 +42,7 @@ describe('Logo', () => {
   it('should navigate to home when clicked', () => {
     renderWithProvider(<Logo />);
     const logoContainer = screen.getByAltText('Logo').closest('div');
-    
+
     if (logoContainer) {
       logoContainer.click();
       expect(mockPush).toHaveBeenCalledWith('/');
@@ -55,4 +55,3 @@ describe('Logo', () => {
     expect(logoContainer).toBeInTheDocument();
   });
 });
-

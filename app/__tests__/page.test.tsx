@@ -25,9 +25,7 @@ jest.mock('next-auth/react', () => ({
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <MantineProvider>
-      <WalkthroughProvider>
-        {ui}
-      </WalkthroughProvider>
+      <WalkthroughProvider>{ui}</WalkthroughProvider>
     </MantineProvider>
   );
 };
@@ -70,9 +68,8 @@ describe('Home Page', () => {
     });
 
     renderWithProvider(<Home />);
-    
+
     // Component should call router.push via useEffect
     expect(mockPush).toHaveBeenCalledWith('/auth/signin');
   });
 });
-

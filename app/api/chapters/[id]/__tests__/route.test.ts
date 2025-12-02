@@ -77,4 +77,3 @@ describe('/api/chapters/[id]', () => {
     });
   });
 });
-

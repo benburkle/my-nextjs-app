@@ -66,18 +66,19 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     if (mounted && pathname) {
       // Only refresh if we're navigating TO a study-related page FROM a different page
       // This prevents refreshing when just clicking between studies
-      const isStudyPage = 
+      const isStudyPage =
         pathname === '/setup/studies' ||
         pathname === '/setup/studies/new' ||
         pathname?.match(/^\/setup\/studies\/\d+$/) ||
         pathname?.match(/^\/study\/\d+$/);
-      
-      const wasStudyPage = prevPathname &&
+
+      const wasStudyPage =
+        prevPathname &&
         (prevPathname === '/setup/studies' ||
-         prevPathname === '/setup/studies/new' ||
-         prevPathname?.match(/^\/setup\/studies\/\d+$/) ||
-         prevPathname?.match(/^\/study\/\d+$/));
-      
+          prevPathname === '/setup/studies/new' ||
+          prevPathname?.match(/^\/setup\/studies\/\d+$/) ||
+          prevPathname?.match(/^\/study\/\d+$/));
+
       // Only refresh if navigating TO a study page FROM a non-study page
       // or if coming from the studies list page (where changes might have occurred)
       if (isStudyPage && (!wasStudyPage || prevPathname === '/setup/studies')) {
@@ -96,23 +97,23 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   // Also refresh periodically when on studies page to catch any changes
   useEffect(() => {
     if (!mounted || pathname !== '/setup/studies') return;
-    
+
     // Refresh every 2 seconds when on studies page (helps catch deletions)
     const intervalId = setInterval(() => {
       fetchStudies();
     }, 2000);
-    
+
     return () => clearInterval(intervalId);
   }, [mounted, pathname, fetchStudies]);
 
   // Also refresh when window regains focus (user returns to tab)
   useEffect(() => {
     if (!mounted) return;
-    
+
     const handleFocus = () => {
       fetchStudies();
     };
-    
+
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [mounted, fetchStudies]);
@@ -120,7 +121,7 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   // Listen for custom events when studies are created or deleted
   useEffect(() => {
     if (!mounted) return;
-    
+
     const handleStudyChange = (event: Event) => {
       console.log('Study change event received:', event.type);
       // Delay to ensure database transaction is committed and API is ready
@@ -128,11 +129,11 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         fetchStudies();
       }, 300);
     };
-    
+
     // Use capture phase to ensure we catch the event
     window.addEventListener('studyDeleted', handleStudyChange, true);
     window.addEventListener('studyCreated', handleStudyChange, true);
-    
+
     return () => {
       window.removeEventListener('studyDeleted', handleStudyChange, true);
       window.removeEventListener('studyCreated', handleStudyChange, true);
@@ -186,12 +187,7 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         {staticNavItems.map((item) => (
           <NavLink key={item.label} label={item.label} defaultOpened>
             {item.children.map((child) => (
-              <NavLink
-                key={child.href}
-                component={Link}
-                href={child.href}
-                label={child.label}
-              />
+              <NavLink key={child.href} component={Link} href={child.href} label={child.label} />
             ))}
           </NavLink>
         ))}
@@ -204,7 +200,7 @@ export function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
       {navItems.map((item) => {
         const isParentActive = item.children.some((child) => pathname === child.href);
         const isOpened = openedItems.has(item.label) || isParentActive;
-        
+
         return (
           <NavLink
             key={item.label}

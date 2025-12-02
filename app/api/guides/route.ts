@@ -6,15 +6,15 @@ export async function GET() {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if prisma is initialized correctly
     if (!prisma || !prisma.guide) {
-      console.error('Prisma client not initialized correctly. Available models:', Object.keys(prisma || {}));
+      console.error(
+        'Prisma client not initialized correctly. Available models:',
+        Object.keys(prisma || {})
+      );
       return NextResponse.json(
         { error: 'Database connection error', details: 'Prisma client not initialized' },
         { status: 500 }
@@ -40,7 +40,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching guides:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch guides', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch guides',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -50,20 +53,14 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const { name, levelOfResource, amtOfResource } = body;
 
     if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
     // Check if prisma is initialized correctly
@@ -91,7 +88,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating guide:', error);
     return NextResponse.json(
-      { error: 'Failed to create guide', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create guide',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

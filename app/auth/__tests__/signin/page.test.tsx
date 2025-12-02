@@ -32,7 +32,7 @@ describe('SignInPage', () => {
 
   it('should render sign in form', () => {
     renderWithProvider(<SignInPage />);
-    
+
     expect(screen.getByText(/Welcome back/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('SignInPage', () => {
     signIn.mockResolvedValue({ error: null });
 
     renderWithProvider(<SignInPage />);
-    
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -58,4 +58,3 @@ describe('SignInPage', () => {
     });
   });
 });
-

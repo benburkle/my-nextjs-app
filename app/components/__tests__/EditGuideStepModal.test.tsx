@@ -38,7 +38,7 @@ describe('EditGuideStepModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
@@ -61,7 +61,7 @@ describe('EditGuideStepModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue('Test Step')).toBeInTheDocument();
     });
@@ -69,7 +69,7 @@ describe('EditGuideStepModal', () => {
 
   it('should create new guide step', async () => {
     const user = userEvent.setup();
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ id: 1 }),
@@ -84,22 +84,21 @@ describe('EditGuideStepModal', () => {
         onSaved={mockOnSaved}
       />
     );
-    
+
     await waitFor(() => {
       const nameInput = screen.getByLabelText(/name/i);
       expect(nameInput).toBeInTheDocument();
     });
-    
+
     const nameInput = screen.getByLabelText(/name/i);
     await user.clear(nameInput);
     await user.type(nameInput, 'New Step');
-    
+
     const createButton = screen.getByRole('button', { name: /create|save/i });
     await user.click(createButton);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
-

@@ -49,9 +49,7 @@ describe('/api/studies', () => {
 
     it('should return studies for authenticated user', async () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
-      const mockStudies = [
-        { id: 1, name: 'Study 1', userId: 'user-1' },
-      ];
+      const mockStudies = [{ id: 1, name: 'Study 1', userId: 'user-1' }];
 
       mockGetCurrentUser.mockResolvedValue(mockUser as any);
       (mockPrisma.study.findMany as jest.Mock).mockResolvedValue(mockStudies);
@@ -172,4 +170,3 @@ describe('/api/studies', () => {
     });
   });
 });
-

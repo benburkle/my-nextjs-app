@@ -2,15 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Box,
-  Title,
-  ActionIcon,
-} from '@mantine/core';
+import { TextInput, Button, Stack, Group, Box, Title, ActionIcon } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useFormState } from '@/app/contexts/FormStateContext';
@@ -64,7 +56,8 @@ export default function NewGuidePage() {
           errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
         }
         console.error('API Error Response:', errorData);
-        const errorMessage = errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
+        const errorMessage =
+          errorData.error || errorData.details || `HTTP ${response.status}: Failed to save guide`;
         throw new Error(errorMessage);
       }
     } catch (error) {
@@ -82,10 +75,7 @@ export default function NewGuidePage() {
   return (
     <Box>
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push('/setup/guides')}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push('/setup/guides')}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -100,9 +90,7 @@ export default function NewGuidePage() {
             placeholder="Enter guide name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             data-walkthrough="guide-name-input"
           />
           <Group justify="flex-end" mt="md">
@@ -118,4 +106,3 @@ export default function NewGuidePage() {
     </Box>
   );
 }
-

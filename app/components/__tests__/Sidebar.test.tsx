@@ -37,7 +37,7 @@ describe('Sidebar', () => {
 
   it('should render static nav items', async () => {
     renderWithProvider(<Sidebar sidebarOpen={true} toggleSidebar={jest.fn()} />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Build')).toBeInTheDocument();
     });
@@ -48,14 +48,14 @@ describe('Sidebar', () => {
       { id: 1, name: 'Test Study 1' },
       { id: 2, name: 'Test Study 2' },
     ];
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockStudies,
     });
 
     renderWithProvider(<Sidebar sidebarOpen={true} toggleSidebar={jest.fn()} />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Test Study 1')).toBeInTheDocument();
       expect(screen.getByText('Test Study 2')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('Sidebar', () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('Fetch failed'));
 
     renderWithProvider(<Sidebar sidebarOpen={true} toggleSidebar={jest.fn()} />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Build')).toBeInTheDocument();
     });
@@ -79,10 +79,9 @@ describe('Sidebar', () => {
     });
 
     renderWithProvider(<Sidebar sidebarOpen={true} toggleSidebar={jest.fn()} />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('No studies yet')).toBeInTheDocument();
     });
   });
 });
-

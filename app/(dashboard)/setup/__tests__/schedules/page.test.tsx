@@ -21,9 +21,7 @@ global.fetch = jest.fn();
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <MantineProvider>
-      <WalkthroughProvider>
-        {ui}
-      </WalkthroughProvider>
+      <WalkthroughProvider>{ui}</WalkthroughProvider>
     </MantineProvider>
   );
 };
@@ -45,19 +43,31 @@ describe('SchedulesPage', () => {
 
   it('should fetch and display schedules', async () => {
     const mockSchedules = [
-      { id: 1, day: 'Monday', timeStart: '09:00', repeats: 'Weekly', starts: null, ends: null, excludeDayOfWeek: null, excludeDate: null, studies: [] },
+      {
+        id: 1,
+        day: 'Monday',
+        timeStart: '09:00',
+        repeats: 'Weekly',
+        starts: null,
+        ends: null,
+        excludeDayOfWeek: null,
+        excludeDate: null,
+        studies: [],
+      },
     ];
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockSchedules,
     });
 
     renderWithProvider(<SchedulesPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Monday')).toBeInTheDocument();
-    }, { timeout: 3000 });
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('Monday')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 });
-

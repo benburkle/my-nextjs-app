@@ -169,7 +169,7 @@ describe('/api/sessions/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(updatedSession);
-      expect((mockPrisma.session.update as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.session.update as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
         data: {
           insights: 'Updated insights',
@@ -212,10 +212,9 @@ describe('/api/sessions/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect((mockPrisma.session.delete as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.session.delete as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
       });
     });
   });
 });
-

@@ -5,6 +5,7 @@ Your code has been committed locally. Follow these steps to push to GitHub:
 ## Option 1: Using GitHub CLI (if installed)
 
 If you have GitHub CLI installed, run:
+
 ```bash
 cd /Users/benburkle/my-nextjs-app
 gh repo create my-nextjs-app --public --source=. --remote=origin --push
@@ -41,4 +42,3 @@ git push -u origin main
 
 Your code will now be on GitHub. You can view it at:
 `https://github.com/YOUR_USERNAME/my-nextjs-app`
-

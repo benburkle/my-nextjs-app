@@ -101,8 +101,7 @@ export default function NewGuideStepPage() {
       console.error('Error saving guide step:', error);
       notifications.show({
         title: 'Error',
-        message:
-          error instanceof Error ? error.message : 'Failed to save guide step',
+        message: error instanceof Error ? error.message : 'Failed to save guide step',
         color: 'red',
       });
     } finally {
@@ -113,10 +112,7 @@ export default function NewGuideStepPage() {
   return (
     <Box>
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push(`/setup/guides/${guideId}`)}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push(`/setup/guides/${guideId}`)}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -142,9 +138,7 @@ export default function NewGuideStepPage() {
             placeholder="Enter step name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             data-walkthrough="step-name-input"
           />
           <Box>
@@ -194,8 +188,17 @@ export default function NewGuideStepPage() {
                 <RichTextEditor.Content />
               </RichTextEditor>
             ) : (
-              <Box style={{ minHeight: 200, border: '1px solid var(--mantine-color-gray-3)', borderRadius: '4px', padding: '8px' }}>
-                <Text size="sm" c="dimmed">Loading editor...</Text>
+              <Box
+                style={{
+                  minHeight: 200,
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  borderRadius: '4px',
+                  padding: '8px',
+                }}
+              >
+                <Text size="sm" c="dimmed">
+                  Loading editor...
+                </Text>
               </Box>
             )}
           </Box>
@@ -246,8 +249,17 @@ export default function NewGuideStepPage() {
                 <RichTextEditor.Content />
               </RichTextEditor>
             ) : (
-              <Box style={{ minHeight: 200, border: '1px solid var(--mantine-color-gray-3)', borderRadius: '4px', padding: '8px' }}>
-                <Text size="sm" c="dimmed">Loading editor...</Text>
+              <Box
+                style={{
+                  minHeight: 200,
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  borderRadius: '4px',
+                  padding: '8px',
+                }}
+              >
+                <Text size="sm" c="dimmed">
+                  Loading editor...
+                </Text>
               </Box>
             )}
           </Box>
@@ -264,4 +276,3 @@ export default function NewGuideStepPage() {
     </Box>
   );
 }
-

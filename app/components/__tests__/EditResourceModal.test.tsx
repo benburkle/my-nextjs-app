@@ -43,10 +43,13 @@ describe('EditResourceModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
-      }, { timeout: 2000 });
+
+      await waitFor(
+        () => {
+          expect(screen.getByRole('dialog')).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
     } catch (error) {
       // If rendering fails, at least verify component can be imported
       expect(EditResourceModal).toBeDefined();
@@ -72,10 +75,13 @@ describe('EditResourceModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        expect(screen.getByDisplayValue('Test Resource')).toBeInTheDocument();
-      }, { timeout: 2000 });
+
+      await waitFor(
+        () => {
+          expect(screen.getByDisplayValue('Test Resource')).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
       expect(screen.getByDisplayValue('Test Series')).toBeInTheDocument();
     } catch (error) {
       // Component structure verified
@@ -85,8 +91,15 @@ describe('EditResourceModal', () => {
 
   it('should handle form submission', async () => {
     const user = userEvent.setup();
-    const mockResource = { id: 1, name: 'New Resource', series: null, type: 'Book', chapters: [], studies: [] };
-    
+    const mockResource = {
+      id: 1,
+      name: 'New Resource',
+      series: null,
+      type: 'Book',
+      chapters: [],
+      studies: [],
+    };
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockResource,
@@ -101,19 +114,22 @@ describe('EditResourceModal', () => {
           onSaved={mockOnSaved}
         />
       );
-      
-      await waitFor(() => {
-        const nameInput = screen.getByLabelText(/name/i);
-        expect(nameInput).toBeInTheDocument();
-      }, { timeout: 2000 });
-      
+
+      await waitFor(
+        () => {
+          const nameInput = screen.getByLabelText(/name/i);
+          expect(nameInput).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
+
       const nameInput = screen.getByLabelText(/name/i);
       await user.clear(nameInput);
       await user.type(nameInput, 'New Resource');
-      
+
       const createButton = screen.getByRole('button', { name: /create|save/i });
       await user.click(createButton);
-      
+
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalled();
       });

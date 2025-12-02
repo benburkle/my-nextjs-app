@@ -17,20 +17,56 @@ function TestComponent() {
 
   return (
     <div>
-      <div data-testid="guide-state">{guideFormState ? JSON.stringify(guideFormState) : 'null'}</div>
-      <div data-testid="guide-step-state">{guideStepFormState ? JSON.stringify(guideStepFormState) : 'null'}</div>
-      <div data-testid="study-state">{studyFormState ? JSON.stringify(studyFormState) : 'null'}</div>
-      <div data-testid="session-state">{sessionFormState ? JSON.stringify(sessionFormState) : 'null'}</div>
-      <button onClick={() => setGuideFormState({ name: 'Guide 1', levelOfResource: 'Beginner', amtOfResource: '10' })}>
+      <div data-testid="guide-state">
+        {guideFormState ? JSON.stringify(guideFormState) : 'null'}
+      </div>
+      <div data-testid="guide-step-state">
+        {guideStepFormState ? JSON.stringify(guideStepFormState) : 'null'}
+      </div>
+      <div data-testid="study-state">
+        {studyFormState ? JSON.stringify(studyFormState) : 'null'}
+      </div>
+      <div data-testid="session-state">
+        {sessionFormState ? JSON.stringify(sessionFormState) : 'null'}
+      </div>
+      <button
+        onClick={() =>
+          setGuideFormState({ name: 'Guide 1', levelOfResource: 'Beginner', amtOfResource: '10' })
+        }
+      >
         Set Guide
       </button>
-      <button onClick={() => setGuideStepFormState({ index: 1, name: 'Step 1', instructions: 'Do this', example: 'Example', amtOfResourcePerStep: '5' })}>
+      <button
+        onClick={() =>
+          setGuideStepFormState({
+            index: 1,
+            name: 'Step 1',
+            instructions: 'Do this',
+            example: 'Example',
+            amtOfResourcePerStep: '5',
+          })
+        }
+      >
         Set Guide Step
       </button>
-      <button onClick={() => setStudyFormState({ name: 'Study 1', scheduleId: '1', resourceId: '2', guideId: '3' })}>
+      <button
+        onClick={() =>
+          setStudyFormState({ name: 'Study 1', scheduleId: '1', resourceId: '2', guideId: '3' })
+        }
+      >
         Set Study
       </button>
-      <button onClick={() => setSessionFormState({ date: '2024-01-01', time: '10:00', insights: 'Insight', reference: 'Ref', sessionSteps: [] })}>
+      <button
+        onClick={() =>
+          setSessionFormState({
+            date: '2024-01-01',
+            time: '10:00',
+            insights: 'Insight',
+            reference: 'Ref',
+            sessionSteps: [],
+          })
+        }
+      >
         Set Session
       </button>
       <button onClick={clearAllFormState}>Clear All</button>
@@ -70,7 +106,11 @@ describe('FormStateContext', () => {
       });
 
       const guideState = JSON.parse(screen.getByTestId('guide-state').textContent || '{}');
-      expect(guideState).toEqual({ name: 'Guide 1', levelOfResource: 'Beginner', amtOfResource: '10' });
+      expect(guideState).toEqual({
+        name: 'Guide 1',
+        levelOfResource: 'Beginner',
+        amtOfResource: '10',
+      });
     });
 
     it('should update guideStepFormState when setGuideStepFormState is called', () => {
@@ -85,7 +125,13 @@ describe('FormStateContext', () => {
       });
 
       const guideStepState = JSON.parse(screen.getByTestId('guide-step-state').textContent || '{}');
-      expect(guideStepState).toEqual({ index: 1, name: 'Step 1', instructions: 'Do this', example: 'Example', amtOfResourcePerStep: '5' });
+      expect(guideStepState).toEqual({
+        index: 1,
+        name: 'Step 1',
+        instructions: 'Do this',
+        example: 'Example',
+        amtOfResourcePerStep: '5',
+      });
     });
 
     it('should update studyFormState when setStudyFormState is called', () => {
@@ -100,7 +146,12 @@ describe('FormStateContext', () => {
       });
 
       const studyState = JSON.parse(screen.getByTestId('study-state').textContent || '{}');
-      expect(studyState).toEqual({ name: 'Study 1', scheduleId: '1', resourceId: '2', guideId: '3' });
+      expect(studyState).toEqual({
+        name: 'Study 1',
+        scheduleId: '1',
+        resourceId: '2',
+        guideId: '3',
+      });
     });
 
     it('should update sessionFormState when setSessionFormState is called', () => {
@@ -115,7 +166,13 @@ describe('FormStateContext', () => {
       });
 
       const sessionState = JSON.parse(screen.getByTestId('session-state').textContent || '{}');
-      expect(sessionState).toEqual({ date: '2024-01-01', time: '10:00', insights: 'Insight', reference: 'Ref', sessionSteps: [] });
+      expect(sessionState).toEqual({
+        date: '2024-01-01',
+        time: '10:00',
+        insights: 'Insight',
+        reference: 'Ref',
+        sessionSteps: [],
+      });
     });
 
     it('should clear all form states when clearAllFormState is called', () => {
@@ -156,4 +213,3 @@ describe('FormStateContext', () => {
     });
   });
 });
-

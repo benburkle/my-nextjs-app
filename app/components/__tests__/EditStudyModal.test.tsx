@@ -33,7 +33,7 @@ describe('EditStudyModal', () => {
       study: null,
       onSaved: mockOnSaved,
     };
-    
+
     // Component can accept props without error
     expect(() => {
       // Just verify the component exists and can be referenced
@@ -54,14 +54,14 @@ describe('EditStudyModal', () => {
       guide: null,
       sessions: [],
     };
-    
+
     const props = {
       opened: false,
       onClose: mockOnClose,
       study,
       onSaved: mockOnSaved,
     };
-    
+
     // Component can accept study prop
     expect(() => {
       const Component = EditStudyModal;

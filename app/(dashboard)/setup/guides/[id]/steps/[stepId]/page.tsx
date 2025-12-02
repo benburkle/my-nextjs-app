@@ -126,9 +126,7 @@ export default function EditGuideStepPage() {
     setLoading(true);
 
     try {
-      const url = stepId && stepId !== 'new'
-        ? `/api/guide-steps/${stepId}`
-        : '/api/guide-steps';
+      const url = stepId && stepId !== 'new' ? `/api/guide-steps/${stepId}` : '/api/guide-steps';
       const method = stepId && stepId !== 'new' ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -149,9 +147,10 @@ export default function EditGuideStepPage() {
       if (response.ok) {
         notifications.show({
           title: 'Success',
-          message: stepId && stepId !== 'new'
-            ? 'Guide step updated successfully'
-            : 'Guide step created successfully',
+          message:
+            stepId && stepId !== 'new'
+              ? 'Guide step updated successfully'
+              : 'Guide step created successfully',
           color: 'green',
         });
         router.push(`/setup/guides/${guideId}`);
@@ -163,8 +162,7 @@ export default function EditGuideStepPage() {
       console.error('Error saving guide step:', error);
       notifications.show({
         title: 'Error',
-        message:
-          error instanceof Error ? error.message : 'Failed to save guide step',
+        message: error instanceof Error ? error.message : 'Failed to save guide step',
         color: 'red',
       });
     } finally {
@@ -183,10 +181,7 @@ export default function EditGuideStepPage() {
   return (
     <Box>
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push(`/setup/guides/${guideId}`)}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push(`/setup/guides/${guideId}`)}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -212,9 +207,7 @@ export default function EditGuideStepPage() {
             placeholder="Enter step name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <Box>
             <Text size="sm" fw={500} mb={5}>
@@ -263,8 +256,17 @@ export default function EditGuideStepPage() {
                 <RichTextEditor.Content />
               </RichTextEditor>
             ) : (
-              <Box style={{ minHeight: 200, border: '1px solid var(--mantine-color-gray-3)', borderRadius: '4px', padding: '8px' }}>
-                <Text size="sm" c="dimmed">Loading editor...</Text>
+              <Box
+                style={{
+                  minHeight: 200,
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  borderRadius: '4px',
+                  padding: '8px',
+                }}
+              >
+                <Text size="sm" c="dimmed">
+                  Loading editor...
+                </Text>
               </Box>
             )}
           </Box>
@@ -315,8 +317,17 @@ export default function EditGuideStepPage() {
                 <RichTextEditor.Content />
               </RichTextEditor>
             ) : (
-              <Box style={{ minHeight: 200, border: '1px solid var(--mantine-color-gray-3)', borderRadius: '4px', padding: '8px' }}>
-                <Text size="sm" c="dimmed">Loading editor...</Text>
+              <Box
+                style={{
+                  minHeight: 200,
+                  border: '1px solid var(--mantine-color-gray-3)',
+                  borderRadius: '4px',
+                  padding: '8px',
+                }}
+              >
+                <Text size="sm" c="dimmed">
+                  Loading editor...
+                </Text>
               </Box>
             )}
           </Box>
@@ -333,4 +344,3 @@ export default function EditGuideStepPage() {
     </Box>
   );
 }
-

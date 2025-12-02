@@ -142,7 +142,7 @@ describe('/api/studies/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual(updatedStudy);
-      expect((mockPrisma.study.update as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.study.update as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
         data: {
           name: 'Updated Study',
@@ -188,10 +188,9 @@ describe('/api/studies/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect((mockPrisma.study.delete as jest.Mock)).toHaveBeenCalledWith({
+      expect(mockPrisma.study.delete as jest.Mock).toHaveBeenCalledWith({
         where: { id: 1, userId: 'user-1' },
       });
     });
   });
 });
-

@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Box, Title, Text, Stack, Paper, Group, ActionIcon, Button, Overlay, Badge } from '@mantine/core';
+import {
+  Box,
+  Title,
+  Text,
+  Stack,
+  Paper,
+  Group,
+  ActionIcon,
+  Button,
+  Overlay,
+  Badge,
+} from '@mantine/core';
 import { IconArrowLeft, IconArrowRight, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 
@@ -19,18 +30,21 @@ const steps: WalkthroughStep[] = [
   {
     id: 'overview',
     title: 'Welcome to the Session Creation Walkthrough',
-    description: 'Sessions are individual study instances that follow the structure defined by a guide. Let\'s learn how to create a session step by step.',
+    description:
+      "Sessions are individual study instances that follow the structure defined by a guide. Let's learn how to create a session step by step.",
   },
   {
     id: 'navigate-study',
     title: 'Navigate to a Study',
-    description: 'First, navigate to a study page. You can find studies in the sidebar under "Abide" → [Study Name]. Click on a study to view it.',
+    description:
+      'First, navigate to a study page. You can find studies in the sidebar under "Abide" → [Study Name]. Click on a study to view it.',
     page: '/study/[id]',
   },
   {
     id: 'add-session-button',
     title: 'Click the Plus Button',
-    description: 'On the study page, look for the plus (+) button next to the session navigation arrows. Click it to create a new session.',
+    description:
+      'On the study page, look for the plus (+) button next to the session navigation arrows. Click it to create a new session.',
     targetElement: '[data-walkthrough="add-session-button"]',
     position: 'bottom',
     highlight: true,
@@ -39,7 +53,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'session-details',
     title: 'Fill in Session Details',
-    description: 'At the top of the session edit page, you\'ll see fields for Date, Time, and Reference. Fill these in as needed. The Date and Time default to the current date and time.',
+    description:
+      "At the top of the session edit page, you'll see fields for Date, Time, and Reference. Fill these in as needed. The Date and Time default to the current date and time.",
     targetElement: '[data-walkthrough="session-date-input"]',
     position: 'bottom',
     highlight: true,
@@ -48,7 +63,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'session-insights',
     title: 'Add Session Insights',
-    description: 'The Session Insights field is a rich text editor where you can add overall insights for the session. Use the formatting toolbar to style your text.',
+    description:
+      'The Session Insights field is a rich text editor where you can add overall insights for the session. Use the formatting toolbar to style your text.',
     targetElement: '[data-walkthrough="session-insights-editor"]',
     position: 'bottom',
     highlight: true,
@@ -57,7 +73,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'session-steps',
     title: 'Navigate Through Session Steps',
-    description: 'Use the stepper at the bottom to navigate through each session step. Each step corresponds to a step from the guide assigned to the study.',
+    description:
+      'Use the stepper at the bottom to navigate through each session step. Each step corresponds to a step from the guide assigned to the study.',
     targetElement: '[data-walkthrough="session-stepper"]',
     position: 'top',
     highlight: true,
@@ -66,7 +83,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'step-insights',
     title: 'Add Insights for Each Step',
-    description: 'For each session step, add your insights in the rich text editor. You can view the step\'s instructions and example by clicking the toggle buttons.',
+    description:
+      "For each session step, add your insights in the rich text editor. You can view the step's instructions and example by clicking the toggle buttons.",
     targetElement: '[data-walkthrough="step-insights-editor"]',
     position: 'bottom',
     highlight: true,
@@ -75,7 +93,8 @@ const steps: WalkthroughStep[] = [
   {
     id: 'create-session',
     title: 'Create the Session',
-    description: 'Once you\'ve filled in the session details and step insights, click the "Create" button on the last step to save your session.',
+    description:
+      'Once you\'ve filled in the session details and step insights, click the "Create" button on the last step to save your session.',
     targetElement: '[data-walkthrough="create-session-button"]',
     position: 'top',
     highlight: true,
@@ -83,8 +102,9 @@ const steps: WalkthroughStep[] = [
   },
   {
     id: 'complete',
-    title: 'You\'re All Set!',
-    description: 'You now know how to create sessions. Sessions are saved and can be viewed, edited, or navigated through using the arrows on the study page.',
+    title: "You're All Set!",
+    description:
+      'You now know how to create sessions. Sessions are saved and can be viewed, edited, or navigated through using the arrows on the study page.',
   },
 ];
 
@@ -92,7 +112,12 @@ export default function SessionWalkthroughPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [tooltipOpened, setTooltipOpened] = useState(false);
-  const [targetPosition, setTargetPosition] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const [targetPosition, setTargetPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const stepRef = useRef<HTMLDivElement>(null);
 
   const currentStepData = steps[currentStep];
@@ -111,7 +136,7 @@ export default function SessionWalkthroughPage() {
           height: rect.height,
         });
         setTooltipOpened(true);
-        
+
         if (currentStepData.highlight) {
           element.style.outline = '3px solid var(--mantine-color-blue-5)';
           element.style.outlineOffset = '4px';
@@ -132,7 +157,7 @@ export default function SessionWalkthroughPage() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       updateTargetPosition();
-      
+
       if (currentStepData?.targetElement) {
         const element = document.querySelector(currentStepData.targetElement) as HTMLElement;
         if (element) {
@@ -202,122 +227,120 @@ export default function SessionWalkthroughPage() {
       )}
 
       {/* Tooltip pointing to element */}
-      {tooltipOpened && targetPosition && currentStepData.targetElement && (() => {
-        const rect = document.querySelector(currentStepData.targetElement)?.getBoundingClientRect();
-        if (!rect) return null;
-        
-        const position = currentStepData.position || 'bottom';
-        let top = 0;
-        let left = 0;
-        let transform = '';
-        
-        if (position === 'bottom') {
-          top = rect.bottom + 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%)';
-        } else if (position === 'top') {
-          top = rect.top - 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%) translateY(-100%)';
-        } else if (position === 'right') {
-          top = rect.top + rect.height / 2;
-          left = rect.right + 10;
-          transform = 'translateY(-50%)';
-        } else if (position === 'left') {
-          top = rect.top + rect.height / 2;
-          left = rect.left - 10;
-          transform = 'translateX(-100%) translateY(-50%)';
-        }
-        
-        return (
-          <Box
-            style={{
-              position: 'fixed',
-              top: `${top}px`,
-              left: `${left}px`,
-              transform,
-              zIndex: 1001,
-              maxWidth: 300,
-            }}
-          >
-            <Paper
-              p="md"
-              shadow="xl"
-              withBorder
+      {tooltipOpened &&
+        targetPosition &&
+        currentStepData.targetElement &&
+        (() => {
+          const rect = document
+            .querySelector(currentStepData.targetElement)
+            ?.getBoundingClientRect();
+          if (!rect) return null;
+
+          const position = currentStepData.position || 'bottom';
+          let top = 0;
+          let left = 0;
+          let transform = '';
+
+          if (position === 'bottom') {
+            top = rect.bottom + 10;
+            left = rect.left + rect.width / 2;
+            transform = 'translateX(-50%)';
+          } else if (position === 'top') {
+            top = rect.top - 10;
+            left = rect.left + rect.width / 2;
+            transform = 'translateX(-50%) translateY(-100%)';
+          } else if (position === 'right') {
+            top = rect.top + rect.height / 2;
+            left = rect.right + 10;
+            transform = 'translateY(-50%)';
+          } else if (position === 'left') {
+            top = rect.top + rect.height / 2;
+            left = rect.left - 10;
+            transform = 'translateX(-100%) translateY(-50%)';
+          }
+
+          return (
+            <Box
               style={{
-                backgroundColor: 'var(--mantine-color-body)',
+                position: 'fixed',
+                top: `${top}px`,
+                left: `${left}px`,
+                transform,
+                zIndex: 1001,
+                maxWidth: 300,
               }}
             >
-              <Stack gap="xs">
-                <Group justify="space-between" align="flex-start">
-                  <Box style={{ flex: 1 }}>
-                    <Text fw={600} size="sm" mb={4}>
-                      {currentStepData.title}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {currentStepData.description}
-                    </Text>
-                  </Box>
-                  <ActionIcon
-                    size="sm"
-                    variant="subtle"
-                    onClick={() => setTooltipOpened(false)}
-                  >
-                    <IconX size={14} />
-                  </ActionIcon>
-                </Group>
-              </Stack>
-            </Paper>
-            {/* Arrow pointing to element */}
-            {(() => {
-              const pos = currentStepData.position || 'bottom';
-              const arrowStyle: React.CSSProperties = {
-                position: 'absolute',
-                width: 0,
-                height: 0,
-              };
+              <Paper
+                p="md"
+                shadow="xl"
+                withBorder
+                style={{
+                  backgroundColor: 'var(--mantine-color-body)',
+                }}
+              >
+                <Stack gap="xs">
+                  <Group justify="space-between" align="flex-start">
+                    <Box style={{ flex: 1 }}>
+                      <Text fw={600} size="sm" mb={4}>
+                        {currentStepData.title}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {currentStepData.description}
+                      </Text>
+                    </Box>
+                    <ActionIcon size="sm" variant="subtle" onClick={() => setTooltipOpened(false)}>
+                      <IconX size={14} />
+                    </ActionIcon>
+                  </Group>
+                </Stack>
+              </Paper>
+              {/* Arrow pointing to element */}
+              {(() => {
+                const pos = currentStepData.position || 'bottom';
+                const arrowStyle: React.CSSProperties = {
+                  position: 'absolute',
+                  width: 0,
+                  height: 0,
+                };
 
-              if (pos === 'bottom') {
-                arrowStyle.top = -8;
-                arrowStyle.left = '50%';
-                arrowStyle.transform = 'translateX(-50%)';
-                arrowStyle.borderLeft = '8px solid transparent';
-                arrowStyle.borderRight = '8px solid transparent';
-                arrowStyle.borderBottom = '8px solid var(--mantine-color-body)';
-              } else if (pos === 'top') {
-                arrowStyle.bottom = -8;
-                arrowStyle.left = '50%';
-                arrowStyle.transform = 'translateX(-50%)';
-                arrowStyle.borderLeft = '8px solid transparent';
-                arrowStyle.borderRight = '8px solid transparent';
-                arrowStyle.borderTop = '8px solid var(--mantine-color-body)';
-              } else if (pos === 'right') {
-                arrowStyle.left = -8;
-                arrowStyle.top = '50%';
-                arrowStyle.transform = 'translateY(-50%)';
-                arrowStyle.borderTop = '8px solid transparent';
-                arrowStyle.borderBottom = '8px solid transparent';
-                arrowStyle.borderRight = '8px solid var(--mantine-color-body)';
-              } else if (pos === 'left') {
-                arrowStyle.right = -8;
-                arrowStyle.top = '50%';
-                arrowStyle.transform = 'translateY(-50%)';
-                arrowStyle.borderTop = '8px solid transparent';
-                arrowStyle.borderBottom = '8px solid transparent';
-                arrowStyle.borderLeft = '8px solid var(--mantine-color-body)';
-              }
+                if (pos === 'bottom') {
+                  arrowStyle.top = -8;
+                  arrowStyle.left = '50%';
+                  arrowStyle.transform = 'translateX(-50%)';
+                  arrowStyle.borderLeft = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid var(--mantine-color-body)';
+                } else if (pos === 'top') {
+                  arrowStyle.bottom = -8;
+                  arrowStyle.left = '50%';
+                  arrowStyle.transform = 'translateX(-50%)';
+                  arrowStyle.borderLeft = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid transparent';
+                  arrowStyle.borderTop = '8px solid var(--mantine-color-body)';
+                } else if (pos === 'right') {
+                  arrowStyle.left = -8;
+                  arrowStyle.top = '50%';
+                  arrowStyle.transform = 'translateY(-50%)';
+                  arrowStyle.borderTop = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid transparent';
+                  arrowStyle.borderRight = '8px solid var(--mantine-color-body)';
+                } else if (pos === 'left') {
+                  arrowStyle.right = -8;
+                  arrowStyle.top = '50%';
+                  arrowStyle.transform = 'translateY(-50%)';
+                  arrowStyle.borderTop = '8px solid transparent';
+                  arrowStyle.borderBottom = '8px solid transparent';
+                  arrowStyle.borderLeft = '8px solid var(--mantine-color-body)';
+                }
 
-              return <Box style={arrowStyle} />;
-            })()}
-          </Box>
-        );
-      })()}
+                return <Box style={arrowStyle} />;
+              })()}
+            </Box>
+          );
+        })()}
 
       <Group mb="xl">
-        <ActionIcon
-          variant="subtle"
-          onClick={handleClose}
-        >
+        <ActionIcon variant="subtle" onClick={handleClose}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={1}>Session Creation Walkthrough</Title>
@@ -329,24 +352,35 @@ export default function SessionWalkthroughPage() {
       <Paper p="lg" withBorder ref={stepRef}>
         <Stack gap="md">
           <Box>
-            <Title order={2} mb="sm">{currentStepData.title}</Title>
-            <Text size="lg" c="dimmed">{currentStepData.description}</Text>
+            <Title order={2} mb="sm">
+              {currentStepData.title}
+            </Title>
+            <Text size="lg" c="dimmed">
+              {currentStepData.description}
+            </Text>
           </Box>
 
           {currentStepData.id === 'overview' && (
             <Box>
-              <Text mb="md">Follow along as we explore how to create a session. Use the navigation buttons below to move through the walkthrough.</Text>
+              <Text mb="md">
+                Follow along as we explore how to create a session. Use the navigation buttons below
+                to move through the walkthrough.
+              </Text>
               <Text size="sm" c="dimmed">
-                Sessions are individual study instances that follow the structure defined by a guide.
+                Sessions are individual study instances that follow the structure defined by a
+                guide.
               </Text>
             </Box>
           )}
 
           {currentStepData.id === 'complete' && (
             <Box>
-              <Text mb="md" fw={500}>You're ready to create sessions!</Text>
+              <Text mb="md" fw={500}>
+                You're ready to create sessions!
+              </Text>
               <Text size="sm" c="dimmed">
-                Sessions are saved and can be viewed, edited, or navigated through using the arrows on the study page.
+                Sessions are saved and can be viewed, edited, or navigated through using the arrows
+                on the study page.
               </Text>
             </Box>
           )}
@@ -371,9 +405,10 @@ export default function SessionWalkthroughPage() {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                backgroundColor: index === currentStep
-                  ? 'var(--mantine-color-blue-6)'
-                  : 'var(--mantine-color-gray-4)',
+                backgroundColor:
+                  index === currentStep
+                    ? 'var(--mantine-color-blue-6)'
+                    : 'var(--mantine-color-gray-4)',
                 cursor: 'pointer',
               }}
               onClick={() => setCurrentStep(index)}
@@ -381,16 +416,9 @@ export default function SessionWalkthroughPage() {
           ))}
         </Group>
         {isLastStep ? (
-          <Button
-            onClick={handleClose}
-          >
-            Finish
-          </Button>
+          <Button onClick={handleClose}>Finish</Button>
         ) : (
-          <Button
-            rightSection={<IconArrowRight size={16} />}
-            onClick={handleNext}
-          >
+          <Button rightSection={<IconArrowRight size={16} />} onClick={handleNext}>
             Next
           </Button>
         )}
@@ -398,4 +426,3 @@ export default function SessionWalkthroughPage() {
     </Box>
   );
 }
-

@@ -10,7 +10,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching posts:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch posts', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch posts',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -31,10 +34,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to create post' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
   }
 }
-

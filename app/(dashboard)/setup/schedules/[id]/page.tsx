@@ -116,10 +116,7 @@ export default function ScheduleDetailPage() {
   return (
     <Box>
       <Group mb="md">
-        <ActionIcon
-          variant="subtle"
-          onClick={() => router.push('/setup/schedules')}
-        >
+        <ActionIcon variant="subtle" onClick={() => router.push('/setup/schedules')}>
           <IconArrowLeft size={20} />
         </ActionIcon>
         <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -179,11 +176,7 @@ export default function ScheduleDetailPage() {
       </Stack>
 
       <Group justify="flex-end" mb="md">
-        <Button
-          leftSection={<IconEdit size={16} />}
-          variant="outline"
-          onClick={handleEditSchedule}
-        >
+        <Button leftSection={<IconEdit size={16} />} variant="outline" onClick={handleEditSchedule}>
           Edit Schedule
         </Button>
       </Group>
@@ -230,4 +223,3 @@ export default function ScheduleDetailPage() {
     </Box>
   );
 }
-

@@ -1,15 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  TextInput,
-  Button,
-  Stack,
-  Group,
-  Textarea,
-  NumberInput,
-} from '@mantine/core';
+import { Modal, TextInput, Button, Stack, Group, Textarea, NumberInput } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 interface GuideStep {
@@ -70,9 +62,7 @@ export function EditGuideStepModal({
     setLoading(true);
 
     try {
-      const url = guideStep
-        ? `/api/guide-steps/${guideStep.id}`
-        : '/api/guide-steps';
+      const url = guideStep ? `/api/guide-steps/${guideStep.id}` : '/api/guide-steps';
       const method = guideStep ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -108,8 +98,7 @@ export function EditGuideStepModal({
       console.error('Error saving guide step:', error);
       notifications.show({
         title: 'Error',
-        message:
-          error instanceof Error ? error.message : 'Failed to save guide step',
+        message: error instanceof Error ? error.message : 'Failed to save guide step',
         color: 'red',
       });
     } finally {
@@ -142,35 +131,27 @@ export function EditGuideStepModal({
             placeholder="Enter step name"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <Textarea
             label="Instructions"
             placeholder="Enter step instructions"
             rows={4}
             value={formData.instructions}
-            onChange={(e) =>
-              setFormData({ ...formData, instructions: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
           />
           <Textarea
             label="Example"
             placeholder="Enter step example"
             rows={3}
             value={formData.example}
-            onChange={(e) =>
-              setFormData({ ...formData, example: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, example: e.target.value })}
           />
           <TextInput
             label="Amount of Resource Per Step"
             placeholder="e.g., Chapter, Verses"
             value={formData.amtOfResourcePerStep}
-            onChange={(e) =>
-              setFormData({ ...formData, amtOfResourcePerStep: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, amtOfResourcePerStep: e.target.value })}
           />
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={onClose}>

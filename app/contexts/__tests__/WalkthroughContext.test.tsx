@@ -4,7 +4,7 @@ import { WalkthroughProvider, useWalkthrough } from '../WalkthroughContext';
 
 function TestComponent() {
   const { walkthroughType, openWalkthrough, closeWalkthrough } = useWalkthrough();
-  
+
   return (
     <div>
       <div data-testid="type">{walkthroughType || 'null'}</div>
@@ -56,7 +56,7 @@ describe('WalkthroughContext', () => {
       );
 
       const types = ['guide', 'study', 'session', 'timer'] as const;
-      
+
       types.forEach((type) => {
         act(() => {
           screen.getByText(`Open ${type.charAt(0).toUpperCase() + type.slice(1)}`).click();
@@ -99,4 +99,3 @@ describe('WalkthroughContext', () => {
     });
   });
 });
-

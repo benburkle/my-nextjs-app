@@ -6,10 +6,7 @@ export async function GET() {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const schedules = await prisma.schedule.findMany({
@@ -27,7 +24,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching schedules:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch schedules', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch schedules',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
@@ -37,10 +37,7 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -87,7 +84,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating schedule:', error);
     return NextResponse.json(
-      { error: 'Failed to create schedule', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create schedule',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

@@ -2,22 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/get-session';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
     const resource = await prisma.resource.findFirst({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -32,33 +26,27 @@ export async function GET(
     });
 
     if (!resource) {
-      return NextResponse.json(
-        { error: 'Resource not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
     }
 
     return NextResponse.json(resource);
   } catch (error) {
     console.error('Error fetching resource:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch resource', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch resource',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
@@ -66,17 +54,11 @@ export async function PUT(
     const { name, series, type } = body;
 
     if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
     if (!type) {
-      return NextResponse.json(
-        { error: 'Type is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Type is required' }, { status: 400 });
     }
 
     // Verify resource belongs to user
@@ -88,14 +70,11 @@ export async function PUT(
     });
 
     if (!existingResource) {
-      return NextResponse.json(
-        { error: 'Resource not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
     }
 
     const resource = await prisma.resource.update({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -118,27 +97,24 @@ export async function PUT(
   } catch (error) {
     console.error('Error updating resource:', error);
     return NextResponse.json(
-      { error: 'Failed to update resource', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to update resource',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await params;
-    
+
     // Verify resource belongs to user
     const resource = await prisma.resource.findFirst({
       where: {
@@ -148,14 +124,11 @@ export async function DELETE(
     });
 
     if (!resource) {
-      return NextResponse.json(
-        { error: 'Resource not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
     }
 
     await prisma.resource.delete({
-      where: { 
+      where: {
         id: parseInt(id),
         userId: user.id,
       },
@@ -164,7 +137,10 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting resource:', error);
     return NextResponse.json(
-      { error: 'Failed to delete resource', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to delete resource',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

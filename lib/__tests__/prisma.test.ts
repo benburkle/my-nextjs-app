@@ -38,4 +38,3 @@ describe('prisma', () => {
     expect(firstInstance).toBe(secondInstance);
   });
 });
-

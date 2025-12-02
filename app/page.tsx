@@ -4,7 +4,18 @@ import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { DashboardLayout } from './components/DashboardLayout';
-import { Box, Title, Text, Button, Stack, Paper, Group, ThemeIcon, Loader, Center } from '@mantine/core';
+import {
+  Box,
+  Title,
+  Text,
+  Button,
+  Stack,
+  Paper,
+  Group,
+  ThemeIcon,
+  Loader,
+  Center,
+} from '@mantine/core';
 import { IconClock, IconArrowRight } from '@tabler/icons-react';
 import { useWalkthrough } from './contexts/WalkthroughContext';
 
@@ -35,7 +46,9 @@ export default function Home() {
       <Box>
         <Stack gap="xl">
           <Box>
-            <Title order={1} mb="md">Welcome to Abide Guide</Title>
+            <Title order={1} mb="md">
+              Welcome to Abide Guide
+            </Title>
             <Text size="lg" c="dimmed">
               Your study management and session tracking application.
             </Text>
@@ -47,9 +60,11 @@ export default function Home() {
                 <IconClock size={28} />
               </ThemeIcon>
               <Box style={{ flex: 1 }}>
-                <Title order={3} mb="sm">Countdown Timer</Title>
+                <Title order={3} mb="sm">
+                  Countdown Timer
+                </Title>
                 <Text c="dimmed" mb="md">
-                  Learn how to use the countdown timer feature located in the top navigation bar. 
+                  Learn how to use the countdown timer feature located in the top navigation bar.
                   Set custom times, start and stop the timer, and get notified when time is up.
                 </Text>
                 <Button
@@ -68,9 +83,12 @@ export default function Home() {
                 <IconArrowRight size={28} />
               </ThemeIcon>
               <Box style={{ flex: 1 }}>
-                <Title order={3} mb="sm">Creating Guides</Title>
+                <Title order={3} mb="sm">
+                  Creating Guides
+                </Title>
                 <Text c="dimmed" mb="md">
-                  Learn how to create guides and add guide steps. Guides provide a template structure for your study sessions.
+                  Learn how to create guides and add guide steps. Guides provide a template
+                  structure for your study sessions.
                 </Text>
                 <Button
                   onClick={() => openWalkthrough('guide')}
@@ -88,9 +106,12 @@ export default function Home() {
                 <IconArrowRight size={28} />
               </ThemeIcon>
               <Box style={{ flex: 1 }}>
-                <Title order={3} mb="sm">Creating Studies</Title>
+                <Title order={3} mb="sm">
+                  Creating Studies
+                </Title>
                 <Text c="dimmed" mb="md">
-                  Learn how to create studies. Studies organize your sessions and can be associated with guides, resources, and schedules.
+                  Learn how to create studies. Studies organize your sessions and can be associated
+                  with guides, resources, and schedules.
                 </Text>
                 <Button
                   onClick={() => openWalkthrough('study')}
@@ -108,9 +129,12 @@ export default function Home() {
                 <IconArrowRight size={28} />
               </ThemeIcon>
               <Box style={{ flex: 1 }}>
-                <Title order={3} mb="sm">Creating Sessions</Title>
+                <Title order={3} mb="sm">
+                  Creating Sessions
+                </Title>
                 <Text c="dimmed" mb="md">
-                  Learn how to create sessions. Sessions are individual study instances that follow the structure defined by a guide.
+                  Learn how to create sessions. Sessions are individual study instances that follow
+                  the structure defined by a guide.
                 </Text>
                 <Button
                   onClick={() => openWalkthrough('session')}

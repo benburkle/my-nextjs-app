@@ -77,4 +77,3 @@ describe('/api/verses/[id]', () => {
     });
   });
 });
-

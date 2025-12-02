@@ -114,9 +114,8 @@ export default function StudyPage() {
     }
   };
 
-  const currentSession = study?.sessions && study.sessions.length > 0 
-    ? study.sessions[currentSessionIndex] 
-    : null;
+  const currentSession =
+    study?.sessions && study.sessions.length > 0 ? study.sessions[currentSessionIndex] : null;
 
   const hasPreviousSession = currentSessionIndex < (study?.sessions?.length || 0) - 1;
   const hasNextSession = currentSessionIndex > 0;
@@ -302,10 +301,14 @@ export default function StudyPage() {
 
           {(() => {
             // Get steps to display - use sessionSteps if available, otherwise use guide steps
-            let stepsToDisplay: Array<{ id: number; guideStep: GuideStep; insights: string | null }> = [];
-            
+            let stepsToDisplay: Array<{
+              id: number;
+              guideStep: GuideStep;
+              insights: string | null;
+            }> = [];
+
             if (currentSession.sessionSteps && currentSession.sessionSteps.length > 0) {
-              stepsToDisplay = currentSession.sessionSteps.map(ss => ({
+              stepsToDisplay = currentSession.sessionSteps.map((ss) => ({
                 id: ss.id,
                 guideStep: ss.guideStep,
                 insights: ss.insights,
@@ -362,4 +365,3 @@ export default function StudyPage() {
     </Box>
   );
 }
-

@@ -33,7 +33,7 @@ describe('SignUpPage', () => {
 
   it('should render sign up form', () => {
     renderWithProvider(<SignUpPage />);
-    
+
     expect(screen.getByText(/Create account/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     const passwordInputs = screen.getAllByLabelText(/password/i);
@@ -44,7 +44,7 @@ describe('SignUpPage', () => {
     const user = userEvent.setup();
     const { notifications } = require('@mantine/notifications');
     renderWithProvider(<SignUpPage />);
-    
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInputs = screen.getAllByLabelText(/password/i);
     const passwordInput = passwordInputs[0];
@@ -70,7 +70,7 @@ describe('SignUpPage', () => {
   it('should handle form submission', async () => {
     const user = userEvent.setup();
     renderWithProvider(<SignUpPage />);
-    
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInputs = screen.getAllByLabelText(/password/i);
     const passwordInput = passwordInputs[0];
@@ -82,8 +82,11 @@ describe('SignUpPage', () => {
     await user.type(confirmPasswordInput, 'password123');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalled();
-    }, { timeout: 10000 });
+    await waitFor(
+      () => {
+        expect(global.fetch).toHaveBeenCalled();
+      },
+      { timeout: 10000 }
+    );
   });
 });

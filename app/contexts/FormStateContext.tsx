@@ -8,8 +8,10 @@ interface FormStateContextType {
     levelOfResource: string;
     amtOfResource: string;
   } | null;
-  setGuideFormState: (state: { name: string; levelOfResource: string; amtOfResource: string } | null) => void;
-  
+  setGuideFormState: (
+    state: { name: string; levelOfResource: string; amtOfResource: string } | null
+  ) => void;
+
   guideStepFormState: {
     index: number;
     name: string;
@@ -17,16 +19,26 @@ interface FormStateContextType {
     example: string;
     amtOfResourcePerStep: string;
   } | null;
-  setGuideStepFormState: (state: { index: number; name: string; instructions: string; example: string; amtOfResourcePerStep: string } | null) => void;
-  
+  setGuideStepFormState: (
+    state: {
+      index: number;
+      name: string;
+      instructions: string;
+      example: string;
+      amtOfResourcePerStep: string;
+    } | null
+  ) => void;
+
   studyFormState: {
     name: string;
     scheduleId: string;
     resourceId: string;
     guideId: string;
   } | null;
-  setStudyFormState: (state: { name: string; scheduleId: string; resourceId: string; guideId: string } | null) => void;
-  
+  setStudyFormState: (
+    state: { name: string; scheduleId: string; resourceId: string; guideId: string } | null
+  ) => void;
+
   sessionFormState: {
     date: string;
     time: string;
@@ -34,18 +46,47 @@ interface FormStateContextType {
     reference: string;
     sessionSteps: Array<{ id: number; insights: string | null }>;
   } | null;
-  setSessionFormState: (state: { date: string; time: string; insights: string; reference: string; sessionSteps: Array<{ id: number; insights: string | null }> } | null) => void;
-  
+  setSessionFormState: (
+    state: {
+      date: string;
+      time: string;
+      insights: string;
+      reference: string;
+      sessionSteps: Array<{ id: number; insights: string | null }>;
+    } | null
+  ) => void;
+
   clearAllFormState: () => void;
 }
 
 const FormStateContext = createContext<FormStateContextType | undefined>(undefined);
 
 export function FormStateProvider({ children }: { children: ReactNode }) {
-  const [guideFormState, setGuideFormState] = useState<{ name: string; levelOfResource: string; amtOfResource: string } | null>(null);
-  const [guideStepFormState, setGuideStepFormState] = useState<{ index: number; name: string; instructions: string; example: string; amtOfResourcePerStep: string } | null>(null);
-  const [studyFormState, setStudyFormState] = useState<{ name: string; scheduleId: string; resourceId: string; guideId: string } | null>(null);
-  const [sessionFormState, setSessionFormState] = useState<{ date: string; time: string; insights: string; reference: string; sessionSteps: Array<{ id: number; insights: string | null }> } | null>(null);
+  const [guideFormState, setGuideFormState] = useState<{
+    name: string;
+    levelOfResource: string;
+    amtOfResource: string;
+  } | null>(null);
+  const [guideStepFormState, setGuideStepFormState] = useState<{
+    index: number;
+    name: string;
+    instructions: string;
+    example: string;
+    amtOfResourcePerStep: string;
+  } | null>(null);
+  const [studyFormState, setStudyFormState] = useState<{
+    name: string;
+    scheduleId: string;
+    resourceId: string;
+    guideId: string;
+  } | null>(null);
+  const [sessionFormState, setSessionFormState] = useState<{
+    date: string;
+    time: string;
+    insights: string;
+    reference: string;
+    sessionSteps: Array<{ id: number; insights: string | null }>;
+  } | null>(null);
 
   const clearAllFormState = () => {
     setGuideFormState(null);
@@ -55,17 +96,19 @@ export function FormStateProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <FormStateContext.Provider value={{
-      guideFormState,
-      setGuideFormState,
-      guideStepFormState,
-      setGuideStepFormState,
-      studyFormState,
-      setStudyFormState,
-      sessionFormState,
-      setSessionFormState,
-      clearAllFormState,
-    }}>
+    <FormStateContext.Provider
+      value={{
+        guideFormState,
+        setGuideFormState,
+        guideStepFormState,
+        setGuideStepFormState,
+        studyFormState,
+        setStudyFormState,
+        sessionFormState,
+        setSessionFormState,
+        clearAllFormState,
+      }}
+    >
       {children}
     </FormStateContext.Provider>
   );
@@ -78,4 +121,3 @@ export function useFormState() {
   }
   return context;
 }
-

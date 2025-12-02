@@ -47,4 +47,3 @@ describe('/api/auth/[...nextauth]', () => {
     expect(response).toBe(mockResponse);
   });
 });
-
