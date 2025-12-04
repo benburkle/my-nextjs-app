@@ -12,11 +12,11 @@ import {
   Text,
   Title,
   Modal,
-  Stepper,
+  Tabs,
   Grid,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconArrowLeft, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { useEditor } from '@tiptap/react';
 import { RichTextEditor } from '@mantine/tiptap';
 import StarterKit from '@tiptap/starter-kit';
@@ -27,6 +27,7 @@ import { SessionStepInsightsEditor } from '@/app/components/SessionStepInsightsE
 interface GuideStep {
   id: number;
   name: string;
+  shortDescription: string | null;
   instructions: string | null;
   example: string | null;
   index: number;
@@ -58,7 +59,7 @@ export default function EditSessionPage() {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeTab, setActiveTab] = useState<string | null>('details');
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
   const [insights, setInsights] = useState<string>('');
@@ -66,9 +67,6 @@ export default function EditSessionPage() {
   const [sessionSteps, setSessionSteps] = useState<SessionStep[]>([]);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [selectedGuideStep, setSelectedGuideStep] = useState<GuideStep | null>(null);
-  const [showInstructions, setShowInstructions] = useState<Record<number, boolean>>({});
-  const [showExample, setShowExample] = useState<Record<number, boolean>>({});
-  const [showSessionDetails, setShowSessionDetails] = useState(false);
   const [editorMounted, setEditorMounted] = useState(false);
 
   const insightsEditor = useEditor({
@@ -172,25 +170,9 @@ export default function EditSessionPage() {
     setHelpModalOpen(true);
   };
 
-  const nextStep = () => {
-    if (activeStep < sessionSteps.length - 1) {
-      setActiveStep((current) => current + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (activeStep > 0) {
-      setActiveStep((current) => current - 1);
-    }
-  };
-
-  const getTotalSteps = () => {
-    return sessionSteps.length;
-  };
-
-  const getCurrentSessionStep = () => {
-    if (activeStep < 0 || activeStep >= sessionSteps.length) return null;
-    return sessionSteps[activeStep];
+  const getCurrentSessionStep = (stepIndex: number) => {
+    if (stepIndex < 0 || stepIndex >= sessionSteps.length) return null;
+    return sessionSteps[stepIndex];
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -294,34 +276,69 @@ export default function EditSessionPage() {
 
   return (
     <Box>
-      <Group mb="xl">
-        <ActionIcon variant="subtle" onClick={() => router.push(`/study/${studyId}`)}>
-          <IconArrowLeft size={20} />
-        </ActionIcon>
-        <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
-          {sessionId && sessionId !== 'new' ? 'Edit Session' : 'New Session'}
-        </Title>
-      </Group>
-
-      <form onSubmit={handleSubmit}>
-        <Stack gap="md">
-          <Box>
-            <Button
-              variant="subtle"
-              size="xs"
-              leftSection={
-                showSessionDetails ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
-              }
-              onClick={() => setShowSessionDetails(!showSessionDetails)}
-              mb="xs"
-              justify="flex-start"
-            >
-              Session Details
+      {/* Fixed Header - positioned relative to viewport */}
+      <Box
+        style={{
+          position: 'fixed',
+          top: '60px', // Account for TopNavBar height
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          backgroundColor: 'var(--mantine-color-body)',
+          borderBottom: '1px solid var(--mantine-color-gray-3)',
+          padding: '16px 24px',
+        }}
+      >
+        <Group justify="space-between" align="center">
+          <Group gap="md">
+            <ActionIcon variant="subtle" onClick={() => router.push(`/study/${studyId}`)}>
+              <IconArrowLeft size={20} />
+            </ActionIcon>
+            <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
+              {sessionId && sessionId !== 'new' ? 'Edit Session' : 'New Session'}
+            </Title>
+          </Group>
+          <Group gap="md">
+            <Button variant="outline" onClick={() => router.push(`/study/${studyId}`)}>
+              Cancel
             </Button>
-            {showSessionDetails && (
-              <Box mb="md">
+            <Button
+              type="submit"
+              form="session-form"
+              loading={loading}
+              data-walkthrough="create-session-button"
+            >
+              {sessionId && sessionId !== 'new' ? 'Update' : 'Create'}
+            </Button>
+          </Group>
+        </Group>
+      </Box>
+
+      {/* Scrollable Content - with padding-top to account for fixed header */}
+      <Box
+        style={{
+          padding: 0,
+          paddingTop: '80px',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingBottom: '24px',
+        }}
+      >
+        <form id="session-form" onSubmit={handleSubmit}>
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <Tabs.List mb="md" data-walkthrough="session-tabs">
+              <Tabs.Tab value="details">Details</Tabs.Tab>
+              {sessionSteps.map((step, index) => (
+                <Tabs.Tab key={step.id} value={`step-${index}`}>
+                  {step.guideStep.name}
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+
+            <Tabs.Panel value="details" pt="md">
+              <Stack gap="md">
                 <Grid mb="md">
-                  <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Grid.Col span={{ base: 12, sm: 6 }}>
                     <TextInput
                       label="Date"
                       type="date"
@@ -330,7 +347,7 @@ export default function EditSessionPage() {
                       data-walkthrough="session-date-input"
                     />
                   </Grid.Col>
-                  <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Grid.Col span={{ base: 12, sm: 6 }}>
                     <TextInput
                       label="Time"
                       type="time"
@@ -338,7 +355,7 @@ export default function EditSessionPage() {
                       onChange={(e) => setTime(e.target.value)}
                     />
                   </Grid.Col>
-                  <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Grid.Col span={{ base: 12, sm: 12 }}>
                     <TextInput
                       label="Reference"
                       placeholder="Enter reference text"
@@ -412,148 +429,36 @@ export default function EditSessionPage() {
                     </Box>
                   )}
                 </Box>
-              </Box>
-            )}
-          </Box>
+              </Stack>
+            </Tabs.Panel>
 
-          {sessionSteps.length > 0 && (
-            <Stepper
-              active={activeStep}
-              onStepClick={setActiveStep}
-              mb="xl"
-              data-walkthrough="session-stepper"
-            >
-              {sessionSteps.map((step, index) => (
-                <Stepper.Step
-                  key={step.id}
-                  label={`Step ${index + 1}`}
-                  description={step.guideStep.name}
-                ></Stepper.Step>
-              ))}
-            </Stepper>
-          )}
-
-          {sessionSteps.length > 0 &&
-            activeStep >= 0 &&
-            getCurrentSessionStep() &&
-            (() => {
-              const currentStep = getCurrentSessionStep()!;
-              const stepIndex = activeStep;
-              const instructionsVisible = showInstructions[stepIndex] || false;
-              const exampleVisible = showExample[stepIndex] || false;
+            {sessionSteps.map((step, stepIndex) => {
               return (
-                <Box>
-                  <Title order={3} mb="md" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {currentStep.guideStep.name}
-                  </Title>
-                  <Grid mb="md">
-                    {currentStep.guideStep.instructions && (
-                      <Grid.Col span={{ base: 12, sm: 6 }}>
-                        <Box>
-                          <Button
-                            variant="subtle"
-                            size="xs"
-                            leftSection={
-                              instructionsVisible ? (
-                                <IconChevronUp size={14} />
-                              ) : (
-                                <IconChevronDown size={14} />
-                              )
-                            }
-                            onClick={() =>
-                              setShowInstructions({
-                                ...showInstructions,
-                                [stepIndex]: !instructionsVisible,
-                              })
-                            }
-                            mb="xs"
-                            fullWidth
-                            justify="flex-start"
-                          >
-                            Instructions
-                          </Button>
-                          {instructionsVisible && (
-                            <Box
-                              style={{ textAlign: 'left', lineHeight: 1.6 }}
-                              dangerouslySetInnerHTML={{
-                                __html: currentStep.guideStep.instructions,
-                              }}
-                            />
-                          )}
-                        </Box>
-                      </Grid.Col>
+                <Tabs.Panel key={step.id} value={`step-${stepIndex}`} pt="md">
+                  <Stack gap="md">
+                    <Title order={3} mb="md" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {step.guideStep.name}
+                    </Title>
+                    {step.guideStep.shortDescription && (
+                      <Text size="sm" c="dimmed" mb="md">
+                        {step.guideStep.shortDescription}
+                      </Text>
                     )}
-                    {currentStep.guideStep.example && (
-                      <Grid.Col span={{ base: 12, sm: 6 }}>
-                        <Box>
-                          <Button
-                            variant="subtle"
-                            size="xs"
-                            leftSection={
-                              exampleVisible ? (
-                                <IconChevronUp size={14} />
-                              ) : (
-                                <IconChevronDown size={14} />
-                              )
-                            }
-                            onClick={() =>
-                              setShowExample({ ...showExample, [stepIndex]: !exampleVisible })
-                            }
-                            mb="xs"
-                            fullWidth
-                            justify="flex-start"
-                          >
-                            Example
-                          </Button>
-                          {exampleVisible && (
-                            <Box
-                              style={{ textAlign: 'left', lineHeight: 1.6 }}
-                              dangerouslySetInnerHTML={{ __html: currentStep.guideStep.example }}
-                            />
-                          )}
-                        </Box>
-                      </Grid.Col>
-                    )}
-                  </Grid>
-                  <Box data-walkthrough="step-insights-editor">
-                    <SessionStepInsightsEditor
-                      content={currentStep.insights}
-                      onChange={(html) => handleSessionStepInsightsChange(currentStep.id, html)}
-                    />
-                  </Box>
-                </Box>
+                    <Box data-walkthrough="step-insights-editor">
+                      <SessionStepInsightsEditor
+                        content={step.insights}
+                        onChange={(html) => handleSessionStepInsightsChange(step.id, html)}
+                        instructions={step.guideStep.instructions}
+                        example={step.guideStep.example}
+                      />
+                    </Box>
+                  </Stack>
+                </Tabs.Panel>
               );
-            })()}
-
-          <Group gap="md" mt="xl" justify="space-between">
-            <Group gap="md">
-              {sessionSteps.length > 0 && activeStep > 0 && (
-                <Button variant="default" onClick={prevStep}>
-                  Previous
-                </Button>
-              )}
-              {sessionSteps.length > 0 && activeStep < getTotalSteps() - 1 && (
-                <Button onClick={nextStep}>Next Step</Button>
-              )}
-            </Group>
-            <Group gap="md">
-              <Button variant="outline" onClick={() => router.push(`/study/${studyId}`)}>
-                Cancel
-              </Button>
-              {sessionSteps.length === 0 && (
-                <Button type="submit" loading={loading} data-walkthrough="create-session-button">
-                  {sessionId && sessionId !== 'new' ? 'Update' : 'Create'}
-                </Button>
-              )}
-              {sessionSteps.length > 0 && activeStep === getTotalSteps() - 1 && (
-                <Button type="submit" loading={loading} data-walkthrough="create-session-button">
-                  {sessionId && sessionId !== 'new' ? 'Update' : 'Create'}
-                </Button>
-              )}
-            </Group>
-          </Group>
-        </Stack>
-      </form>
+            })}
+          </Tabs>
+        </form>
+      </Box>
 
       <Modal
         opened={helpModalOpen}

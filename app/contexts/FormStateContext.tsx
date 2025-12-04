@@ -13,16 +13,16 @@ interface FormStateContextType {
   ) => void;
 
   guideStepFormState: {
-    index: number;
     name: string;
+    shortDescription: string;
     instructions: string;
     example: string;
     amtOfResourcePerStep: string;
   } | null;
   setGuideStepFormState: (
     state: {
-      index: number;
       name: string;
+      shortDescription: string;
       instructions: string;
       example: string;
       amtOfResourcePerStep: string;
@@ -68,8 +68,8 @@ export function FormStateProvider({ children }: { children: ReactNode }) {
     amtOfResource: string;
   } | null>(null);
   const [guideStepFormState, setGuideStepFormState] = useState<{
-    index: number;
     name: string;
+    shortDescription: string;
     instructions: string;
     example: string;
     amtOfResourcePerStep: string;

@@ -11,8 +11,8 @@ import {
   Title,
   ActionIcon,
   Loader,
-  NumberInput,
   Text,
+  Tabs,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
@@ -22,13 +22,18 @@ import StarterKit from '@tiptap/starter-kit';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 
-interface _GuideStep {
+interface GuideStep {
   id: number;
   index: number;
   name: string;
+  shortDescription: string | null;
   instructions: string | null;
   example: string | null;
   amtOfResourcePerStep: string | null;
+  guide?: {
+    id: number;
+    name: string;
+  };
 }
 
 export default function EditGuideStepPage() {
@@ -37,12 +42,14 @@ export default function EditGuideStepPage() {
   const guideId = params?.id as string;
   const stepId = params?.stepId as string;
 
+  const [activeTab, setActiveTab] = useState<string | null>('name');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [editorMounted, setEditorMounted] = useState(false);
+  const [guideName, setGuideName] = useState<string>('');
   const [formData, setFormData] = useState({
-    index: 1,
     name: '',
+    shortDescription: '',
     instructions: '',
     example: '',
     amtOfResourcePerStep: '',
@@ -76,6 +83,7 @@ export default function EditGuideStepPage() {
     } else {
       setFetching(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepId, guideId]);
 
   useEffect(() => {
@@ -101,14 +109,25 @@ export default function EditGuideStepPage() {
       if (!response.ok) {
         throw new Error('Failed to fetch guide step');
       }
-      const data = await response.json();
+      const data: GuideStep = await response.json();
       setFormData({
-        index: data.index || 1,
         name: data.name || '',
+        shortDescription: data.shortDescription || '',
         instructions: data.instructions || '',
         example: data.example || '',
         amtOfResourcePerStep: data.amtOfResourcePerStep || '',
       });
+      // Set guide name if available from the API response
+      if (data.guide?.name) {
+        setGuideName(data.guide.name);
+      } else {
+        // Fallback: fetch guide name separately
+        const guideResponse = await fetch(`/api/guides/${guideId}`);
+        if (guideResponse.ok) {
+          const guideData = await guideResponse.json();
+          setGuideName(guideData.name || '');
+        }
+      }
     } catch (error) {
       console.error('Error fetching guide step:', error);
       notifications.show({
@@ -121,23 +140,43 @@ export default function EditGuideStepPage() {
     }
   };
 
+  const handleNext = () => {
+    if (activeTab === 'name') {
+      if (!formData.name.trim()) {
+        notifications.show({
+          title: 'Validation Error',
+          message: 'Please enter a step name',
+          color: 'red',
+        });
+        return;
+      }
+      setActiveTab('instructions');
+    } else if (activeTab === 'instructions') {
+      setActiveTab('example');
+    }
+  };
+
+  const handleBack = () => {
+    if (activeTab === 'instructions') {
+      setActiveTab('name');
+    } else if (activeTab === 'example') {
+      setActiveTab('instructions');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const url = stepId && stepId !== 'new' ? `/api/guide-steps/${stepId}` : '/api/guide-steps';
-      const method = stepId && stepId !== 'new' ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
+      const response = await fetch(`/api/guide-steps/${stepId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...(stepId && stepId !== 'new' ? {} : { guideId: parseInt(guideId) }),
-          index: formData.index,
           name: formData.name,
+          shortDescription: formData.shortDescription || null,
           instructions: formData.instructions || null,
           example: formData.example || null,
           amtOfResourcePerStep: formData.amtOfResourcePerStep || null,
@@ -147,22 +186,27 @@ export default function EditGuideStepPage() {
       if (response.ok) {
         notifications.show({
           title: 'Success',
-          message:
-            stepId && stepId !== 'new'
-              ? 'Guide step updated successfully'
-              : 'Guide step created successfully',
+          message: 'Guide step updated successfully',
           color: 'green',
         });
         router.push(`/setup/guides/${guideId}`);
       } else {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save guide step');
+        let errorMessage = 'Failed to save guide step';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } catch (parseError) {
+          // If response is not JSON, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error('Error saving guide step:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save guide step';
       notifications.show({
         title: 'Error',
-        message: error instanceof Error ? error.message : 'Failed to save guide step',
+        message: errorMessage,
         color: 'red',
       });
     } finally {
@@ -179,168 +223,229 @@ export default function EditGuideStepPage() {
   }
 
   return (
-    <Box>
-      <Group mb="xl">
-        <ActionIcon variant="subtle" onClick={() => router.push(`/setup/guides/${guideId}`)}>
-          <IconArrowLeft size={20} />
-        </ActionIcon>
-        <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
-          {stepId && stepId !== 'new' ? 'Edit Guide Step' : 'New Guide Step'}
-        </Title>
-      </Group>
-
-      <form onSubmit={handleSubmit}>
-        <Stack gap="md">
-          <NumberInput
-            label="Index"
-            placeholder="Enter step index"
-            required
-            min={1}
-            value={formData.index}
-            onChange={(value) =>
-              setFormData({ ...formData, index: typeof value === 'number' ? value : 1 })
-            }
-            allowNegative={false}
-          />
-          <TextInput
-            label="Name"
-            placeholder="Enter step name"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <Box>
-            <Text size="sm" fw={500} mb={5}>
-              Instructions
-            </Text>
-            {editorMounted && instructionsEditor ? (
-              <RichTextEditor editor={instructionsEditor} style={{ minHeight: 200 }}>
-                <RichTextEditor.Toolbar sticky stickyOffset={0}>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Bold />
-                    <RichTextEditor.Italic />
-                    <RichTextEditor.Underline />
-                    <RichTextEditor.Strikethrough />
-                    <RichTextEditor.ClearFormatting />
-                    <RichTextEditor.Highlight />
-                    <RichTextEditor.Code />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.H1 />
-                    <RichTextEditor.H2 />
-                    <RichTextEditor.H3 />
-                    <RichTextEditor.H4 />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Blockquote />
-                    <RichTextEditor.Hr />
-                    <RichTextEditor.BulletList />
-                    <RichTextEditor.OrderedList />
-                    <RichTextEditor.TaskList />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Link />
-                    <RichTextEditor.Unlink />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignJustify />
-                    <RichTextEditor.AlignRight />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Undo />
-                    <RichTextEditor.Redo />
-                  </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
-                <RichTextEditor.Content />
-              </RichTextEditor>
-            ) : (
-              <Box
-                style={{
-                  minHeight: 200,
-                  border: '1px solid var(--mantine-color-gray-3)',
-                  borderRadius: '4px',
-                  padding: '8px',
-                }}
-              >
-                <Text size="sm" c="dimmed">
-                  Loading editor...
+    <Box style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Fixed Header */}
+      <Box
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor: 'var(--mantine-color-body)',
+          borderBottom: '1px solid var(--mantine-color-gray-3)',
+          padding: '16px 24px',
+        }}
+      >
+        <Group justify="space-between" align="center">
+          <Group gap="md">
+            <ActionIcon variant="subtle" onClick={() => router.push(`/setup/guides/${guideId}`)}>
+              <IconArrowLeft size={20} />
+            </ActionIcon>
+            <Box>
+              <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
+                {guideName || 'Edit Guide Step'}
+              </Title>
+              {formData.name && (
+                <Text size="sm" c="dimmed" mt={4}>
+                  {formData.name}
                 </Text>
-              </Box>
-            )}
-          </Box>
-          <Box>
-            <Text size="sm" fw={500} mb={5}>
-              Example
-            </Text>
-            {editorMounted && exampleEditor ? (
-              <RichTextEditor editor={exampleEditor} style={{ minHeight: 200 }}>
-                <RichTextEditor.Toolbar sticky stickyOffset={0}>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Bold />
-                    <RichTextEditor.Italic />
-                    <RichTextEditor.Underline />
-                    <RichTextEditor.Strikethrough />
-                    <RichTextEditor.ClearFormatting />
-                    <RichTextEditor.Highlight />
-                    <RichTextEditor.Code />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.H1 />
-                    <RichTextEditor.H2 />
-                    <RichTextEditor.H3 />
-                    <RichTextEditor.H4 />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Blockquote />
-                    <RichTextEditor.Hr />
-                    <RichTextEditor.BulletList />
-                    <RichTextEditor.OrderedList />
-                    <RichTextEditor.TaskList />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Link />
-                    <RichTextEditor.Unlink />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignJustify />
-                    <RichTextEditor.AlignRight />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Undo />
-                    <RichTextEditor.Redo />
-                  </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
-                <RichTextEditor.Content />
-              </RichTextEditor>
-            ) : (
-              <Box
-                style={{
-                  minHeight: 200,
-                  border: '1px solid var(--mantine-color-gray-3)',
-                  borderRadius: '4px',
-                  padding: '8px',
-                }}
-              >
-                <Text size="sm" c="dimmed">
-                  Loading editor...
-                </Text>
-              </Box>
-            )}
-          </Box>
-          <Group justify="flex-end" mt="md">
+              )}
+            </Box>
+          </Group>
+          <Group gap="md">
             <Button variant="outline" onClick={() => router.push(`/setup/guides/${guideId}`)}>
               Cancel
             </Button>
-            <Button type="submit" loading={loading}>
-              {stepId && stepId !== 'new' ? 'Update' : 'Create'}
+            <Button type="submit" form="edit-guide-step-form" loading={loading}>
+              Update Step
             </Button>
           </Group>
-        </Stack>
-      </form>
+        </Group>
+      </Box>
+
+      {/* Scrollable Content */}
+      <Box style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <form id="edit-guide-step-form" onSubmit={handleSubmit}>
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <Tabs.List>
+              <Tabs.Tab value="name">1. Name</Tabs.Tab>
+              <Tabs.Tab value="instructions">2. Instructions</Tabs.Tab>
+              <Tabs.Tab value="example">3. Example</Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="name" pt="md">
+              <Stack gap="md" style={{ maxWidth: 600 }}>
+                <TextInput
+                  label="Name"
+                  placeholder="Enter step name"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  description="Give your guide step a descriptive name"
+                />
+                <TextInput
+                  label="Short Description"
+                  placeholder="Enter a short description (optional)"
+                  value={formData.shortDescription}
+                  onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
+                  description="A brief description that will be shown in session tabs"
+                />
+                <Group justify="flex-end" mt="md">
+                  <Button onClick={handleNext}>Next: Instructions</Button>
+                </Group>
+              </Stack>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="instructions" pt="md">
+              <Stack gap="md" style={{ maxWidth: 800 }}>
+                <Box>
+                  <Text size="sm" fw={500} mb={5}>
+                    Instructions
+                  </Text>
+                  <Text size="xs" c="dimmed" mb="sm">
+                    Provide detailed instructions for this step
+                  </Text>
+                  {editorMounted && instructionsEditor ? (
+                    <RichTextEditor editor={instructionsEditor} style={{ minHeight: 300 }}>
+                      <RichTextEditor.Toolbar sticky stickyOffset={0}>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Bold />
+                          <RichTextEditor.Italic />
+                          <RichTextEditor.Underline />
+                          <RichTextEditor.Strikethrough />
+                          <RichTextEditor.ClearFormatting />
+                          <RichTextEditor.Highlight />
+                          <RichTextEditor.Code />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.H1 />
+                          <RichTextEditor.H2 />
+                          <RichTextEditor.H3 />
+                          <RichTextEditor.H4 />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Blockquote />
+                          <RichTextEditor.Hr />
+                          <RichTextEditor.BulletList />
+                          <RichTextEditor.OrderedList />
+                          <RichTextEditor.TaskList />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Link />
+                          <RichTextEditor.Unlink />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.AlignLeft />
+                          <RichTextEditor.AlignCenter />
+                          <RichTextEditor.AlignJustify />
+                          <RichTextEditor.AlignRight />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Undo />
+                          <RichTextEditor.Redo />
+                        </RichTextEditor.ControlsGroup>
+                      </RichTextEditor.Toolbar>
+                      <RichTextEditor.Content />
+                    </RichTextEditor>
+                  ) : (
+                    <Box
+                      style={{
+                        minHeight: 300,
+                        border: '1px solid var(--mantine-color-gray-3)',
+                        borderRadius: '4px',
+                        padding: '8px',
+                      }}
+                    >
+                      <Text size="sm" c="dimmed">
+                        Loading editor...
+                      </Text>
+                    </Box>
+                  )}
+                </Box>
+                <Group justify="space-between" mt="md">
+                  <Button variant="outline" onClick={handleBack}>
+                    Back
+                  </Button>
+                  <Button onClick={handleNext}>Next: Example</Button>
+                </Group>
+              </Stack>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="example" pt="md">
+              <Stack gap="md" style={{ maxWidth: 800 }}>
+                <Box>
+                  <Text size="sm" fw={500} mb={5}>
+                    Example
+                  </Text>
+                  <Text size="xs" c="dimmed" mb="sm">
+                    Provide an example for this step (optional)
+                  </Text>
+                  {editorMounted && exampleEditor ? (
+                    <RichTextEditor editor={exampleEditor} style={{ minHeight: 300 }}>
+                      <RichTextEditor.Toolbar sticky stickyOffset={0}>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Bold />
+                          <RichTextEditor.Italic />
+                          <RichTextEditor.Underline />
+                          <RichTextEditor.Strikethrough />
+                          <RichTextEditor.ClearFormatting />
+                          <RichTextEditor.Highlight />
+                          <RichTextEditor.Code />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.H1 />
+                          <RichTextEditor.H2 />
+                          <RichTextEditor.H3 />
+                          <RichTextEditor.H4 />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Blockquote />
+                          <RichTextEditor.Hr />
+                          <RichTextEditor.BulletList />
+                          <RichTextEditor.OrderedList />
+                          <RichTextEditor.TaskList />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Link />
+                          <RichTextEditor.Unlink />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.AlignLeft />
+                          <RichTextEditor.AlignCenter />
+                          <RichTextEditor.AlignJustify />
+                          <RichTextEditor.AlignRight />
+                        </RichTextEditor.ControlsGroup>
+                        <RichTextEditor.ControlsGroup>
+                          <RichTextEditor.Undo />
+                          <RichTextEditor.Redo />
+                        </RichTextEditor.ControlsGroup>
+                      </RichTextEditor.Toolbar>
+                      <RichTextEditor.Content />
+                    </RichTextEditor>
+                  ) : (
+                    <Box
+                      style={{
+                        minHeight: 300,
+                        border: '1px solid var(--mantine-color-gray-3)',
+                        borderRadius: '4px',
+                        padding: '8px',
+                      }}
+                    >
+                      <Text size="sm" c="dimmed">
+                        Loading editor...
+                      </Text>
+                    </Box>
+                  )}
+                </Box>
+                <Group justify="space-between" mt="md">
+                  <Button variant="outline" onClick={handleBack}>
+                    Back
+                  </Button>
+                </Group>
+              </Stack>
+            </Tabs.Panel>
+          </Tabs>
+        </form>
+      </Box>
     </Box>
   );
 }

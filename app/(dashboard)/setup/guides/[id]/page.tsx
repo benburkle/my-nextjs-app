@@ -15,7 +15,24 @@ import {
   Badge,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconEdit, IconPlus, IconArrowLeft } from '@tabler/icons-react';
+import { IconEdit, IconPlus, IconArrowLeft, IconGripVertical } from '@tabler/icons-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface GuideStep {
   id: number;
@@ -34,6 +51,71 @@ interface Guide {
   guideSteps: GuideStep[];
 }
 
+function SortableRow({ step, onEdit }: { step: GuideStep; onEdit: (step: GuideStep) => void }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: step.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <Table.Tr ref={setNodeRef} style={style}>
+      <Table.Td>
+        <Group gap="xs">
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            style={{ cursor: 'grab', touchAction: 'none' }}
+            {...attributes}
+            {...listeners}
+          >
+            <IconGripVertical size={16} />
+          </ActionIcon>
+          <Badge>{step.index}</Badge>
+        </Group>
+      </Table.Td>
+      <Table.Td>{step.name}</Table.Td>
+      <Table.Td>
+        {step.instructions
+          ? (() => {
+              // Strip HTML tags and get first sentence
+              const text = step.instructions.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+              // Split by sentence-ending punctuation followed by space or end of string
+              const firstSentence =
+                text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
+                text.split(/[.!?]+[\s]?/)[0]?.trim() ||
+                text.trim();
+              return firstSentence || '-';
+            })()
+          : '-'}
+      </Table.Td>
+      <Table.Td>
+        {step.example
+          ? (() => {
+              // Strip HTML tags and get first sentence
+              const text = step.example.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+              // Split by sentence-ending punctuation followed by space or end of string
+              const firstSentence =
+                text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
+                text.split(/[.!?]+[\s]?/)[0]?.trim() ||
+                text.trim();
+              return firstSentence || '-';
+            })()
+          : '-'}
+      </Table.Td>
+      <Table.Td>
+        <ActionIcon variant="subtle" color="blue" onClick={() => onEdit(step)}>
+          <IconEdit size={16} />
+        </ActionIcon>
+      </Table.Td>
+    </Table.Tr>
+  );
+}
+
 export default function GuideDetailPage() {
   const router = useRouter();
   const params = useParams();
@@ -41,11 +123,20 @@ export default function GuideDetailPage() {
 
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reordering, setReordering] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     if (guideId) {
       fetchGuide();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guideId]);
 
   const fetchGuide = async () => {
@@ -66,6 +157,54 @@ export default function GuideDetailPage() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || !guide) return;
+
+    const oldIndex = guide.guideSteps.findIndex((step) => step.id === active.id);
+    const newIndex = guide.guideSteps.findIndex((step) => step.id === over.id);
+
+    if (oldIndex !== newIndex) {
+      const newSteps = arrayMove(guide.guideSteps, oldIndex, newIndex);
+      setGuide({ ...guide, guideSteps: newSteps });
+
+      // Update indices on server
+      try {
+        setReordering(true);
+        const stepIds = newSteps.map((step) => step.id);
+        const response = await fetch('/api/guide-steps/reorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            guideId: parseInt(guideId),
+            stepIds,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to reorder steps');
+        }
+
+        // Refresh to get updated indices
+        await fetchGuide();
+      } catch (error) {
+        console.error('Error reordering steps:', error);
+        notifications.show({
+          title: 'Error',
+          message: 'Failed to reorder steps. Please try again.',
+          color: 'red',
+        });
+        // Revert on error
+        await fetchGuide();
+      } finally {
+        setReordering(false);
+      }
     }
   };
 
@@ -132,62 +271,34 @@ export default function GuideDetailPage() {
           No steps yet. Add your first step!
         </Text>
       ) : (
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Index</Table.Th>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Instructions</Table.Th>
-              <Table.Th>Example</Table.Th>
-              <Table.Th>Actions</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {guide.guideSteps.map((step) => (
-              <Table.Tr key={step.id}>
-                <Table.Td>
-                  <Badge>{step.index}</Badge>
-                </Table.Td>
-                <Table.Td>{step.name}</Table.Td>
-                <Table.Td>
-                  {step.instructions
-                    ? (() => {
-                        // Strip HTML tags and get first sentence
-                        const text = step.instructions
-                          .replace(/<[^>]*>/g, '')
-                          .replace(/&nbsp;/g, ' ');
-                        // Split by sentence-ending punctuation followed by space or end of string
-                        const firstSentence =
-                          text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
-                          text.split(/[.!?]+[\s]?/)[0]?.trim() ||
-                          text.trim();
-                        return firstSentence || '-';
-                      })()
-                    : '-'}
-                </Table.Td>
-                <Table.Td>
-                  {step.example
-                    ? (() => {
-                        // Strip HTML tags and get first sentence
-                        const text = step.example.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
-                        // Split by sentence-ending punctuation followed by space or end of string
-                        const firstSentence =
-                          text.match(/[^.!?]+[.!?]+[\s]?/)?.[0]?.trim() ||
-                          text.split(/[.!?]+[\s]?/)[0]?.trim() ||
-                          text.trim();
-                        return firstSentence || '-';
-                      })()
-                    : '-'}
-                </Table.Td>
-                <Table.Td>
-                  <ActionIcon variant="subtle" color="blue" onClick={() => handleEditStep(step)}>
-                    <IconEdit size={16} />
-                  </ActionIcon>
-                </Table.Td>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <Table striped highlightOnHover>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th style={{ width: 120 }}>Index</Table.Th>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Instructions</Table.Th>
+                <Table.Th>Example</Table.Th>
+                <Table.Th>Actions</Table.Th>
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              <SortableContext
+                items={guide.guideSteps.map((step) => step.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {guide.guideSteps.map((step) => (
+                  <SortableRow key={step.id} step={step} onEdit={handleEditStep} />
+                ))}
+              </SortableContext>
+            </Table.Tbody>
+          </Table>
+        </DndContext>
+      )}
+      {reordering && (
+        <Box style={{ position: 'fixed', top: 20, right: 20 }}>
+          <Loader size="sm" />
+        </Box>
       )}
     </Box>
   );

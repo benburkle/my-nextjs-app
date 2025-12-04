@@ -73,36 +73,58 @@ export default function NewGuidePage() {
   };
 
   return (
-    <Box>
-      <Group mb="xl">
-        <ActionIcon variant="subtle" onClick={() => router.push('/setup/guides')}>
-          <IconArrowLeft size={20} />
-        </ActionIcon>
-        <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
-          New Guide
-        </Title>
-      </Group>
-
-      <form onSubmit={handleSubmit}>
-        <Stack gap="md">
-          <TextInput
-            label="Name"
-            placeholder="Enter guide name"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            data-walkthrough="guide-name-input"
-          />
-          <Group justify="flex-end" mt="md">
+    <Box style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Fixed Header */}
+      <Box
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor: 'var(--mantine-color-body)',
+          borderBottom: '1px solid var(--mantine-color-gray-3)',
+          padding: '16px 24px',
+        }}
+      >
+        <Group justify="space-between" align="center">
+          <Group gap="md">
+            <ActionIcon variant="subtle" onClick={() => router.push('/setup/guides')}>
+              <IconArrowLeft size={20} />
+            </ActionIcon>
+            <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
+              New Guide
+            </Title>
+          </Group>
+          <Group gap="md">
             <Button variant="outline" onClick={() => router.push('/setup/guides')}>
               Cancel
             </Button>
-            <Button type="submit" loading={loading} data-walkthrough="create-guide-button">
+            <Button
+              type="submit"
+              form="new-guide-form"
+              loading={loading}
+              data-walkthrough="create-guide-button"
+            >
               Create
             </Button>
           </Group>
-        </Stack>
-      </form>
+        </Group>
+      </Box>
+
+      {/* Scrollable Content */}
+      <Box style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <form id="new-guide-form" onSubmit={handleSubmit}>
+          <Stack gap="md">
+            <TextInput
+              label="Name"
+              placeholder="Enter guide name"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              data-walkthrough="guide-name-input"
+            />
+          </Stack>
+        </form>
+      </Box>
     </Box>
   );
 }

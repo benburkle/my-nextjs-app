@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -15,20 +15,20 @@ model User {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
-  password      String    // Hashed password
+  password      String // Hashed password
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   // Relationships
   schedules     Schedule[]
   resources     Resource[]
-  guides         Guide[]
-  studies        Study[]
-  sessions       Session[]
-  accounts       Account[]
-  sessions_auth  SessionAuth[]
+  guides        Guide[]
+  studies       Study[]
+  sessions      Session[]
+  accounts      Account[]
+  sessions_auth SessionAuth[]
 }
 
 model Account {
@@ -116,7 +116,7 @@ model Study {
   id         Int       @id @default(autoincrement())
   userId     String?   @map("user_id")
   scheduleId Int?      @map("schedule_id")
-  resourceId Int?       @map("resource_id")
+  resourceId Int?      @map("resource_id")
   guideId    Int?      @map("guide_id")
   name       String // Name of the study
   user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -194,6 +194,7 @@ model GuideStep {
   guideId              Int           @map("guide_id")
   index                Int // Order of the step within the guide
   name                 String // Name of the guide step
+  shortDescription     String?       @map("short_description") // Short description of the step
   instructions         String? // Instructions for the step
   example              String? // Example for the step
   amtOfResourcePerStep String?       @map("amt_of_resource_per_step") // Amount of resource required (e.g., Chapter, Verses)
@@ -229,7 +230,7 @@ model SessionStep {
   id          Int       @id @default(autoincrement())
   sessionId   Int       @map("session_id")
   guideStepId Int       @map("guide_step_id")
-  insights    String?   // User's insights or notes for this step
+  insights    String? // User's insights or notes for this step
   session     Session   @relation(fields: [sessionId], references: [id])
   guideStep   GuideStep @relation(fields: [guideStepId], references: [id])
 

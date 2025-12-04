@@ -66,17 +66,19 @@ describe('DashboardLayout', () => {
       </DashboardLayout>
     );
 
-    expect(screen.getByText('Abide Guide')).toBeInTheDocument();
+    // TopNavBar should show "Select Study" when no study is selected
+    expect(screen.getByText('Select Study')).toBeInTheDocument();
   });
 
-  it('should render Sidebar', () => {
+  it('should render BottomNavBar', () => {
     renderWithProvider(
       <DashboardLayout>
         <div>Test</div>
       </DashboardLayout>
     );
 
-    // Sidebar should be rendered (check for menu button)
-    expect(screen.getByLabelText('Toggle sidebar')).toBeInTheDocument();
+    // BottomNavBar should be rendered (check for Build Guide button)
+    expect(screen.getByLabelText('Build Guide')).toBeInTheDocument();
+    expect(screen.getByLabelText('Build Study')).toBeInTheDocument();
   });
 });

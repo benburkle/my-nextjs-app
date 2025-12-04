@@ -1,19 +1,27 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Text, Loader } from '@mantine/core';
+import { Box, Text, Loader, Group, ActionIcon, Popover } from '@mantine/core';
 import { RichTextEditor } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
+import { IconInfoCircle, IconBook } from '@tabler/icons-react';
 
 interface SessionStepInsightsEditorProps {
   content: string | null;
   onChange: (html: string) => void;
+  instructions?: string | null;
+  example?: string | null;
 }
 
-export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsightsEditorProps) {
+export function SessionStepInsightsEditor({
+  content,
+  onChange,
+  instructions,
+  example,
+}: SessionStepInsightsEditorProps) {
   const [mounted, setMounted] = useState(false);
 
   const editor = useEditor({
@@ -41,9 +49,21 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
   if (!mounted || !editor) {
     return (
       <Box>
-        <Text size="sm" fw={500} mb={5}>
-          Insights
-        </Text>
+        <Group gap="xs" mb={5}>
+          <Text size="sm" fw={500}>
+            Insights
+          </Text>
+          {instructions && (
+            <ActionIcon variant="subtle" size="sm" color="blue" disabled>
+              <IconInfoCircle size={16} />
+            </ActionIcon>
+          )}
+          {example && (
+            <ActionIcon variant="subtle" size="sm" color="blue" disabled>
+              <IconBook size={16} />
+            </ActionIcon>
+          )}
+        </Group>
         <Box
           style={{
             minHeight: 200,
@@ -60,9 +80,47 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
 
   return (
     <Box>
-      <Text size="sm" fw={500} mb={5}>
-        Insights
-      </Text>
+      <Group gap="xs" mb={5}>
+        <Text size="sm" fw={500}>
+          Insights
+        </Text>
+        {instructions && (
+          <Popover width={400} position="top" withArrow shadow="md">
+            <Popover.Target>
+              <ActionIcon variant="subtle" size="sm" color="blue">
+                <IconInfoCircle size={16} />
+              </ActionIcon>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Text size="sm" fw={500} mb="xs">
+                Instructions
+              </Text>
+              <Box
+                style={{ textAlign: 'left', lineHeight: 1.6 }}
+                dangerouslySetInnerHTML={{ __html: instructions }}
+              />
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {example && (
+          <Popover width={400} position="top" withArrow shadow="md">
+            <Popover.Target>
+              <ActionIcon variant="subtle" size="sm" color="blue">
+                <IconBook size={16} />
+              </ActionIcon>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Text size="sm" fw={500} mb="xs">
+                Example
+              </Text>
+              <Box
+                style={{ textAlign: 'left', lineHeight: 1.6 }}
+                dangerouslySetInnerHTML={{ __html: example }}
+              />
+            </Popover.Dropdown>
+          </Popover>
+        )}
+      </Group>
       <RichTextEditor editor={editor} style={{ minHeight: 200 }}>
         <RichTextEditor.Toolbar>
           <RichTextEditor.ControlsGroup>
