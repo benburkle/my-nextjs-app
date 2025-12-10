@@ -116,24 +116,6 @@ export default function StudyDetailPage() {
       <Stack gap="md" mb="xl">
         <Box>
           <Text size="sm" c="dimmed">
-            Resource
-          </Text>
-          <Text>{study.resource?.name || '-'}</Text>
-        </Box>
-        <Box>
-          <Text size="sm" c="dimmed">
-            Schedule
-          </Text>
-          {study.schedule ? (
-            <Text>
-              {study.schedule.day} {study.schedule.timeStart} ({study.schedule.repeats})
-            </Text>
-          ) : (
-            <Text>-</Text>
-          )}
-        </Box>
-        <Box>
-          <Text size="sm" c="dimmed">
             Sessions
           </Text>
           <Text>{study.sessions?.length || 0}</Text>

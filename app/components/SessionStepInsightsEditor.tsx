@@ -11,9 +11,10 @@ import TaskItem from '@tiptap/extension-task-item';
 interface SessionStepInsightsEditorProps {
   content: string | null;
   onChange: (html: string) => void;
+  hideLabel?: boolean;
 }
 
-export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsightsEditorProps) {
+export function SessionStepInsightsEditor({ content, onChange, hideLabel = false }: SessionStepInsightsEditorProps) {
   const [mounted, setMounted] = useState(false);
 
   const editor = useEditor({
@@ -41,9 +42,11 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
   if (!mounted || !editor) {
     return (
       <Box>
-        <Text size="sm" fw={500} mb={5}>
-          Insights
-        </Text>
+        {!hideLabel && (
+          <Text size="sm" fw={500} mb={5}>
+            Insights
+          </Text>
+        )}
         <Box
           style={{
             minHeight: 200,
@@ -60,9 +63,11 @@ export function SessionStepInsightsEditor({ content, onChange }: SessionStepInsi
 
   return (
     <Box>
-      <Text size="sm" fw={500} mb={5}>
-        Insights
-      </Text>
+      {!hideLabel && (
+        <Text size="sm" fw={500} mb={5}>
+          Insights
+        </Text>
+      )}
       <RichTextEditor editor={editor} style={{ minHeight: 200 }}>
         <RichTextEditor.Toolbar>
           <RichTextEditor.ControlsGroup>

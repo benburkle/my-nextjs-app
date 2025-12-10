@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Box, useMantineColorScheme } from '@mantine/core';
 import { TopNavBar } from './TopNavBar';
+import { BottomNavBar } from './BottomNavBar';
 import { Sidebar } from './Sidebar';
 import { WalkthroughPanel } from './WalkthroughPanel';
 import { useWalkthrough } from '../contexts/WalkthroughContext';
@@ -49,7 +50,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           backgroundColor: 'var(--mantine-color-body)',
         }}
       >
-        <TopNavBar onMenuClick={toggleSidebar} />
+        <TopNavBar />
       </Box>
       <Box
         style={{
@@ -85,12 +86,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             backgroundColor: 'var(--mantine-color-body)',
             marginLeft: sidebarOpen ? '200px' : '0px', // Approximate sidebar width when open
             marginRight: walkthroughType ? '400px' : '0px', // Adjust for walkthrough panel
+            marginBottom: '60px', // Space for bottom nav bar
             transition: 'margin-right 0.2s ease',
           }}
         >
           {children}
         </Box>
       </Box>
+      <BottomNavBar />
       {walkthroughType && (
         <WalkthroughPanel walkthroughType={walkthroughType} onClose={closeWalkthrough} />
       )}

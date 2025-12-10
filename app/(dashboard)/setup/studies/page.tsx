@@ -136,9 +136,7 @@ export default function StudiesPage() {
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>
-              <Table.Th>Resource</Table.Th>
               <Table.Th>Guide</Table.Th>
-              <Table.Th>Schedule</Table.Th>
               <Table.Th>Sessions</Table.Th>
               <Table.Th>Actions</Table.Th>
             </Table.Tr>
@@ -151,11 +149,7 @@ export default function StudiesPage() {
                 onClick={() => router.push(`/setup/studies/${study.id}`)}
               >
                 <Table.Td>{study.name}</Table.Td>
-                <Table.Td>{study.resource?.name || '-'}</Table.Td>
                 <Table.Td>{study.guide?.name || '-'}</Table.Td>
-                <Table.Td>
-                  {study.schedule ? `${study.schedule.day} ${study.schedule.timeStart}` : '-'}
-                </Table.Td>
                 <Table.Td>{study.sessions?.length || 0}</Table.Td>
                 <Table.Td>
                   <Group gap="xs" onClick={(e) => e.stopPropagation()}>
@@ -167,7 +161,7 @@ export default function StudiesPage() {
                       <IconEdit size={16} />
                     </ActionIcon>
                     <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(study.id)}>
-                      <IconTrash size={16} />
+                      <IconTrash size={16} color="red" />
                     </ActionIcon>
                   </Group>
                 </Table.Td>

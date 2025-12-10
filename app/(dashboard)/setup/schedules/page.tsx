@@ -145,7 +145,7 @@ export default function SchedulesPage() {
                       color="red"
                       onClick={() => handleDelete(schedule.id)}
                     >
-                      <IconTrash size={16} />
+                      <IconTrash size={16} color="red" />
                     </ActionIcon>
                   </Group>
                 </Table.Td>

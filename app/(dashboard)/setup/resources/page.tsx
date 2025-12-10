@@ -144,7 +144,7 @@ export default function ResourcesPage() {
                       color="red"
                       onClick={() => handleDelete(resource.id)}
                     >
-                      <IconTrash size={16} />
+                      <IconTrash size={16} color="red" />
                     </ActionIcon>
                   </Group>
                 </Table.Td>

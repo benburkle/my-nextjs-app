@@ -141,7 +141,7 @@ export default function GuidesPage() {
                       <IconEdit size={16} />
                     </ActionIcon>
                     <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(guide.id)}>
-                      <IconTrash size={16} />
+                      <IconTrash size={16} color="red" />
                     </ActionIcon>
                   </Group>
                 </Table.Td>

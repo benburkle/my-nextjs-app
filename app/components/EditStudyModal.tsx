@@ -20,19 +20,6 @@ function getStatusDescription(status: number): string {
   return descriptions[status] || `HTTP ${status} error`;
 }
 
-interface Schedule {
-  id: number;
-  day: string;
-  timeStart: string;
-  repeats: string;
-}
-
-interface Resource {
-  id: number;
-  name: string;
-  type: string;
-}
-
 interface Guide {
   id: number;
   name: string;
@@ -58,14 +45,10 @@ interface EditStudyModalProps {
 
 export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyModalProps) {
   const [loading, setLoading] = useState(false);
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const [resources, setResources] = useState<Resource[]>([]);
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
-    scheduleId: '',
-    resourceId: '',
     guideId: '',
   });
 
@@ -75,15 +58,11 @@ export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyMod
       if (study) {
         setFormData({
           name: study.name || '',
-          scheduleId: study.scheduleId ? study.scheduleId.toString() : '',
-          resourceId: study.resourceId ? study.resourceId.toString() : '',
           guideId: study.guideId ? study.guideId.toString() : '',
         });
       } else {
         setFormData({
           name: '',
-          scheduleId: '',
-          resourceId: '',
           guideId: '',
         });
       }
@@ -93,21 +72,7 @@ export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyMod
   const fetchOptions = async () => {
     try {
       setLoadingOptions(true);
-      const [schedulesRes, resourcesRes, guidesRes] = await Promise.all([
-        fetch('/api/schedules'),
-        fetch('/api/resources'),
-        fetch('/api/guides'),
-      ]);
-
-      if (schedulesRes.ok) {
-        const schedulesData = await schedulesRes.json();
-        setSchedules(schedulesData);
-      }
-
-      if (resourcesRes.ok) {
-        const resourcesData = await resourcesRes.json();
-        setResources(resourcesData);
-      }
+      const guidesRes = await fetch('/api/guides');
 
       if (guidesRes.ok) {
         const guidesData = await guidesRes.json();
@@ -130,8 +95,8 @@ export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyMod
 
       const requestBody = {
         name: formData.name,
-        scheduleId: formData.scheduleId || null,
-        resourceId: formData.resourceId || null,
+        scheduleId: null,
+        resourceId: null,
         guideId: formData.guideId || null,
       };
 
@@ -237,16 +202,6 @@ export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyMod
     }
   };
 
-  const scheduleOptions = schedules.map((s) => ({
-    value: s.id.toString(),
-    label: `${s.day} ${s.timeStart} (${s.repeats})`,
-  }));
-
-  const resourceOptions = resources.map((r) => ({
-    value: r.id.toString(),
-    label: `${r.name} (${r.type})`,
-  }));
-
   const guideOptions = guides.map((g) => ({
     value: g.id.toString(),
     label: g.name,
@@ -266,26 +221,6 @@ export function EditStudyModal({ opened, onClose, study, onSaved }: EditStudyMod
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               data-walkthrough="study-name-input"
-            />
-            <Select
-              label="Schedule"
-              placeholder="Select schedule (optional)"
-              data={scheduleOptions}
-              value={formData.scheduleId}
-              onChange={(value) => setFormData({ ...formData, scheduleId: value || '' })}
-              searchable
-              clearable
-              data-walkthrough="study-schedule-select"
-            />
-            <Select
-              label="Resource"
-              placeholder="Select resource (optional)"
-              data={resourceOptions}
-              value={formData.resourceId}
-              onChange={(value) => setFormData({ ...formData, resourceId: value || '' })}
-              searchable
-              clearable
-              data-walkthrough="study-resource-select"
             />
             <Select
               label="Guide"

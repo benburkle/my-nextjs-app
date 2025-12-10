@@ -152,81 +152,67 @@ export default function StudyPage() {
 
   return (
     <Box>
-      <Grid mb="xl">
-        <Grid.Col span={{ base: 12, sm: 3 }}>
-          <Box>
-            <Text size="sm" c="dimmed">
-              Study
-            </Text>
-            <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
-              {study.name}
-            </Title>
-          </Box>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, sm: 3 }}>
-          <Box>
-            <Text size="sm" c="dimmed">
-              Resource
-            </Text>
-            <Text>{study.resource?.name || '-'}</Text>
-          </Box>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, sm: 3 }}>
-          <Box>
-            <Text size="sm" c="dimmed">
-              Guide
-            </Text>
-            <Text>{study.guide?.name || '-'}</Text>
-          </Box>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, sm: 3 }}>
-          <Box>
-            <Text size="sm" c="dimmed">
-              Schedule
-            </Text>
-            {study.schedule ? (
-              <Text>
-                {study.schedule.day} {study.schedule.timeStart} ({study.schedule.repeats})
+      <Group justify="space-between" align="flex-start" mb="xl" wrap="nowrap">
+        <Grid style={{ flex: 1 }}>
+          <Grid.Col span={6}>
+            <Box>
+              <Text size="sm" c="dimmed">
+                Study
               </Text>
-            ) : (
-              <Text>-</Text>
-            )}
-          </Box>
-        </Grid.Col>
-      </Grid>
-
-      <Divider mb="xl" />
-
-      {/* Navigation buttons at the top */}
-      <Group justify="flex-start" mb="xl">
-        {currentSession ? (
-          <>
-            <ActionIcon
-              variant="subtle"
-              size="lg"
-              onClick={() => router.push(`/study/${studyId}/sessions/${currentSession.id}`)}
-              aria-label="Edit session"
-            >
-              <IconPencil size={20} />
-            </ActionIcon>
-            <ActionIcon
-              variant="subtle"
-              size="lg"
-              onClick={goToPreviousSession}
-              disabled={!hasPreviousSession}
-              aria-label="Previous session"
-            >
-              <IconChevronLeft size={20} />
-            </ActionIcon>
-            <ActionIcon
-              variant="subtle"
-              size="lg"
-              onClick={goToNextSession}
-              disabled={!hasNextSession}
-              aria-label="Next session"
-            >
-              <IconChevronRight size={20} />
-            </ActionIcon>
+              <Title order={2} style={{ fontFamily: 'Arial, sans-serif' }}>
+                {study.name}
+              </Title>
+            </Box>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Box>
+              <Text size="sm" c="dimmed">
+                Guide
+              </Text>
+              <Text>{study.guide?.name || '-'}</Text>
+            </Box>
+          </Grid.Col>
+        </Grid>
+        <Group gap="xs" wrap="nowrap">
+          {currentSession ? (
+            <>
+              <ActionIcon
+                variant="subtle"
+                size="lg"
+                onClick={() => router.push(`/study/${studyId}/sessions/${currentSession.id}`)}
+                aria-label="Edit session"
+              >
+                <IconPencil size={20} />
+              </ActionIcon>
+              <ActionIcon
+                variant="subtle"
+                size="lg"
+                onClick={goToPreviousSession}
+                disabled={!hasPreviousSession}
+                aria-label="Previous session"
+              >
+                <IconChevronLeft size={20} />
+              </ActionIcon>
+              <ActionIcon
+                variant="subtle"
+                size="lg"
+                onClick={goToNextSession}
+                disabled={!hasNextSession}
+                aria-label="Next session"
+              >
+                <IconChevronRight size={20} />
+              </ActionIcon>
+              <ActionIcon
+                variant="subtle"
+                size="lg"
+                onClick={() => router.push(`/study/${studyId}/sessions/new`)}
+                aria-label="Add session"
+                data-walkthrough="add-session-button"
+              >
+                <IconPlus size={20} />
+              </ActionIcon>
+            </>
+          ) : (
             <ActionIcon
               variant="subtle"
               size="lg"
@@ -236,19 +222,11 @@ export default function StudyPage() {
             >
               <IconPlus size={20} />
             </ActionIcon>
-          </>
-        ) : (
-          <ActionIcon
-            variant="subtle"
-            size="lg"
-            onClick={() => router.push(`/study/${studyId}/sessions/new`)}
-            aria-label="Add session"
-            data-walkthrough="add-session-button"
-          >
-            <IconPlus size={20} />
-          </ActionIcon>
-        )}
+          )}
+        </Group>
       </Group>
+
+      <Divider mb="xl" />
 
       {currentSession ? (
         <Box>
@@ -278,23 +256,29 @@ export default function StudyPage() {
 
           <Grid mb="xl">
             <Grid.Col span={{ base: 12, sm: 4 }}>
-              <Box>
-                <Text size="sm" c="dimmed" mb="xs">
-                  Reference
+              <Group gap="xs" align="flex-start">
+                <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+                  Reference:
                 </Text>
-                <Text>{currentSession.reference || '-'}</Text>
-              </Box>
+                <Text size="sm">{currentSession.reference || '-'}</Text>
+              </Group>
             </Grid.Col>
           </Grid>
           {currentSession.insights && (
             <Box mb="xl">
-              <Text size="sm" c="dimmed" mb="xs">
-                Insights
-              </Text>
-              <Box
-                style={{ lineHeight: 1.6 }}
-                dangerouslySetInnerHTML={{ __html: currentSession.insights }}
-              />
+              <Group gap="xs" align="flex-start" wrap="nowrap">
+                <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+                  Insights:
+                </Text>
+                <Box
+                  style={{ 
+                    lineHeight: 1.6,
+                    flex: 1,
+                    minWidth: 0
+                  }}
+                  dangerouslySetInnerHTML={{ __html: currentSession.insights }}
+                />
+              </Group>
             </Box>
           )}
 
@@ -327,19 +311,26 @@ export default function StudyPage() {
                   <Stack gap="md">
                     {stepsToDisplay.map((step, index) => (
                       <Box key={step.id} mb="md">
-                        <Text size="sm" c="dimmed" mb="xs">
-                          {index + 1}. {step.guideStep.name}
-                        </Text>
-                        {step.insights ? (
-                          <Box
-                            style={{ fontSize: 'var(--mantine-font-size-sm)', lineHeight: 1.6 }}
-                            dangerouslySetInnerHTML={{ __html: step.insights }}
-                          />
-                        ) : (
-                          <Text size="sm" c="dimmed" style={{ fontStyle: 'italic' }}>
-                            No insights yet
+                        <Group gap="xs" align="flex-start" wrap="nowrap">
+                          <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+                            {index + 1}. {step.guideStep.name}:
                           </Text>
-                        )}
+                          {step.insights ? (
+                            <Box
+                              style={{ 
+                                fontSize: 'var(--mantine-font-size-sm)', 
+                                lineHeight: 1.6,
+                                flex: 1,
+                                minWidth: 0
+                              }}
+                              dangerouslySetInnerHTML={{ __html: step.insights }}
+                            />
+                          ) : (
+                            <Text size="sm" c="dimmed" style={{ fontStyle: 'italic' }}>
+                              No insights yet
+                            </Text>
+                          )}
+                        </Group>
                       </Box>
                     ))}
                   </Stack>
