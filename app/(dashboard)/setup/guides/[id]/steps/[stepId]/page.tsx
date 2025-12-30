@@ -13,6 +13,7 @@ import {
   Loader,
   NumberInput,
   Text,
+  Tabs,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
@@ -191,146 +192,150 @@ export default function EditGuideStepPage() {
 
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <NumberInput
-            label="Index"
-            placeholder="Enter step index"
-            required
-            min={1}
-            value={formData.index}
-            onChange={(value) =>
-              setFormData({ ...formData, index: typeof value === 'number' ? value : 1 })
-            }
-            allowNegative={false}
-          />
-          <TextInput
-            label="Name"
-            placeholder="Enter step name"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <Box>
-            <Text size="sm" fw={500} mb={5}>
-              Instructions
-            </Text>
-            {editorMounted && instructionsEditor ? (
-              <RichTextEditor editor={instructionsEditor} style={{ minHeight: 200 }}>
-                <RichTextEditor.Toolbar sticky stickyOffset={0}>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Bold />
-                    <RichTextEditor.Italic />
-                    <RichTextEditor.Underline />
-                    <RichTextEditor.Strikethrough />
-                    <RichTextEditor.ClearFormatting />
-                    <RichTextEditor.Highlight />
-                    <RichTextEditor.Code />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.H1 />
-                    <RichTextEditor.H2 />
-                    <RichTextEditor.H3 />
-                    <RichTextEditor.H4 />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Blockquote />
-                    <RichTextEditor.Hr />
-                    <RichTextEditor.BulletList />
-                    <RichTextEditor.OrderedList />
-                    <RichTextEditor.TaskList />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Link />
-                    <RichTextEditor.Unlink />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignJustify />
-                    <RichTextEditor.AlignRight />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Undo />
-                    <RichTextEditor.Redo />
-                  </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
-                <RichTextEditor.Content />
-              </RichTextEditor>
-            ) : (
-              <Box
-                style={{
-                  minHeight: 200,
-                  border: '1px solid var(--mantine-color-gray-3)',
-                  borderRadius: '4px',
-                  padding: '8px',
-                }}
-              >
-                <Text size="sm" c="dimmed">
-                  Loading editor...
-                </Text>
-              </Box>
-            )}
-          </Box>
-          <Box>
-            <Text size="sm" fw={500} mb={5}>
-              Example
-            </Text>
-            {editorMounted && exampleEditor ? (
-              <RichTextEditor editor={exampleEditor} style={{ minHeight: 200 }}>
-                <RichTextEditor.Toolbar sticky stickyOffset={0}>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Bold />
-                    <RichTextEditor.Italic />
-                    <RichTextEditor.Underline />
-                    <RichTextEditor.Strikethrough />
-                    <RichTextEditor.ClearFormatting />
-                    <RichTextEditor.Highlight />
-                    <RichTextEditor.Code />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.H1 />
-                    <RichTextEditor.H2 />
-                    <RichTextEditor.H3 />
-                    <RichTextEditor.H4 />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Blockquote />
-                    <RichTextEditor.Hr />
-                    <RichTextEditor.BulletList />
-                    <RichTextEditor.OrderedList />
-                    <RichTextEditor.TaskList />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Link />
-                    <RichTextEditor.Unlink />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignJustify />
-                    <RichTextEditor.AlignRight />
-                  </RichTextEditor.ControlsGroup>
-                  <RichTextEditor.ControlsGroup>
-                    <RichTextEditor.Undo />
-                    <RichTextEditor.Redo />
-                  </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
-                <RichTextEditor.Content />
-              </RichTextEditor>
-            ) : (
-              <Box
-                style={{
-                  minHeight: 200,
-                  border: '1px solid var(--mantine-color-gray-3)',
-                  borderRadius: '4px',
-                  padding: '8px',
-                }}
-              >
-                <Text size="sm" c="dimmed">
-                  Loading editor...
-                </Text>
-              </Box>
-            )}
-          </Box>
+          <Group grow>
+            <NumberInput
+              label="Index"
+              placeholder="Enter step index"
+              required
+              min={1}
+              value={formData.index}
+              onChange={(value) =>
+                setFormData({ ...formData, index: typeof value === 'number' ? value : 1 })
+              }
+              allowNegative={false}
+            />
+            <TextInput
+              label="Name"
+              placeholder="Enter step name"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+          </Group>
+          <Tabs defaultValue="instructions">
+            <Tabs.List>
+              <Tabs.Tab value="instructions">Instructions</Tabs.Tab>
+              <Tabs.Tab value="example">Example</Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="instructions" pt="md">
+              {editorMounted && instructionsEditor ? (
+                <RichTextEditor editor={instructionsEditor} style={{ minHeight: 200 }}>
+                  <RichTextEditor.Toolbar sticky stickyOffset={0}>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Bold />
+                      <RichTextEditor.Italic />
+                      <RichTextEditor.Underline />
+                      <RichTextEditor.Strikethrough />
+                      <RichTextEditor.ClearFormatting />
+                      <RichTextEditor.Highlight />
+                      <RichTextEditor.Code />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.H1 />
+                      <RichTextEditor.H2 />
+                      <RichTextEditor.H3 />
+                      <RichTextEditor.H4 />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Blockquote />
+                      <RichTextEditor.Hr />
+                      <RichTextEditor.BulletList />
+                      <RichTextEditor.OrderedList />
+                      <RichTextEditor.TaskList />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Link />
+                      <RichTextEditor.Unlink />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.AlignLeft />
+                      <RichTextEditor.AlignCenter />
+                      <RichTextEditor.AlignJustify />
+                      <RichTextEditor.AlignRight />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Undo />
+                      <RichTextEditor.Redo />
+                    </RichTextEditor.ControlsGroup>
+                  </RichTextEditor.Toolbar>
+                  <RichTextEditor.Content />
+                </RichTextEditor>
+              ) : (
+                <Box
+                  style={{
+                    minHeight: 200,
+                    border: '1px solid var(--mantine-color-gray-3)',
+                    borderRadius: '4px',
+                    padding: '8px',
+                  }}
+                >
+                  <Text size="sm" c="dimmed">
+                    Loading editor...
+                  </Text>
+                </Box>
+              )}
+            </Tabs.Panel>
+
+            <Tabs.Panel value="example" pt="md">
+              {editorMounted && exampleEditor ? (
+                <RichTextEditor editor={exampleEditor} style={{ minHeight: 200 }}>
+                  <RichTextEditor.Toolbar sticky stickyOffset={0}>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Bold />
+                      <RichTextEditor.Italic />
+                      <RichTextEditor.Underline />
+                      <RichTextEditor.Strikethrough />
+                      <RichTextEditor.ClearFormatting />
+                      <RichTextEditor.Highlight />
+                      <RichTextEditor.Code />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.H1 />
+                      <RichTextEditor.H2 />
+                      <RichTextEditor.H3 />
+                      <RichTextEditor.H4 />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Blockquote />
+                      <RichTextEditor.Hr />
+                      <RichTextEditor.BulletList />
+                      <RichTextEditor.OrderedList />
+                      <RichTextEditor.TaskList />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Link />
+                      <RichTextEditor.Unlink />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.AlignLeft />
+                      <RichTextEditor.AlignCenter />
+                      <RichTextEditor.AlignJustify />
+                      <RichTextEditor.AlignRight />
+                    </RichTextEditor.ControlsGroup>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Undo />
+                      <RichTextEditor.Redo />
+                    </RichTextEditor.ControlsGroup>
+                  </RichTextEditor.Toolbar>
+                  <RichTextEditor.Content />
+                </RichTextEditor>
+              ) : (
+                <Box
+                  style={{
+                    minHeight: 200,
+                    border: '1px solid var(--mantine-color-gray-3)',
+                    borderRadius: '4px',
+                    padding: '8px',
+                  }}
+                >
+                  <Text size="sm" c="dimmed">
+                    Loading editor...
+                  </Text>
+                </Box>
+              )}
+            </Tabs.Panel>
+          </Tabs>
           <Group justify="flex-end" mt="md">
             <Button variant="outline" onClick={() => router.push(`/setup/guides/${guideId}`)}>
               Cancel

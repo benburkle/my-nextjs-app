@@ -34,6 +34,7 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
   const [studies, setStudies] = useState<Study[]>([]);
   const [loadingStudies, setLoadingStudies] = useState(true);
   const [currentStudy, setCurrentStudy] = useState<Study | null>(null);
+  const [selectedStudyId, setSelectedStudyId] = useState<number | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -66,7 +67,17 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
     }
   }, [mounted, fetchStudies]);
 
-  // Determine current study from URL
+  // Load selected study from localStorage on mount
+  useEffect(() => {
+    if (mounted) {
+      const savedStudyId = localStorage.getItem('selectedStudyId');
+      if (savedStudyId) {
+        setSelectedStudyId(parseInt(savedStudyId));
+      }
+    }
+  }, [mounted]);
+
+  // Determine current study from URL or selected study
   useEffect(() => {
     if (pathname && studies.length > 0) {
       const studyMatch = pathname.match(/^\/study\/(\d+)/);
@@ -74,11 +85,27 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
         const studyId = parseInt(studyMatch[1]);
         const study = studies.find((s) => s.id === studyId);
         setCurrentStudy(study || null);
-      } else {
+        // Save to localStorage when on a study page
+        if (study) {
+          localStorage.setItem('selectedStudyId', studyId.toString());
+          setSelectedStudyId(studyId);
+        }
+      } else if (pathname === '/abide') {
+        // On Abide page, clear the selected study
         setCurrentStudy(null);
+        localStorage.removeItem('selectedStudyId');
+        setSelectedStudyId(null);
+      } else {
+        // Not on a study page, use saved selection
+        if (selectedStudyId) {
+          const study = studies.find((s) => s.id === selectedStudyId);
+          setCurrentStudy(study || null);
+        } else {
+          setCurrentStudy(null);
+        }
       }
     }
-  }, [pathname, studies]);
+  }, [pathname, studies, selectedStudyId]);
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
@@ -87,6 +114,8 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
   };
 
   const handleStudySelect = (studyId: number) => {
+    localStorage.setItem('selectedStudyId', studyId.toString());
+    setSelectedStudyId(studyId);
     router.push(`/study/${studyId}`);
   };
 
@@ -95,13 +124,17 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
       ? 'var(--mantine-color-dark-4)'
       : 'var(--mantine-color-gray-3)';
 
+  // Hide study dropdown on build guide and build study pages
+  const isBuildPage = pathname?.startsWith('/setup/guides') || pathname?.startsWith('/setup/studies');
+  const showStudyDropdown = !isBuildPage;
+
   return (
     <Box style={{ padding: '12px 16px', borderBottom: `1px solid ${borderColor}` }}>
       <Group justify="space-between" gap="md">
         <Group gap="xs">
           <Logo size={40} />
         </Group>
-        {loadingStudies ? (
+        {showStudyDropdown && (loadingStudies ? (
           <Loader size="sm" />
         ) : currentStudy ? (
           <Menu shadow="md" width={250}>
@@ -131,8 +164,6 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
                   </Menu.Item>
                 ))
               )}
-              <Menu.Divider />
-              <Menu.Item onClick={() => router.push('/setup/studies')}>Manage Studies</Menu.Item>
             </Menu.Dropdown>
           </Menu>
         ) : (
@@ -156,11 +187,9 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
                   </Menu.Item>
                 ))
               )}
-              <Menu.Divider />
-              <Menu.Item onClick={() => router.push('/setup/studies')}>Manage Studies</Menu.Item>
             </Menu.Dropdown>
           </Menu>
-        )}
+        ))}
         <Group gap="xs">
           <CountdownTimer />
           <ActionIcon

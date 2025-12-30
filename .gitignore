@@ -3,12 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.pnp.js
 
 # testing
 /coverage
@@ -28,10 +23,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# local env files
+.env*.local
+.env
 
 # vercel
 .vercel
@@ -40,13 +35,51 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-/lib/prisma
-/.prisma
+# React Native / Expo
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+dist/
+
+# macOS
+.DS_Store
+
+# iOS
+ios/Pods/
+ios/build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android
+android/app/build/
+android/build/
+android/.gradle
+android/local.properties
+*.apk
+*.aab
+
+# Prisma
 prisma/dev.db
 prisma/dev.db-journal
-*.db
-*.db-journal
-
-# docker
-docker-compose.override.yml
+prisma/prisma/dev.db
+prisma/prisma/dev.db-journal

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ActionIcon, Tooltip, Group, Box } from '@mantine/core';
 import { useRouter, usePathname } from 'next/navigation';
-import { IconBook, IconSchool } from '@tabler/icons-react';
+import { IconBook, IconSchool, IconHome } from '@tabler/icons-react';
 import { useMantineColorScheme } from '@mantine/core';
 
 export function BottomNavBar() {
@@ -24,6 +24,7 @@ export function BottomNavBar() {
 
   const isGuidesActive = pathname?.startsWith('/setup/guides');
   const isStudiesActive = pathname?.startsWith('/setup/studies');
+  const isAbideActive = pathname === '/abide';
 
   return (
     <Box
@@ -39,6 +40,17 @@ export function BottomNavBar() {
       }}
     >
       <Group justify="center" gap="xl">
+        <Tooltip label="Abide" position="top" withArrow>
+          <ActionIcon
+            variant={isAbideActive ? 'filled' : 'subtle'}
+            size="lg"
+            color={isAbideActive ? 'blue' : 'gray'}
+            onClick={() => router.push('/abide')}
+            aria-label="Abide"
+          >
+            <IconHome size={24} />
+          </ActionIcon>
+        </Tooltip>
         <Tooltip label="Build Guide" position="top" withArrow>
           <ActionIcon
             variant={isGuidesActive ? 'filled' : 'subtle'}
@@ -65,4 +77,7 @@ export function BottomNavBar() {
     </Box>
   );
 }
+
+
+
 
