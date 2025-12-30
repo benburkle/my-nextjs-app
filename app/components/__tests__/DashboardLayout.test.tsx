@@ -68,15 +68,4 @@ describe('DashboardLayout', () => {
 
     expect(screen.getByText('Abide Guide')).toBeInTheDocument();
   });
-
-  it('should render Sidebar', () => {
-    renderWithProvider(
-      <DashboardLayout>
-        <div>Test</div>
-      </DashboardLayout>
-    );
-
-    // Sidebar should be rendered (check for menu button)
-    expect(screen.getByLabelText('Toggle sidebar')).toBeInTheDocument();
-  });
 });

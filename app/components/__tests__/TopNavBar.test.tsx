@@ -37,27 +37,15 @@ describe('TopNavBar', () => {
     } as any);
   });
 
-  it('should render with menu button', () => {
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
+  it('should render TopNavBar', () => {
+    renderWithProvider(<TopNavBar />);
 
-    expect(screen.getByLabelText('Toggle sidebar')).toBeInTheDocument();
     expect(screen.getByText('Abide Guide')).toBeInTheDocument();
-  });
-
-  it('should call onMenuClick when menu button is clicked', async () => {
-    const user = userEvent.setup();
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
-
-    await user.click(screen.getByLabelText('Toggle sidebar'));
-    expect(onMenuClick).toHaveBeenCalledTimes(1);
   });
 
   it('should toggle color scheme when theme button is clicked', async () => {
     const user = userEvent.setup();
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
+    renderWithProvider(<TopNavBar />);
 
     const themeButton = screen.getByLabelText('Toggle color scheme');
     await user.click(themeButton);
@@ -75,8 +63,7 @@ describe('TopNavBar', () => {
       status: 'authenticated',
     } as any);
 
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
+    renderWithProvider(<TopNavBar />);
 
     // Verify session hook is called
     expect(auth.useSession).toHaveBeenCalled();
@@ -102,8 +89,7 @@ describe('TopNavBar', () => {
       status: 'authenticated',
     } as any);
 
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
+    renderWithProvider(<TopNavBar />);
 
     // Verify session hook is called
     expect(auth.useSession).toHaveBeenCalled();
@@ -123,8 +109,7 @@ describe('TopNavBar', () => {
   });
 
   it('should not show user menu when user is not authenticated', () => {
-    const onMenuClick = jest.fn();
-    renderWithProvider(<TopNavBar onMenuClick={onMenuClick} />);
+    renderWithProvider(<TopNavBar />);
 
     expect(screen.queryByLabelText(/user/i)).not.toBeInTheDocument();
   });

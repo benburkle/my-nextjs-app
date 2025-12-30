@@ -21,11 +21,7 @@ interface Study {
   name: string;
 }
 
-interface TopNavBarProps {
-  onMenuClick?: () => void;
-}
-
-export function TopNavBar({ onMenuClick }: TopNavBarProps) {
+export function TopNavBar() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { data: session } = useSession();
   const router = useRouter();

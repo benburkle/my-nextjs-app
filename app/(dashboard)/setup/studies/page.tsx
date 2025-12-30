@@ -86,11 +86,6 @@ export default function StudiesPage() {
           color: 'green',
         });
         fetchStudies();
-        // Dispatch custom event to notify sidebar to refresh
-        // Use a small delay to ensure database transaction is committed
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('studyDeleted', { bubbles: true }));
-        }, 200);
       } else {
         throw new Error('Failed to delete study');
       }
